@@ -1,16 +1,16 @@
 export type Value = Atom | Data
 export type Atom = Bool | Symbol | String | Int | Float
-export type Bool = { kind: "Bool"; content: boolean; attributes: Attributes }
-export type Symbol = { kind: "Symbol"; content: string; attributes: Attributes }
-export type String = { kind: "String"; content: string; attributes: Attributes }
-export type Int = { kind: "Int"; content: number; attributes: Attributes }
-export type Float = { kind: "Float"; content: number; attributes: Attributes }
-export type Data = { kind: "Data"; array: Array<Value>; attributes: Attributes }
+export type Bool = { type: "Bool"; content: boolean; attributes: Attributes }
+export type Symbol = { type: "Symbol"; content: string; attributes: Attributes }
+export type String = { type: "String"; content: string; attributes: Attributes }
+export type Int = { type: "Int"; content: number; attributes: Attributes }
+export type Float = { type: "Float"; content: number; attributes: Attributes }
+export type Data = { type: "Data"; array: Array<Value>; attributes: Attributes }
 export type Attributes = Record<string, Value>
 
 export function Bool(content: boolean, attributes?: Attributes): Bool {
   return {
-    kind: "Bool",
+    type: "Bool",
     content,
     attributes: attributes || {},
   }
@@ -22,7 +22,7 @@ export function Symbol(content: string, attributes?: Attributes): Symbol {
   }
 
   return {
-    kind: "Symbol",
+    type: "Symbol",
     content,
     attributes: attributes || {},
   }
@@ -30,7 +30,7 @@ export function Symbol(content: string, attributes?: Attributes): Symbol {
 
 export function String(content: string, attributes?: Attributes): String {
   return {
-    kind: "String",
+    type: "String",
     content,
     attributes: attributes || {},
   }
@@ -42,7 +42,7 @@ export function Int(content: number, attributes?: Attributes): Int {
   }
 
   return {
-    kind: "Int",
+    type: "Int",
     content,
     attributes: attributes || {},
   }
@@ -50,7 +50,7 @@ export function Int(content: number, attributes?: Attributes): Int {
 
 export function Float(content: number, attributes?: Attributes): Float {
   return {
-    kind: "Float",
+    type: "Float",
     content,
     attributes: attributes || {},
   }
@@ -58,7 +58,7 @@ export function Float(content: number, attributes?: Attributes): Float {
 
 export function Data(array: Array<Value>, attributes?: Attributes): Data {
   return {
-    kind: "Data",
+    type: "Data",
     array,
     attributes: attributes || {},
   }
