@@ -14,3 +14,13 @@ export type Float = { kind: "Float"; content: number }
 export type List = Cons | Null
 export type Cons = { kind: "Cons"; head: Value; tail: Value }
 export type Null = { kind: "Null" }
+
+// boolAtom
+// symbolAtom
+// stringAtom
+// intAtom
+// floatAtom
+
+// listData
+// consData
+// nullData
