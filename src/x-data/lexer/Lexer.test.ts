@@ -15,7 +15,6 @@ const lexer = new Lexer({
     { start: "{", end: "}" },
   ],
   comments: [";", "//"],
-  nulls: ["null"],
 })
 
 function assertTokens(text: string, tokens: Array<Omit<Token, "span">>): void {

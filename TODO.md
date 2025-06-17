@@ -1,4 +1,3 @@
-[x-data] lexer -- remove nulls from ParserConfig
 [x-data] parser
 [x-data] format
 [x-data] match -- just view data as pattern
