@@ -2,7 +2,7 @@ import * as X from "../data/index.ts"
 import { type Data } from "../data/index.ts"
 import { InternalError, ParsingError } from "../errors/index.ts"
 import { Parser } from "../parser/index.ts"
-import { Position } from "../position/index.ts"
+import { initPosition } from "../position/index.ts"
 import { Span } from "../span/index.ts"
 import { Token } from "../token/index.ts"
 
@@ -20,7 +20,7 @@ export class Parsing {
     if (tokens[0] === undefined) {
       throw new ParsingError(
         "I expect to see a token, but there is no token remain.",
-        new Span(Position.init(), Position.init()),
+        new Span(initPosition(), initPosition()),
       )
     }
 

@@ -1,11 +1,11 @@
 import { InternalError, ParsingError } from "../errors/index.ts"
 import { Lexer } from "../lexer/index.ts"
-import { Position } from "../position/index.ts"
+import { initPosition, Position } from "../position/index.ts"
 import { Span } from "../span/index.ts"
 import { Token, type TokenKind } from "../token/index.ts"
 
 export class Lexing implements Iterator<Token> {
-  position = Position.init()
+  position = initPosition()
 
   handlers: Array<CharHandler> = [
     // NOTE The order matters, we must

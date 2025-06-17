@@ -9,10 +9,6 @@ export class Position {
     this.row = options.row
   }
 
-  static init(): Position {
-    return new Position({ index: 0, column: 0, row: 0 })
-  }
-
   step(char: string): void {
     if (char.length !== 1) {
       throw new Error(`I expect the char to be length of one: ${char}`)
@@ -27,4 +23,8 @@ export class Position {
       this.column++
     }
   }
+}
+
+export function initPosition(): Position {
+  return new Position({ index: 0, column: 0, row: 0 })
 }
