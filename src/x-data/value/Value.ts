@@ -5,7 +5,7 @@ export type Symbol = { type: "Symbol"; content: string; attributes: Attributes }
 export type String = { type: "String"; content: string; attributes: Attributes }
 export type Int = { type: "Int"; content: number; attributes: Attributes }
 export type Float = { type: "Float"; content: number; attributes: Attributes }
-export type Data = { type: "Data"; array: Array<Value>; attributes: Attributes }
+export type Data = { type: "Data"; content: Array<Value>; attributes: Attributes }
 export type Attributes = Record<string, Value>
 
 export function Bool(content: boolean, attributes?: Attributes): Bool {
@@ -56,10 +56,10 @@ export function Float(content: number, attributes?: Attributes): Float {
   }
 }
 
-export function Data(array: Array<Value>, attributes?: Attributes): Data {
+export function Data(content: Array<Value>, attributes?: Attributes): Data {
   return {
     type: "Data",
-    array,
+    content,
     attributes: attributes || {},
   }
 }
