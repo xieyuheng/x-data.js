@@ -15,11 +15,53 @@ export type List = Cons | Null
 export type Cons = { kind: "Cons"; head: Value; tail: Value }
 export type Null = { kind: "Null" }
 
-// boolAtom
-// symbolAtom
-// stringAtom
-// intAtom
-// floatAtom
+export function boolAtom(content: boolean, attributes?: Attributes): Atom {
+  return {
+    kind: "Atom",
+    literal: { kind: "Boolean", content },
+    attributes: attributes || {},
+  }
+}
+
+export function symbolAtom(content: string, attributes?: Attributes): Atom {
+  if (content.includes(" ")) {
+    throw new Error(`[symbolAtom] expect string to have no space: ${content}.`)
+  }
+
+  return {
+    kind: "Atom",
+    literal: { kind: "Symbol", content },
+    attributes: attributes || {},
+  }
+}
+
+export function stringAtom(content: string, attributes?: Attributes): Atom {
+  return {
+    kind: "Atom",
+    literal: { kind: "String", content },
+    attributes: attributes || {},
+  }
+}
+
+export function intAtom(content: number, attributes?: Attributes): Atom {
+  if (!Number.isInteger(content)) {
+    throw new Error(`[intAtom] expect number be int: ${content}.`)
+  }
+
+  return {
+    kind: "Atom",
+    literal: { kind: "Int", content },
+    attributes: attributes || {},
+  }
+}
+
+export function floatAtom(content: number, attributes?: Attributes): Atom {
+  return {
+    kind: "Atom",
+    literal: { kind: "Float", content },
+    attributes: attributes || {},
+  }
+}
 
 // listData
 // consData

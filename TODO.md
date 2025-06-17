@@ -1,4 +1,3 @@
-[x-data] value -- atom creators
 [x-data] value -- data creators
 [x-data] errors
 [x-data] lexer
