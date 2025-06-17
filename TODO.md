@@ -1,4 +1,3 @@
-[x-data] value -- data creators
 [x-data] errors
 [x-data] lexer
 [x-data] parser
