@@ -1,7 +1,7 @@
+import { type Data } from "../data/index.ts"
 import { ParsingError } from "../errors/index.ts"
 import { Lexer } from "../lexer/index.ts"
 import { ParserConfig, type ParserOptions } from "../parser/index.ts"
-import { type Data } from "../data/index.ts"
 import { Token } from "../token/index.ts"
 import { Parsing } from "./Parsing.ts"
 
