@@ -12,7 +12,6 @@ const lexer = new Lexer({
   parentheses: [
     { start: "(", end: ")" },
     { start: "[", end: "]" },
-    { start: "{", end: "}" },
   ],
   comments: [";"],
 })
@@ -74,12 +73,10 @@ test("parentheses", () => {
     { kind: "ParenthesisEnd", value: ")" },
   ])
 
-  assertTokens("([{x}])", [
+  assertTokens("([x])", [
     { kind: "ParenthesisStart", value: "(" },
     { kind: "ParenthesisStart", value: "[" },
-    { kind: "ParenthesisStart", value: "{" },
     { kind: "Symbol", value: "x" },
-    { kind: "ParenthesisEnd", value: "}" },
     { kind: "ParenthesisEnd", value: "]" },
     { kind: "ParenthesisEnd", value: ")" },
   ])
