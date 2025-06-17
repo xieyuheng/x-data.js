@@ -1,4 +1,3 @@
-[x-data] token
 [x-data] lexer
 [x-data] parser
 [x-data] format
