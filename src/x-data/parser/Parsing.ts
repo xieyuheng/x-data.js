@@ -30,19 +30,27 @@ export class Parsing {
         }
       }
 
-      // case "Number": {
-      //   const value = JSON.parse(tokens[0].value)
-      //   if (typeof value !== "number") {
-      //     throw new InternalError(
-      //       `I expect value to be a JSON number: ${value}`,
-      //     )
-      //   }
+      case "Number": {
+        const value = JSON.parse(tokens[0].value)
+        if (typeof value !== "number") {
+          throw new InternalError(
+            `I expect value to be a JSON number: ${value}`,
+          )
+        }
 
-      //   return {
-      //     sexp: Sexps.Num(value, tokens[0].span),
-      //     remain: tokens.slice(1),
-      //   }
-      // }
+        // TODO span to attributes: tokens[0].span
+        if (Number.isInteger(value)) {
+          return {
+            data: X.Int(value),
+            remain: tokens.slice(1),
+          }
+        } else {
+          return {
+            data: X.Float(value),
+            remain: tokens.slice(1),
+          }
+        }
+      }
 
       case "String": {
         const value = JSON.parse(tokens[0].value)
