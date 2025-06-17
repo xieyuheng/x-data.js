@@ -1,11 +1,15 @@
-export type Value = Atom | Data
+export type Value = Atom | List
 export type Atom = Bool | Symbol | String | Int | Float
 export type Bool = { type: "Bool"; content: boolean; attributes: Attributes }
 export type Symbol = { type: "Symbol"; content: string; attributes: Attributes }
 export type String = { type: "String"; content: string; attributes: Attributes }
 export type Int = { type: "Int"; content: number; attributes: Attributes }
 export type Float = { type: "Float"; content: number; attributes: Attributes }
-export type Data = { type: "Data"; content: Array<Value>; attributes: Attributes }
+export type List = {
+  type: "List"
+  content: Array<Value>
+  attributes: Attributes
+}
 export type Attributes = Record<string, Value>
 
 export function Bool(content: boolean, attributes?: Attributes): Bool {
@@ -56,9 +60,9 @@ export function Float(content: number, attributes?: Attributes): Float {
   }
 }
 
-export function Data(content: Array<Value>, attributes?: Attributes): Data {
+export function List(content: Array<Value>, attributes?: Attributes): List {
   return {
-    type: "Data",
+    type: "List",
     content,
     attributes: attributes || {},
   }

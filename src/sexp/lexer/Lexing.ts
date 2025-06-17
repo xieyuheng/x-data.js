@@ -62,7 +62,7 @@ export class Lexing implements Iterator<Token> {
         if (handler.kind === undefined) return undefined
         const end = new Position(this.position)
         const span = new Span(start, end)
-        const token = new Token({ kind: handler.kind, value, span })
+        const token = new Token(handler.kind, value, span)
         return { done: false, value: token }
       }
     }
