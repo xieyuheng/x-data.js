@@ -9,9 +9,12 @@ import { Token } from "../token/index.ts"
 type Result = { data: Data; remain: Array<Token> }
 
 export class Parsing {
+  parser: Parser
   index = 0
 
-  constructor(public parser: Parser) {}
+  constructor(parser: Parser) {
+this.parser = parser
+  }
 
   parse(tokens: Array<Token>): Result {
     if (tokens[0] === undefined) {

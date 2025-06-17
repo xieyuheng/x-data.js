@@ -20,10 +20,16 @@ export class Lexing implements Iterator<Token> {
     new SymbolHandler(this),
   ]
 
+   lexer: Lexer
+   text: string
+
   constructor(
-    public lexer: Lexer,
-    public text: string,
-  ) {}
+     lexer: Lexer,
+     text: string,
+  ) {
+    this.lexer = lexer
+    this.text = text
+  }
 
   [Symbol.iterator](): Iterator<Token> {
     return this
@@ -72,7 +78,10 @@ export class Lexing implements Iterator<Token> {
 }
 
 abstract class CharHandler {
-  constructor(public lexing: Lexing) {}
+  lexing: Lexing
+  constructor(lexing: Lexing) {
+    this.lexing = lexing
+  }
 
   abstract kind: TokenKind | undefined
 

@@ -4,10 +4,15 @@ import { intervalOverlap } from "../utils/interval.ts"
 import { isBrowser } from "../utils/isBrowser.ts"
 
 export class Span {
+  start: Position
+  end: Position
   constructor(
-    public start: Position,
-    public end: Position,
-  ) {}
+    start: Position,
+    end: Position,
+  ) {
+    this.start = start
+this.end = end
+  }
 
   get lo(): number {
     return this.start.index

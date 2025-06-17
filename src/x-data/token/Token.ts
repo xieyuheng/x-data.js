@@ -9,9 +9,17 @@ export type TokenKind =
   | "Quote"
 
 export class Token {
+   kind: TokenKind
+   value: string
+   span: Span
+
   constructor(
-    public kind: TokenKind,
-    public value: string,
-    public span: Span,
-  ) {}
+   kind: TokenKind,
+   value: string,
+   span: Span,
+  ) {
+    this.kind = kind
+    this.value = value
+    this.span = span
+  }
 }

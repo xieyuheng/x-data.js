@@ -9,7 +9,7 @@ export class Parser {
   lexer: Lexer
   config: ParserConfig
 
-  constructor(public options: ParserOptions) {
+  constructor(options: ParserOptions) {
     this.lexer = new Lexer(options)
     this.config = this.lexer.config
   }

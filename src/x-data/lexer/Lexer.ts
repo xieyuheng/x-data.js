@@ -5,7 +5,7 @@ import { Lexing } from "./Lexing.ts"
 export class Lexer {
   config: ParserConfig
 
-  constructor(public options: ParserOptions) {
+  constructor(options: ParserOptions) {
     this.config = new ParserConfig(options)
   }
 
