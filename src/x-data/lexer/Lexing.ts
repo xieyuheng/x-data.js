@@ -20,13 +20,10 @@ export class Lexing implements Iterator<Token> {
     new SymbolHandler(this),
   ]
 
-   lexer: Lexer
-   text: string
+  lexer: Lexer
+  text: string
 
-  constructor(
-     lexer: Lexer,
-     text: string,
-  ) {
+  constructor(lexer: Lexer, text: string) {
     this.lexer = lexer
     this.text = text
   }

@@ -13,7 +13,7 @@ export class Parsing {
   index = 0
 
   constructor(parser: Parser) {
-this.parser = parser
+    this.parser = parser
   }
 
   parse(tokens: Array<Token>): Result {

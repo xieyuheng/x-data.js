@@ -29,7 +29,6 @@ test("string", () => {
   assertData('"abc"', X.String("abc"))
 })
 
-
 test("number", () => {
   assertData("1", X.Int(1))
   assertData("0", X.Int(0))

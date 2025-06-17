@@ -6,12 +6,9 @@ import { isBrowser } from "../utils/isBrowser.ts"
 export class Span {
   start: Position
   end: Position
-  constructor(
-    start: Position,
-    end: Position,
-  ) {
+  constructor(start: Position, end: Position) {
     this.start = start
-this.end = end
+    this.end = end
   }
 
   get lo(): number {
