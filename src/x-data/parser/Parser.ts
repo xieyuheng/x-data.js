@@ -3,7 +3,7 @@ import { Lexer } from "../lexer/index.ts"
 import { ParserConfig, type ParserOptions } from "../parser/index.ts"
 import { type Data } from "../data/index.ts"
 import { Token } from "../token/index.ts"
-// import { Parsing } from "./Parsing.ts"
+import { Parsing } from "./Parsing.ts"
 
 export class Parser {
   lexer: Lexer
@@ -44,8 +44,7 @@ export class Parser {
     data: Data
     remain: Array<Token>
   } {
-    throw new Error("TODO")
-    // const parsing = new Parsing(this)
-    // return parsing.parse(tokens)
+    const parsing = new Parsing(this)
+    return parsing.parse(tokens)
   }
 }
