@@ -14,7 +14,7 @@ const lexer = new Lexer({
     { start: "[", end: "]" },
     { start: "{", end: "}" },
   ],
-  comments: [";", "//"],
+  comments: [";"],
 })
 
 function assertTokens(text: string, tokens: Array<Omit<Token, "span">>): void {
@@ -99,10 +99,6 @@ test("comments", () => {
   assertTokens("; abc", [])
   assertTokens("; abc\n", [])
   assertTokens("; abc\nabc", [{ kind: "Symbol", value: "abc" }])
-
-  assertTokens("// abc", [])
-  assertTokens("// abc\n", [])
-  assertTokens("// abc\nabc", [{ kind: "Symbol", value: "abc" }])
 })
 
 test("string", () => {
@@ -118,7 +114,7 @@ test("string", () => {
     { kind: "String", value: '"abc"' },
   ])
 
-  assertTokens('"//"', [{ kind: "String", value: '"//"' }])
+  assertTokens('";;"', [{ kind: "String", value: '";;"' }])
 })
 
 test("number", () => {
