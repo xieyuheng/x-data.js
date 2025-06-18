@@ -1,6 +1,5 @@
 # data
 
-[data] dataFromJson.test.ts
 [data] `dataToJson`
 
 # parser
