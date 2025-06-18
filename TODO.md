@@ -1,4 +1,4 @@
-[x-data] `Parsing` -- list from ParenthesisStart
+[x-data] `Parsing` -- list from BracketStart
 [x-data] `Parsing` -- quote
 [x-data] `Parsing` -- list from `[...]`
 [x-data] format

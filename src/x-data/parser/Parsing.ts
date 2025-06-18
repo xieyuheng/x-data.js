@@ -69,7 +69,7 @@ export class Parsing {
         }
       }
 
-      // case "ParenthesisStart": {
+      // case "BracketStart": {
       //   return this.parseList(
       //     token,
       //     tokens.slice(1),
@@ -77,8 +77,8 @@ export class Parsing {
       //   )
       // }
 
-      // case "ParenthesisEnd": {
-      //   throw new ParsingError(`I found extra ParenthesisEnd`, token.span)
+      // case "BracketEnd": {
+      //   throw new ParsingError(`I found extra BracketEnd`, token.span)
       // }
 
       // case "Quote": {
