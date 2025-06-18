@@ -81,25 +81,23 @@ export class Parsing {
         throw new ParsingError(`I found extra BracketEnd`, token.span)
       }
 
-      // case "Quote": {
-      //   const { sexp, remain } = this.parse(tokens.slice(1))
+      case "Quote": {
+        const { data, remain } = this.parse(tokens.slice(1))
 
-      //   const first = Sexps.Sym(
-      //     this.parser.config.findQuoteSymbolOrFail(token.value),
-      //     token.span,
-      //   )
+        const first = X.Symbol(
+          this.parser.config.findQuoteSymbolOrFail(token.value),
+          spanToData(token.span).attributes,
+        )
 
-      //   const second = Sexps.Cons(
-      //     sexp,
-      //     Sexps.Null(token.span),
-      //     token.span.union(sexp.span),
-      //   )
+        // TODO spanUnion(token.span, data.span)
+        const second = X.List([data], data.attributes)
 
-      //   return {
-      //     sexp: Sexps.Cons(first, second, first.span.union(second.span)),
-      //     remain,
-      //   }
-      // }
+        // TODO spanUnion(first.span, second.span)
+        return {
+          data: X.Cons(first, second, second.attributes),
+          remain,
+        }
+      }
 
       default: {
         throw new Error("TODO")
