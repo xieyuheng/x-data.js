@@ -1,4 +1,3 @@
-[x-data] `positionToAttributes`
 [x-data] `spanToAttributes`
 
 [x-data] `Parsing` -- list from ParenthesisStart

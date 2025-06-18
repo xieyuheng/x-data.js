@@ -1,12 +1,12 @@
 export class Position {
   index: number
-  column: number
   row: number
+  column: number
 
-  constructor(options: { index: number; column: number; row: number }) {
+  constructor(options: { index: number; row: number; column: number }) {
     this.index = options.index
-    this.column = options.column
     this.row = options.row
+    this.column = options.column
   }
 
   step(char: string): void {
