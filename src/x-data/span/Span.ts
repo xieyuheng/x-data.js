@@ -8,12 +8,4 @@ export class Span {
     this.start = start
     this.end = end
   }
-
-  get lo(): number {
-    return this.start.index
-  }
-
-  get hi(): number {
-    return this.end.index
-  }
 }

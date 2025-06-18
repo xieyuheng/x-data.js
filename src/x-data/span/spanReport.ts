@@ -26,14 +26,17 @@ function repr_in_context(
 ): string {
   let s = ""
   for (let i = 0; i < context.length; i++) {
-    if (span.lo <= i && i < span.hi) {
+    if (span.start.index <= i && i < span.end.index) {
       s += color(context.charAt(i), { ...opts, background: "red" })
     } else {
       s += context.charAt(i)
     }
   }
   // NOTE END_OF_FILE
-  if (span.lo === context.length && span.hi === context.length) {
+  if (
+    span.start.index === context.length &&
+    span.end.index === context.length
+  ) {
     s += color(" ", { ...opts, background: "red" })
   }
   return s
@@ -66,7 +69,14 @@ function to_line_span_in_context(
   let cursor = 0
   let lines = context.split("\n")
   for (let [i, line] of lines.entries()) {
-    if (intervalOverlap(span.lo, span.hi, cursor, cursor + line.length + 1)) {
+    if (
+      intervalOverlap(
+        span.start.index,
+        span.end.index,
+        cursor,
+        cursor + line.length + 1,
+      )
+    ) {
       line_indexes.add(i)
     }
     cursor += line.length + 1
