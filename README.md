@@ -21,15 +21,22 @@ Quoted list:
 '(lambda (x) x)
 ```
 
-evaluates to array:
+evaluates to:
 
 ```lisp
 ['lambda ['x] 'x]
 ```
 
 This is useful for writing interpreter in lisp
-with good support for error reporting,
-because `(lambda (x) x)` can be parsed into list with attributes:
+with good support for error reporting.
+
+For example:
+
+```lisp
+(lambda (x) x)
+```
+
+can be read to:
 
 ```lisp
 ['lambda ['x] 'x :row 0 :colum 0]
