@@ -1,4 +1,4 @@
-import { Span } from "../span/index.ts"
+import { Span, spanReport } from "../span/index.ts"
 
 export class ParsingError extends Error {
   span: Span
@@ -9,6 +9,6 @@ export class ParsingError extends Error {
   }
 
   report(text: string): string {
-    return [this.message + "\n", this.span.report(text)].join("\n")
+    return [this.message + "\n", spanReport(this.span, text)].join("\n")
   }
 }
