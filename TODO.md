@@ -1,6 +1,19 @@
-[x-data] `Parsing` -- call `spanFromData` and `spanUnion`
-[x-data] `Parsing` -- list from `BracketStart` -- `[]`
-[x-data] `Parsing` -- save :keyword to attributes
-[x-data] `Parsing` -- quote with :keyword
-[x-data] format
-[x-data] match -- just view data as pattern
+# data
+
+[data] dataToJson
+[data] dataFromJson
+
+# parser
+
+[parser] `Parsing` -- call `spanFromData` and `spanUnion`
+[parser] `Parsing` -- list from `BracketStart` -- `[]`
+[parser] `Parsing` -- save :keyword to attributes
+[parser] `Parsing` -- quote with :keyword
+
+# format
+
+[format] format
+
+# match
+
+[match] match -- just view data as pattern
