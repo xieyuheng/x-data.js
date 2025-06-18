@@ -11,19 +11,19 @@ For example, we can represent the following JSON:
 
 as x-data:
 
-```lisp
+```scheme
 [:oranges 2 :apples 6 :pears 5]
 ```
 
 Quoted list:
 
-```lisp
+```scheme
 '(lambda (x) x)
 ```
 
 evaluates to:
 
-```lisp
+```scheme
 ['lambda ['x] 'x]
 ```
 
@@ -32,13 +32,13 @@ with good support for error reporting.
 
 For example:
 
-```lisp
+```scheme
 (lambda (x) x)
 ```
 
 can be read to:
 
-```lisp
+```scheme
 ['lambda ['x] 'x :row 0 :colum 0]
 ```
 
