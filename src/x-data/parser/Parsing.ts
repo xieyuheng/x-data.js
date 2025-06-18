@@ -3,7 +3,7 @@ import { type Data } from "../data/index.ts"
 import { InternalError, ParsingError } from "../errors/index.ts"
 import { Parser } from "../parser/index.ts"
 import { initPosition } from "../position/index.ts"
-import { Span } from "../span/index.ts"
+import { Span, spanToData } from "../span/index.ts"
 import { Token } from "../token/index.ts"
 
 type Result = { data: Data; remain: Array<Token> }
@@ -24,76 +24,75 @@ export class Parsing {
       )
     }
 
-    switch (tokens[0].kind) {
+    const token = tokens[0]
+
+    switch (token.kind) {
       case "Symbol": {
         return {
-          // TODO span to attributes: tokens[0].span
-          data: X.Symbol(tokens[0].value),
+          data: X.Symbol(token.value, spanToData(token.span).attributes),
           remain: tokens.slice(1),
         }
       }
 
       case "Number": {
-        const value = JSON.parse(tokens[0].value)
+        const value = JSON.parse(token.value)
         if (typeof value !== "number") {
           throw new InternalError(
             `I expect value to be a JSON number: ${value}`,
           )
         }
 
-        // TODO span to attributes: tokens[0].span
         if (Number.isInteger(value)) {
           return {
-            data: X.Int(value),
+            data: X.Int(value, spanToData(token.span).attributes),
             remain: tokens.slice(1),
           }
         } else {
           return {
-            data: X.Float(value),
+            data: X.Float(value, spanToData(token.span).attributes),
             remain: tokens.slice(1),
           }
         }
       }
 
       case "String": {
-        const value = JSON.parse(tokens[0].value)
+        const value = JSON.parse(token.value)
         if (typeof value !== "string") {
           throw new InternalError(
             `I expect value to be a JSON string: ${value}`,
           )
         }
 
-        // TODO span to attributes: tokens[0].span
         return {
-          data: X.String(value),
+          data: X.String(value, spanToData(token.span).attributes),
           remain: tokens.slice(1),
         }
       }
 
       // case "ParenthesisStart": {
       //   return this.parseList(
-      //     tokens[0],
+      //     token,
       //     tokens.slice(1),
-      //     Sexps.Null(tokens[0].span),
+      //     Sexps.Null(token.span),
       //   )
       // }
 
       // case "ParenthesisEnd": {
-      //   throw new ParsingError(`I found extra ParenthesisEnd`, tokens[0].span)
+      //   throw new ParsingError(`I found extra ParenthesisEnd`, token.span)
       // }
 
       // case "Quote": {
       //   const { sexp, remain } = this.parse(tokens.slice(1))
 
       //   const first = Sexps.Sym(
-      //     this.parser.config.findQuoteSymbolOrFail(tokens[0].value),
-      //     tokens[0].span,
+      //     this.parser.config.findQuoteSymbolOrFail(token.value),
+      //     token.span,
       //   )
 
       //   const second = Sexps.Cons(
       //     sexp,
-      //     Sexps.Null(tokens[0].span),
-      //     tokens[0].span.union(sexp.span),
+      //     Sexps.Null(token.span),
+      //     token.span.union(sexp.span),
       //   )
 
       //   return {
