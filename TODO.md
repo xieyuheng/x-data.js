@@ -1,4 +1,4 @@
-[x-data] `spanToAttributes`
+[x-data] `spanToData`
 
 [x-data] `Parsing` -- list from ParenthesisStart
 [x-data] `Parsing` -- quote

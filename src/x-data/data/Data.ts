@@ -67,3 +67,11 @@ export function List(content: Array<Data>, attributes?: Attributes): List {
     attributes: attributes || {},
   }
 }
+
+export function Record(attributes: Attributes): List {
+  return {
+    type: "List",
+    content: [],
+    attributes,
+  }
+}
