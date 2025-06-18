@@ -69,17 +69,17 @@ export class Parsing {
         }
       }
 
-      // case "BracketStart": {
-      //   return this.parseList(
-      //     token,
-      //     tokens.slice(1),
-      //     Sexps.Null(token.span),
-      //   )
-      // }
+      case "BracketStart": {
+        return this.parseList(
+          token,
+          tokens.slice(1),
+          X.List([], spanToData(token.span).attributes),
+        )
+      }
 
-      // case "BracketEnd": {
-      //   throw new ParsingError(`I found extra BracketEnd`, token.span)
-      // }
+      case "BracketEnd": {
+        throw new ParsingError(`I found extra BracketEnd`, token.span)
+      }
 
       // case "Quote": {
       //   const { sexp, remain } = this.parse(tokens.slice(1))
@@ -104,6 +104,48 @@ export class Parsing {
       default: {
         throw new Error("TODO")
       }
+    }
+  }
+
+  private parseList(start: Token, tokens: Array<Token>, list: X.List): Result {
+    if (tokens[0] === undefined) {
+      throw new ParsingError(`Missing BracketEnd`, start.span)
+    }
+
+    const token = tokens[0]
+
+    if (token.kind === "Symbol" && token.value === ".") {
+      const { data, remain } = this.parse(tokens.slice(1))
+
+      if (remain[0] === undefined) {
+        throw new ParsingError(`Missing BracketEnd`, start.span)
+      }
+
+      if (!this.parser.config.matchBrackets(start.value, remain[0].value)) {
+        throw new ParsingError(`I expect a matching BracketEnd`, remain[0].span)
+      }
+
+      return { data, remain: remain.slice(1) }
+    }
+
+    if (token.kind === "BracketEnd") {
+      if (!this.parser.config.matchBrackets(start.value, token.value)) {
+        throw new ParsingError(`I expect a matching BracketEnd`, token.span)
+      }
+
+      list.attributes = spanToData(token.span).attributes
+
+      return { data: list, remain: tokens.slice(1) }
+    }
+
+    const head = this.parse(tokens)
+    const { data, remain } = this.parseList(start, head.remain, list)
+
+    // TODO call spanUnion
+    return {
+      data: X.Cons(head.data, data, data.attributes),
+      // data: X.Cons(head.data, data, spanUnion(head.data.span, data.span)),
+      remain,
     }
   }
 }

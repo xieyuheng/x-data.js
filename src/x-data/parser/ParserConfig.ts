@@ -2,23 +2,23 @@ import { InternalError } from "../errors/index.ts"
 
 export interface ParserOptions {
   quotes: Array<{ mark: string; symbol: string }>
-  parentheses: Array<{ start: string; end: string }>
+  brackets: Array<{ start: string; end: string }>
   comments: Array<string>
 }
 
 export class ParserConfig {
   quotes: Array<{ mark: string; symbol: string }>
-  parentheses: Array<{ start: string; end: string }>
+  brackets: Array<{ start: string; end: string }>
   comments: Array<string>
   marks: Array<string>
 
   constructor(options: ParserOptions) {
     this.quotes = options.quotes
-    this.parentheses = options.parentheses
+    this.brackets = options.brackets
     this.comments = options.comments
     this.marks = [
       ...options.quotes.map(({ mark }) => mark),
-      ...options.parentheses.flatMap(({ start, end }) => [start, end]),
+      ...options.brackets.flatMap(({ start, end }) => [start, end]),
     ]
   }
 
@@ -26,8 +26,8 @@ export class ParserConfig {
     return this.marks.some((x) => x === value)
   }
 
-  matchParentheses(start: string, end: string): boolean {
-    const found = this.parentheses.find((entry) => entry.start === start)
+  matchBrackets(start: string, end: string): boolean {
+    const found = this.brackets.find((entry) => entry.start === start)
     if (found === undefined) {
       return false
     }

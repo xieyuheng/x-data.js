@@ -9,7 +9,7 @@ const parser = new Parser({
     { mark: ",", symbol: "unquote" },
     { mark: "`", symbol: "quasiquote" },
   ],
-  parentheses: [
+  brackets: [
     { start: "(", end: ")" },
     { start: "[", end: "]" },
   ],
@@ -34,4 +34,18 @@ test("number", () => {
   assertData("0", X.Int(0))
   assertData("-1", X.Int(-1))
   assertData("3.14", X.Float(3.14))
+})
+
+test("list", () => {
+  assertData("()", X.List([]))
+  assertData("(a b c)", X.List([X.Symbol("a"), X.Symbol("b"), X.Symbol("c")]))
+  assertData(
+    "(a (b) c)",
+    X.List([X.Symbol("a"), X.List([X.Symbol("b")]), X.Symbol("c")]),
+  )
+})
+
+test("list", () => {
+  // assertData("[]", X.List([]))
+  // assertData("[a b c]", X.List([X.Symbol("a"), X.Symbol("b"), X.Symbol("c")]))
 })
