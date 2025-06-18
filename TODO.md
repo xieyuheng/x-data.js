@@ -1,4 +1,3 @@
-[x-data] extract `spanUnion`
 [x-data] extract `spanReport`
 [x-data] `Parsing` -- `spanToAttributes`
 [x-data] `Parsing` -- list from ParenthesisStart

@@ -20,18 +20,18 @@ export class Span {
     return this.end.index
   }
 
-  union(that: Span): Span {
-    const start = this.start.index < that.start.index ? this.start : that.start
-    const end = this.end.index > that.end.index ? this.end : that.end
-    return new Span(start, end)
-  }
-
   report(context: string): string {
     let s = repr_in_context(this, context)
     s = decorate_line_number(s)
     s = line_span_focus(to_line_span_in_context(this, context), s, 3)
     return s
   }
+}
+
+export function spanUnion(x: Span, y: Span): Span {
+  const start = x.start.index < y.start.index ? x.start : y.start
+  const end = x.end.index > y.end.index ? x.end : y.end
+  return new Span(start, end)
 }
 
 // TODO The code is copied from `@cicada-lang/partech`,
