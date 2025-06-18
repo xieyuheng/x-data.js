@@ -29,7 +29,7 @@ export class Parsing {
     switch (token.kind) {
       case "Symbol": {
         return {
-          data: X.Symbol(token.value, spanToData(token.span).attributes),
+          data: X.String(token.value, spanToData(token.span).attributes),
           remain: tokens.slice(1),
         }
       }
@@ -84,7 +84,7 @@ export class Parsing {
       case "Quote": {
         const { data, remain } = this.parse(tokens.slice(1))
 
-        const first = X.Symbol(
+        const first = X.String(
           this.parser.config.findQuoteSymbolOrFail(token.value),
           spanToData(token.span).attributes,
         )

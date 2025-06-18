@@ -21,8 +21,8 @@ function assertParse(text: string, data: X.Data): void {
 }
 
 test("symbol", () => {
-  assertParse("abc", X.Symbol("abc"))
-  assertParse("3-sphere", X.Symbol("3-sphere"))
+  assertParse("abc", X.String("abc"))
+  assertParse("3-sphere", X.String("3-sphere"))
 })
 
 test("string", () => {
@@ -38,43 +38,43 @@ test("number", () => {
 
 test("list in round brackets", () => {
   assertParse("()", X.List([]))
-  assertParse("(a b c)", X.List([X.Symbol("a"), X.Symbol("b"), X.Symbol("c")]))
+  assertParse("(a b c)", X.List([X.String("a"), X.String("b"), X.String("c")]))
   assertParse(
     "(a (b) c)",
-    X.List([X.Symbol("a"), X.List([X.Symbol("b")]), X.Symbol("c")]),
+    X.List([X.String("a"), X.List([X.String("b")]), X.String("c")]),
   )
 })
 
 test("list in square brackets", () => {
   // assertParse("[]", X.List([]))
-  // assertParse("[a b c]", X.List([X.Symbol("a"), X.Symbol("b"), X.Symbol("c")]))
+  // assertParse("[a b c]", X.List([X.String("a"), X.String("b"), X.String("c")]))
 })
 
 test("quotes", () => {
-  assertParse("'a", X.List([X.Symbol("quote"), X.Symbol("a")]))
-  assertParse("'(a)", X.List([X.Symbol("quote"), X.List([X.Symbol("a")])]))
+  assertParse("'a", X.List([X.String("quote"), X.String("a")]))
+  assertParse("'(a)", X.List([X.String("quote"), X.List([X.String("a")])]))
   assertParse(
     "'(a b c)",
     X.List([
-      X.Symbol("quote"),
-      X.List([X.Symbol("a"), X.Symbol("b"), X.Symbol("c")]),
+      X.String("quote"),
+      X.List([X.String("a"), X.String("b"), X.String("c")]),
     ]),
   )
   assertParse(
     ",(a b c)",
     X.List([
-      X.Symbol("unquote"),
-      X.List([X.Symbol("a"), X.Symbol("b"), X.Symbol("c")]),
+      X.String("unquote"),
+      X.List([X.String("a"), X.String("b"), X.String("c")]),
     ]),
   )
   assertParse(
     "`(a ,b c)",
     X.List([
-      X.Symbol("quasiquote"),
+      X.String("quasiquote"),
       X.List([
-        X.Symbol("a"),
-        X.List([X.Symbol("unquote"), X.Symbol("b")]),
-        X.Symbol("c"),
+        X.String("a"),
+        X.List([X.String("unquote"), X.String("b")]),
+        X.String("c"),
       ]),
     ]),
   )

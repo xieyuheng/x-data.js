@@ -1,7 +1,7 @@
 # data
 
-[data] `dataToJson`
 [data] `dataFromJson`
+[data] `dataToJson`
 
 # parser
 
