@@ -1,5 +1,3 @@
-[x-data] `spanToData`
-
 [x-data] `Parsing` -- list from ParenthesisStart
 [x-data] `Parsing` -- quote
 [x-data] `Parsing` -- list from `[...]`
