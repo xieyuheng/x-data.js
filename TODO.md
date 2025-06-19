@@ -1,6 +1,6 @@
-# format
+`parse/` instead of `parser/`
 
-[format] `formatData`
+[span] `dataRemoveSpan` -- quit using `assert.partialDeepStrictEqual`
 
 # match
 
