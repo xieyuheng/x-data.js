@@ -9,7 +9,7 @@ For example, we can represent the following JSON:
 { "oranges": 2, "apples": 6, "pears": 5 }
 ```
 
-as x-data:
+as:
 
 ```scheme
 [:oranges 2 :apples 6 :pears 5]
@@ -28,7 +28,7 @@ evaluates to:
 ```
 
 This is useful for writing interpreter in lisp
-with good support for error reporting.
+with good support for error report.
 
 For example:
 
