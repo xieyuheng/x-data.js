@@ -1,3 +1,5 @@
+move x-data to top level
+
 # data
 
 [data] `dataToJson`
@@ -17,7 +19,3 @@
 # match
 
 [match] match -- just view data as pattern
-
-# command
-
-`match` -- match data (viewed as pattern) against data to data (record)
