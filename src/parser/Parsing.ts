@@ -111,7 +111,7 @@ export class Parsing {
         const { data, remain } = this.parse(tokens.slice(1))
 
         const quoteSymbol = X.String(
-          this.parser.config.findQuoteSymbolOrFail(token.value),
+          this.parser.lexer.config.findQuoteSymbolOrFail(token.value),
           spanToAttributes(token.span),
         )
 
@@ -136,7 +136,7 @@ export class Parsing {
     const token = tokens[0]
 
     if (token.kind === "BracketEnd") {
-      if (!this.parser.config.matchBrackets(start.value, token.value)) {
+      if (!this.parser.lexer.config.matchBrackets(start.value, token.value)) {
         throw new ParsingError(`I expect a matching BracketEnd`, token.span)
       }
 

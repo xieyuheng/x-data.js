@@ -1,18 +1,22 @@
 import { type Data } from "../data/index.ts"
 import { ParsingError } from "../errors/index.ts"
 import { Lexer } from "../lexer/index.ts"
-import { ParserConfig, type ParserOptions } from "../parser/index.ts"
 import { Token } from "../token/index.ts"
 import { Parsing } from "./Parsing.ts"
 
 export class Parser {
-  lexer: Lexer
-  config: ParserConfig
-
-  constructor(options: ParserOptions) {
-    this.lexer = new Lexer(options)
-    this.config = this.lexer.config
-  }
+  lexer = new Lexer({
+    quotes: [
+      { mark: "'", symbol: "quote" },
+      { mark: ",", symbol: "unquote" },
+      { mark: "`", symbol: "quasiquote" },
+    ],
+    brackets: [
+      { start: "(", end: ")" },
+      { start: "[", end: "]" },
+    ],
+    comments: [";"],
+  })
 
   parseData(text: string): Data {
     const tokens = this.lexer.lex(text)

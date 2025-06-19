@@ -3,18 +3,7 @@ import { test } from "node:test"
 import * as X from "../data/index.ts"
 import { Parser } from "../parser/index.ts"
 
-const parser = new Parser({
-  quotes: [
-    { mark: "'", symbol: "quote" },
-    { mark: ",", symbol: "unquote" },
-    { mark: "`", symbol: "quasiquote" },
-  ],
-  brackets: [
-    { start: "(", end: ")" },
-    { start: "[", end: "]" },
-  ],
-  comments: [";"],
-})
+const parser = new Parser()
 
 function assertParse(text: string, data: X.Data): void {
   assert.partialDeepStrictEqual(parser.parseData(text), data)
