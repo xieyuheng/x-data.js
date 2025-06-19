@@ -28,6 +28,27 @@ export class Parsing {
 
     switch (token.kind) {
       case "Symbol": {
+        if (token.value === "#f") {
+          return {
+            data: X.Bool(false, dataFromJson(token.span).attributes),
+            remain: tokens.slice(1),
+          }
+        }
+
+        if (token.value === "#t") {
+          return {
+            data: X.Bool(true, dataFromJson(token.span).attributes),
+            remain: tokens.slice(1),
+          }
+        }
+
+        if (token.value.startsWith("#")) {
+          throw new ParsingError(
+            `unknown special symbol: ${token.value}`,
+            token.span,
+          )
+        }
+
         return {
           data: X.String(token.value, dataFromJson(token.span).attributes),
           remain: tokens.slice(1),

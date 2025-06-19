@@ -29,6 +29,11 @@ test("string", () => {
   assertParse('"abc"', X.String("abc"))
 })
 
+test("bool", () => {
+  assertParse("#t", X.Bool(true))
+  assertParse("#f", X.Bool(false))
+})
+
 test("number", () => {
   assertParse("1", X.Int(1))
   assertParse("0", X.Int(0))
