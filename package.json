@@ -13,8 +13,7 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "test": "node --test",
-    "test:watch": "node --test --watch",
+    "test": "node --test lib/**/*.test.js",
     "format": "prettier src --write"
   },
   "dependencies": {
