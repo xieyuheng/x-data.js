@@ -1,9 +1,9 @@
 import * as X from "../data/index.ts"
-import { type Data, dataFromJson } from "../data/index.ts"
+import { type Data } from "../data/index.ts"
 import { InternalError, ParsingError } from "../errors/index.ts"
 import { Parser } from "../parser/index.ts"
 import { initPosition } from "../position/index.ts"
-import { Span } from "../span/index.ts"
+import { Span, spanToAttributes } from "../span/index.ts"
 import { Token } from "../token/index.ts"
 
 type Result = { data: Data; remain: Array<Token> }
@@ -30,14 +30,14 @@ export class Parsing {
       case "Symbol": {
         if (token.value === "#f") {
           return {
-            data: X.Bool(false, dataFromJson(token.span).attributes),
+            data: X.Bool(false, spanToAttributes(token.span)),
             remain: tokens.slice(1),
           }
         }
 
         if (token.value === "#t") {
           return {
-            data: X.Bool(true, dataFromJson(token.span).attributes),
+            data: X.Bool(true, spanToAttributes(token.span)),
             remain: tokens.slice(1),
           }
         }
@@ -50,7 +50,7 @@ export class Parsing {
         }
 
         return {
-          data: X.String(token.value, dataFromJson(token.span).attributes),
+          data: X.String(token.value, spanToAttributes(token.span)),
           remain: tokens.slice(1),
         }
       }
@@ -65,12 +65,12 @@ export class Parsing {
 
         if (Number.isInteger(value)) {
           return {
-            data: X.Int(value, dataFromJson(token.span).attributes),
+            data: X.Int(value, spanToAttributes(token.span)),
             remain: tokens.slice(1),
           }
         } else {
           return {
-            data: X.Float(value, dataFromJson(token.span).attributes),
+            data: X.Float(value, spanToAttributes(token.span)),
             remain: tokens.slice(1),
           }
         }
@@ -85,7 +85,7 @@ export class Parsing {
         }
 
         return {
-          data: X.String(value, dataFromJson(token.span).attributes),
+          data: X.String(value, spanToAttributes(token.span)),
           remain: tokens.slice(1),
         }
       }
@@ -94,7 +94,7 @@ export class Parsing {
         return this.parseList(
           token,
           tokens.slice(1),
-          X.List([], dataFromJson(token.span).attributes),
+          X.List([], spanToAttributes(token.span)),
         )
       }
 
@@ -105,23 +105,16 @@ export class Parsing {
       case "Quote": {
         const { data, remain } = this.parse(tokens.slice(1))
 
-        const first = X.String(
+        const quoteSymbol = X.String(
           this.parser.config.findQuoteSymbolOrFail(token.value),
-          dataFromJson(token.span).attributes,
+          spanToAttributes(token.span),
         )
 
-        // TODO spanUnion(token.span, data.span)
-        const second = X.List([data], data.attributes)
-
-        // TODO spanUnion(first.span, second.span)
+        // TODO union(token.span, data.span)
         return {
-          data: X.Cons(first, second, second.attributes),
+          data: X.List([quoteSymbol, data], data.attributes),
           remain,
         }
-      }
-
-      default: {
-        throw new Error("TODO")
       }
     }
   }
@@ -138,7 +131,7 @@ export class Parsing {
         throw new ParsingError(`I expect a matching BracketEnd`, token.span)
       }
 
-      list.attributes = dataFromJson(token.span).attributes
+      list.attributes = spanToAttributes(token.span)
       return { data: list, remain: tokens.slice(1) }
     } else {
       const head = this.parse(tokens)
