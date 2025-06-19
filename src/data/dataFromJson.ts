@@ -1,10 +1,10 @@
-import { type Json, isJsonArray, isJsonObject } from "../utils/Json.ts"
+import { isJsonArray, isJsonObject } from "../utils/Json.ts"
 import * as X from "./Data.ts"
 
 // Can not handle null and undefined,
 // when found in a record, they will be ignored.
 
-export function dataFromJson(json: Json): X.Data {
+export function dataFromJson(json: any): X.Data {
   if (typeof json === "string") {
     return X.String(json)
   }
