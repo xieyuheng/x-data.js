@@ -1,12 +1,12 @@
-import { ParserConfig, type ParserOptions } from "../parser/index.ts"
+import { LexerConfig, type LexerOptions } from "../lexer/index.ts"
 import { Token } from "../token/index.ts"
 import { Lexing } from "./Lexing.ts"
 
 export class Lexer {
-  config: ParserConfig
+  config: LexerConfig
 
-  constructor(options: ParserOptions) {
-    this.config = new ParserConfig(options)
+  constructor(options: LexerOptions) {
+    this.config = new LexerConfig(options)
   }
 
   lex(text: string): Array<Token> {

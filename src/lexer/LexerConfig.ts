@@ -1,18 +1,18 @@
 import { InternalError } from "../errors/index.ts"
 
-export interface ParserOptions {
+export interface LexerOptions {
   quotes: Array<{ mark: string; symbol: string }>
   brackets: Array<{ start: string; end: string }>
   comments: Array<string>
 }
 
-export class ParserConfig {
+export class LexerConfig {
   quotes: Array<{ mark: string; symbol: string }>
   brackets: Array<{ start: string; end: string }>
   comments: Array<string>
   marks: Array<string>
 
-  constructor(options: ParserOptions) {
+  constructor(options: LexerOptions) {
     this.quotes = options.quotes
     this.brackets = options.brackets
     this.comments = options.comments
