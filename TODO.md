@@ -1,6 +1,6 @@
 # format
 
-[format] format
+[format] `formatData`
 
 # match
 
