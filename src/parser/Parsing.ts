@@ -140,24 +140,15 @@ export class Parsing {
         throw new ParsingError(`I expect a matching BracketEnd`, token.span)
       }
 
-      list.attributes = spanToAttributes(token.span)
+      list.attributes = spanToAttributes(
+        spanUnion(spanFromAttributes(list.attributes), token.span),
+      )
+
       return { data: list, remain: tokens.slice(1) }
     } else {
       const head = this.parse(tokens)
       const { data, remain } = this.parseList(start, head.remain, list)
-      return {
-        data: X.Cons(
-          head.data,
-          data,
-          spanToAttributes(
-            spanUnion(
-              spanFromAttributes(head.data.attributes),
-              spanFromAttributes(data.attributes),
-            ),
-          ),
-        ),
-        remain,
-      }
+      return { data: X.Cons(head.data, data), remain }
     }
   }
 }
