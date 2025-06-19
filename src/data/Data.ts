@@ -11,6 +11,15 @@ export type List = {
 }
 export type Attributes = Record<string, Data>
 
+export function isAtom(data: Data): data is Atom {
+  return (
+    data.kind === "Bool" ||
+    data.kind === "String" ||
+    data.kind === "Int" ||
+    data.kind === "Float"
+  )
+}
+
 export function Bool(content: boolean, attributes?: Attributes): Bool {
   return {
     kind: "Bool",

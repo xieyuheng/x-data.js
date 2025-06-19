@@ -1,7 +1,3 @@
-# data
-
-[data] `dataToJson`
-
 # parser
 
 [parser] `Parsing` -- `#t` and `#f` to `Bool`
