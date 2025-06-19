@@ -4,4 +4,4 @@
 
 # match
 
-[match] match -- just view data as pattern
+[match] `matchData` -- just view data as pattern
