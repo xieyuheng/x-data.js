@@ -1,5 +1,3 @@
-move x-data to top level
-
 # data
 
 [data] `dataToJson`

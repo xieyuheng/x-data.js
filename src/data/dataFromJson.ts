@@ -1,4 +1,4 @@
-import { type Json, isJsonArray, isJsonObject } from "../../utils/Json.ts"
+import { type Json, isJsonArray, isJsonObject } from "../utils/Json.ts"
 import * as X from "./Data.ts"
 
 // Can not handle null and undefined,

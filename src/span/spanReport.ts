@@ -1,6 +1,6 @@
-import { color, type ColorMode } from "../../utils/color.ts"
-import { intervalOverlap } from "../../utils/interval.ts"
-import { isBrowser } from "../../utils/isBrowser.ts"
+import { color, type ColorMode } from "../utils/color.ts"
+import { intervalOverlap } from "../utils/interval.ts"
+import { isBrowser } from "../utils/isBrowser.ts"
 import { type Span } from "./Span.ts"
 
 // TODO The code is copied from `@cicada-lang/partech`,
