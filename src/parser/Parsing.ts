@@ -131,6 +131,8 @@ export class Parsing {
 
   private parseList(start: Token, tokens: Array<Token>): Result {
     const array: Array<X.Data> = []
+    const attributes: X.Attributes = {}
+
     while (true) {
       if (tokens[0] === undefined) {
         throw new ParsingError(`Missing BracketEnd`, start.span)
@@ -144,12 +146,19 @@ export class Parsing {
         }
 
         return {
-          data: X.List(
-            array,
-            spanToAttributes(spanUnion(start.span, token.span)),
-          ),
+          data: X.List(array, {
+            ...attributes,
+            ...spanToAttributes(spanUnion(start.span, token.span)),
+          }),
           remain: tokens.slice(1),
         }
+      }
+
+      if (token.kind === "Symbol" && token.value.startsWith(":")) {
+        const head = this.parse(tokens.slice(1))
+        attributes[token.value.slice(1)] = head.data
+        tokens = head.remain
+        continue
       }
 
       const head = this.parse(tokens)

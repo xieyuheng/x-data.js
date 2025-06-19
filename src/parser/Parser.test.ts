@@ -52,6 +52,17 @@ test("list in square brackets", () => {
   )
 })
 
+test("list with attributes", () => {
+  assertParse("(:x 1 :y 2)", X.Record({ x: X.Int(1), y: X.Int(2) }))
+  assertParse(
+    "(a b c :x 1 :y 2)",
+    X.List([X.String("a"), X.String("b"), X.String("c")], {
+      x: X.Int(1),
+      y: X.Int(2),
+    }),
+  )
+})
+
 test("quotes", () => {
   assertParse("'a", X.List([X.String("quote"), X.String("a")]))
   assertParse("'(a)", X.List([X.String("quote"), X.List([X.String("a")])]))
