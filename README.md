@@ -36,7 +36,7 @@ For example:
 (lambda (x) x)
 ```
 
-can be read to:
+can be parsed to:
 
 ```scheme
 ['lambda ['x] 'x :row 0 :colum 0]
