@@ -1,5 +1,3 @@
-[span] `spanFromAttributes`
-
 # parser
 
 [parser] `Parsing` -- call `dataToJson` and `spanUnion`
