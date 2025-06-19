@@ -3,7 +3,12 @@ import { type Data } from "../data/index.ts"
 import { InternalError, ParsingError } from "../errors/index.ts"
 import { Parser } from "../parser/index.ts"
 import { initPosition } from "../position/index.ts"
-import { Span, spanToAttributes } from "../span/index.ts"
+import {
+  Span,
+  spanFromAttributes,
+  spanToAttributes,
+  spanUnion,
+} from "../span/index.ts"
 import { Token } from "../token/index.ts"
 
 type Result = { data: Data; remain: Array<Token> }
@@ -110,9 +115,13 @@ export class Parsing {
           spanToAttributes(token.span),
         )
 
-        // TODO union(token.span, data.span)
         return {
-          data: X.List([quoteSymbol, data], data.attributes),
+          data: X.List(
+            [quoteSymbol, data],
+            spanToAttributes(
+              spanUnion(token.span, spanFromAttributes(data.attributes)),
+            ),
+          ),
           remain,
         }
       }
@@ -136,10 +145,17 @@ export class Parsing {
     } else {
       const head = this.parse(tokens)
       const { data, remain } = this.parseList(start, head.remain, list)
-      // TODO call spanUnion
       return {
-        data: X.Cons(head.data, data, data.attributes),
-        // data: X.Cons(head.data, data, spanUnion(head.data.span, data.span)),
+        data: X.Cons(
+          head.data,
+          data,
+          spanToAttributes(
+            spanUnion(
+              spanFromAttributes(head.data.attributes),
+              spanFromAttributes(data.attributes),
+            ),
+          ),
+        ),
         remain,
       }
     }

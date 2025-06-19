@@ -1,6 +1,5 @@
 # parser
 
-[parser] `Parsing` -- call `dataToJson` and `spanUnion`
 [parser] `Parsing` -- list from `BracketStart` -- `[]` -- `make-list`
 [parser] `Parsing` -- save :key to attributes
 [parser] `Parsing` -- quote with :key
