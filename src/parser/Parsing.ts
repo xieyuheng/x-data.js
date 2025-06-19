@@ -96,11 +96,7 @@ export class Parsing {
       }
 
       case "BracketStart": {
-        return this.parseList(
-          token,
-          tokens.slice(1),
-          X.List([], spanToAttributes(token.span)),
-        )
+        return this.parseList(token, tokens.slice(1))
       }
 
       case "BracketEnd": {
@@ -128,27 +124,32 @@ export class Parsing {
     }
   }
 
-  private parseList(start: Token, tokens: Array<Token>, list: X.List): Result {
-    if (tokens[0] === undefined) {
-      throw new ParsingError(`Missing BracketEnd`, start.span)
-    }
-
-    const token = tokens[0]
-
-    if (token.kind === "BracketEnd") {
-      if (!this.parser.lexer.config.matchBrackets(start.value, token.value)) {
-        throw new ParsingError(`I expect a matching BracketEnd`, token.span)
+  private parseList(start: Token, tokens: Array<Token>): Result {
+    const array: Array<X.Data> = []
+    while (true) {
+      if (tokens[0] === undefined) {
+        throw new ParsingError(`Missing BracketEnd`, start.span)
       }
 
-      list.attributes = spanToAttributes(
-        spanUnion(spanFromAttributes(list.attributes), token.span),
-      )
+      const token = tokens[0]
 
-      return { data: list, remain: tokens.slice(1) }
-    } else {
+      if (token.kind === "BracketEnd") {
+        if (!this.parser.lexer.config.matchBrackets(start.value, token.value)) {
+          throw new ParsingError(`I expect a matching BracketEnd`, token.span)
+        }
+
+        return {
+          data: X.List(
+            array,
+            spanToAttributes(spanUnion(start.span, token.span)),
+          ),
+          remain: tokens.slice(1),
+        }
+      }
+
       const head = this.parse(tokens)
-      const { data, remain } = this.parseList(start, head.remain, list)
-      return { data: X.Cons(head.data, data), remain }
+      array.push(head.data)
+      tokens = head.remain
     }
   }
 }

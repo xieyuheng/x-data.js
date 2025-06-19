@@ -64,18 +64,6 @@ export function List(content: Array<Data>, attributes?: Attributes): List {
   }
 }
 
-export function Cons(head: Data, tail: Data): List {
-  if (tail.kind !== "List") {
-    throw new Error(`[Cons] tail to be a list, tail kind: ${tail.kind}.`)
-  }
-
-  return {
-    kind: "List",
-    content: [head, ...tail.content],
-    attributes: tail.attributes,
-  }
-}
-
 export function Record(attributes: Attributes): List {
   return {
     kind: "List",
