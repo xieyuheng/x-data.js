@@ -78,6 +78,30 @@ function matchAttributes(
   )
 }
 
+function matchList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
+  switch (mode) {
+    case "NormalMode": {
+      return effectChoice([
+        matchMakeList(mode, pattern, data),
+        matchQuote(mode, pattern, data),
+        matchQuasiquote(mode, pattern, data),
+        matchCons(mode, pattern, data),
+      ])
+    }
+
+    case "QuoteMode": {
+      return matchQuotedList(mode, pattern, data)
+    }
+
+    case "QuasiquoteMode": {
+      return effectChoice([
+        matchUnquote(mode, pattern, data),
+        matchQuotedList(mode, pattern, data),
+      ])
+    }
+  }
+}
+
 function matchQuotedList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return guardEffect(
     pattern.kind === "List" &&
@@ -97,29 +121,6 @@ function matchQuotedList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
         matchAttributes(mode, pattern.attributes, data.attributes),
       ]),
   )
-}
-
-function matchList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
-  switch (mode) {
-    case "NormalMode": {
-      return effectChoice([
-        matchMakeList(mode, pattern, data),
-        matchQuote(mode, pattern, data),
-        matchQuasiquote(mode, pattern, data),
-      ])
-    }
-
-    case "QuoteMode": {
-      return matchQuotedList(mode, pattern, data)
-    }
-
-    case "QuasiquoteMode": {
-      return effectChoice([
-        matchUnquote(mode, pattern, data),
-        matchQuotedList(mode, pattern, data),
-      ])
-    }
-  }
 }
 
 function matchUnquote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
@@ -192,6 +193,32 @@ function matchQuasiquote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
           firstData.attributes,
           data.attributes,
         ),
+      ])
+    },
+  )
+}
+
+function matchCons(mode: Mode, pattern: X.Data, data: X.Data): Effect {
+  return guardEffect(
+    pattern.kind === "List" &&
+      data.kind === "List" &&
+      pattern.content.length === 3 &&
+      pattern.content[0].kind === "String" &&
+      pattern.content[0].content === "cons",
+    () => {
+      const listPattern = pattern as X.List
+      const headPattern = listPattern.content[1]
+      const tailPattern = listPattern.content[2]
+
+      const listData = data as X.List
+      if (listData.content.length === 0) return failEffect()
+      const headData = listData.content[0]
+      const tailData = X.List(listData.content.slice(1))
+
+      return effectSequence([
+        matchData(mode, headPattern, headData),
+        matchData(mode, tailPattern, tailData),
+        matchAttributes(mode, pattern.attributes, data.attributes),
       ])
     },
   )

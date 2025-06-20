@@ -86,3 +86,7 @@ test("quasiquote", () => {
   assertMatch("`x", "x", "[]")
   assertMatch("`(lambda (,x) ,x)", "(lambda (x) x)", "[:x x]")
 })
+
+test("cons", () => {
+  assertMatch("(cons head tail)", "(f x y)", "[:head f :tail (x y)]")
+})
