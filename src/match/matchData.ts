@@ -80,6 +80,7 @@ function matchAttributes(
   for (const key of Object.keys(patternAttributes)) {
     const pattern = patternAttributes[key]
     const data = dataAttributes[key]
+    if (!data) return
     const newSubstitution = matchData(pattern, data, substitution)
     if (!newSubstitution) return
 
@@ -125,14 +126,16 @@ function matchQuote(
   data: X.Data,
   substitution: Substitution,
 ): Substitution | undefined {
-  if (pattern.kind === "List" && data.kind === "String") {
+  if (pattern.kind === "List") {
     if (pattern.content.length === 0) return
 
     const keyword = pattern.content[0]
     if (keyword.kind !== "String") return
     if (keyword.content !== "quote") return
 
-    if (!deepEqual(pattern.content[1], data)) return
+    const firstData = pattern.content[1]
+    if (!firstData) return
+    if (!deepEqual(firstData.content, data.content)) return
 
     return matchAttributes(pattern.attributes, data.attributes, substitution)
   }

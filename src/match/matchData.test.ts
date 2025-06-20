@@ -1,27 +1,29 @@
 import assert from "node:assert"
 import { test } from "node:test"
+import * as X from "../data/index.ts"
 import { dataPruneAttributes } from "../data/index.ts"
 import { matchData } from "../match/index.ts"
 import { parseData } from "../parse/index.ts"
 
 function assertMatch(
-  patternText: string,
-  dataText: string,
-  expectedText: string,
+  patternInput: string,
+  dataInput: string | X.Data,
+  expectedInput: string,
 ): void {
-  const substitution = matchData(
-    dataPruneAttributes(parseData(patternText), ["span"]),
-    dataPruneAttributes(parseData(dataText), ["span"]),
-    {},
-  )
-  const expectedData = dataPruneAttributes(parseData(expectedText), ["span"])
+  const pattern = dataPruneAttributes(parseData(patternInput), ["span"])
+  const data =
+    typeof dataInput === "string"
+      ? dataPruneAttributes(parseData(dataInput), ["span"])
+      : dataInput
+  const substitution = matchData(pattern, data, {})
+  const expectedData = dataPruneAttributes(parseData(expectedInput), ["span"])
   assert.deepStrictEqual(substitution, expectedData.attributes)
 }
 
-function assertMatchFail(patternText: string, dataText: string): void {
+function assertMatchFail(patternInput: string, dataInput: string): void {
   const substitution = matchData(
-    dataPruneAttributes(parseData(patternText), ["span"]),
-    dataPruneAttributes(parseData(dataText), ["span"]),
+    dataPruneAttributes(parseData(patternInput), ["span"]),
+    dataPruneAttributes(parseData(dataInput), ["span"]),
     {},
   )
   assert.deepStrictEqual(substitution, undefined)
@@ -57,4 +59,11 @@ test("list", () => {
 test("quote", () => {
   assertMatch("'x", "x", "[]")
   assertMatch("['lambda [x] x]", "(lambda (x) x)", "[:x x]")
+
+  assertMatch("(quote x)", "x", "[]")
+  assertMatch("(quote x :a a)", X.String("x", { a: X.Int(1) }), "[:a 1]")
+  assertMatchFail("(quote x :a 1)", "x")
+
+  assertMatch("(quote 3)", X.Int(3), "[]")
+  assertMatch("(quote 3 :a a)", X.Int(3, { a: X.Bool(false) }), "[:a #f]")
 })
