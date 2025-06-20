@@ -1,5 +1,3 @@
-`parse/` instead of `parser/`
-
 [span] `dataRemoveSpan` -- quit using `assert.partialDeepStrictEqual`
 
 # match

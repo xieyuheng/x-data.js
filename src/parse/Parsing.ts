@@ -1,7 +1,7 @@
 import * as X from "../data/index.ts"
 import { type Data } from "../data/index.ts"
 import { InternalError, ParsingError } from "../errors/index.ts"
-import { Parser } from "../parser/index.ts"
+import { type Lexer } from "../lexer/index.ts"
 import { initPosition } from "../position/index.ts"
 import {
   Span,
@@ -14,11 +14,11 @@ import { Token } from "../token/index.ts"
 type Result = { data: Data; remain: Array<Token> }
 
 export class Parsing {
-  parser: Parser
+  lexer: Lexer
   index = 0
 
-  constructor(parser: Parser) {
-    this.parser = parser
+  constructor(lexer: Lexer) {
+    this.lexer = lexer
   }
 
   parse(tokens: Array<Token>): Result {
@@ -112,7 +112,7 @@ export class Parsing {
         const { data, remain } = this.parse(tokens.slice(1))
 
         const quoteSymbol = X.String(
-          this.parser.lexer.config.findQuoteSymbolOrFail(token.value),
+          this.lexer.config.findQuoteSymbolOrFail(token.value),
           spanToAttributes(token.span),
         )
 
@@ -141,7 +141,7 @@ export class Parsing {
       const token = tokens[0]
 
       if (token.kind === "BracketEnd") {
-        if (!this.parser.lexer.config.matchBrackets(start.value, token.value)) {
+        if (!this.lexer.config.matchBrackets(start.value, token.value)) {
           throw new ParsingError(`I expect a matching BracketEnd`, token.span)
         }
 
