@@ -82,7 +82,7 @@ test("quote record", () => {
   )
 })
 
-test.skip("quasiquote", () => {
+test("quasiquote", () => {
   assertMatch("`x", "x", "[]")
   assertMatch("`(lambda (,x) ,x)", "(lambda (x) x)", "[:x x]")
 })

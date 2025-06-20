@@ -78,37 +78,64 @@ function matchAttributes(
   )
 }
 
-function matchList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
-  if (mode === "NormalMode") {
-    return effectChoice([
-      matchMakeList(mode, pattern, data),
-      matchQuote(mode, pattern, data),
-    ])
-  }
-
-  if (mode === "QuoteMode") {
-    return guardEffect(
-      pattern.kind === "List" &&
-        data.kind === "List" &&
-        pattern.content.length === data.content.length,
-      () =>
-        effectSequence([
-          ...(pattern as X.List).content
-            .keys()
-            .map((index) =>
-              matchData(
-                mode,
-                (pattern as X.List).content[index],
-                (data as X.List).content[index],
-              ),
+function matchQuotedList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
+  return guardEffect(
+    pattern.kind === "List" &&
+      data.kind === "List" &&
+      pattern.content.length === data.content.length,
+    () =>
+      effectSequence([
+        ...(pattern as X.List).content
+          .keys()
+          .map((index) =>
+            matchData(
+              mode,
+              (pattern as X.List).content[index],
+              (data as X.List).content[index],
             ),
+          ),
+        matchAttributes(mode, pattern.attributes, data.attributes),
+      ]),
+  )
+}
 
-          matchAttributes(mode, pattern.attributes, data.attributes),
-        ]),
-    )
+function matchList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
+  switch (mode) {
+    case "NormalMode": {
+      return effectChoice([
+        matchMakeList(mode, pattern, data),
+        matchQuote(mode, pattern, data),
+        matchQuasiquote(mode, pattern, data),
+      ])
+    }
+
+    case "QuoteMode": {
+      return matchQuotedList(mode, pattern, data)
+    }
+
+    case "QuasiquoteMode": {
+      return effectChoice([
+        matchUnquote(mode, pattern, data),
+        matchQuotedList(mode, pattern, data),
+      ])
+    }
   }
+}
 
-  return failEffect()
+function matchUnquote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
+  return guardEffect(
+    pattern.kind === "List" &&
+      pattern.content.length >= 2 &&
+      pattern.content[0].kind === "String" &&
+      pattern.content[0].content === "unquote",
+    () => {
+      const firstData = (pattern as X.List).content[1]
+      return effectSequence([
+        matchData("NormalMode", firstData, data),
+        matchAttributes("NormalMode", firstData.attributes, data.attributes),
+      ])
+    },
+  )
 }
 
 function matchMakeList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
@@ -144,6 +171,27 @@ function matchQuote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
         matchData("QuoteMode", firstData, data),
         matchAttributes(mode, pattern.attributes, data.attributes),
         matchAttributes("QuoteMode", firstData.attributes, data.attributes),
+      ])
+    },
+  )
+}
+
+function matchQuasiquote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
+  return guardEffect(
+    pattern.kind === "List" &&
+      pattern.content.length >= 2 &&
+      pattern.content[0].kind === "String" &&
+      pattern.content[0].content === "quasiquote",
+    () => {
+      const firstData = (pattern as X.List).content[1]
+      return effectSequence([
+        matchData("QuasiquoteMode", firstData, data),
+        matchAttributes(mode, pattern.attributes, data.attributes),
+        matchAttributes(
+          "QuasiquoteMode",
+          firstData.attributes,
+          data.attributes,
+        ),
       ])
     },
   )
