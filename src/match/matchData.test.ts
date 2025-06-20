@@ -55,6 +55,6 @@ test("list", () => {
 })
 
 test("quote", () => {
-  // assertMatch("'x", "x", "[:x x]")
-  // assertMatch("['lambda ['x] 'x]", "(lambda (x) x)", "[:x x]")
+  assertMatch("'x", "x", "[]")
+  assertMatch("['lambda [x] x]", "(lambda (x) x)", "[:x x]")
 })

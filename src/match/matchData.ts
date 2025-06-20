@@ -13,7 +13,8 @@ export function matchData(
     matchBool(pattern, data, substitution) ||
     matchInt(pattern, data, substitution) ||
     matchFloat(pattern, data, substitution) ||
-    matchList(pattern, data, substitution)
+    matchList(pattern, data, substitution) ||
+    matchQuote(pattern, data, substitution)
   )
 }
 
@@ -71,6 +72,23 @@ function matchFloat(
   }
 }
 
+function matchAttributes(
+  patternAttributes: X.Attributes,
+  dataAttributes: X.Attributes,
+  substitution: Substitution,
+): Substitution | undefined {
+  for (const key of Object.keys(patternAttributes)) {
+    const pattern = patternAttributes[key]
+    const data = dataAttributes[key]
+    const newSubstitution = matchData(pattern, data, substitution)
+    if (!newSubstitution) return
+
+    substitution = newSubstitution
+  }
+
+  return substitution
+}
+
 function matchList(
   pattern: X.Data,
   data: X.Data,
@@ -102,19 +120,20 @@ function matchList(
   }
 }
 
-function matchAttributes(
-  patternAttributes: X.Attributes,
-  dataAttributes: X.Attributes,
+function matchQuote(
+  pattern: X.Data,
+  data: X.Data,
   substitution: Substitution,
 ): Substitution | undefined {
-  for (const key of Object.keys(patternAttributes)) {
-    const pattern = patternAttributes[key]
-    const data = dataAttributes[key]
-    const newSubstitution = matchData(pattern, data, substitution)
-    if (!newSubstitution) return
+  if (pattern.kind === "List" && data.kind === "String") {
+    if (pattern.content.length === 0) return
 
-    substitution = newSubstitution
+    const keyword = pattern.content[0]
+    if (keyword.kind !== "String") return
+    if (keyword.content !== "quote") return
+
+    if (!deepEqual(pattern.content[1], data)) return
+
+    return matchAttributes(pattern.attributes, data.attributes, substitution)
   }
-
-  return substitution
 }
