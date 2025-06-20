@@ -67,3 +67,8 @@ test("quote", () => {
   assertMatch("(quote 3)", X.Int(3), "[]")
   assertMatch("(quote 3 :a a)", X.Int(3, { a: X.Bool(false) }), "[:a #f]")
 })
+
+test.skip("quasiquote", () => {
+  assertMatch("`x", "x", "[]")
+  assertMatch("`(lambda (,x) ,x)", "(lambda (x) x)", "[:x x]")
+})
