@@ -2,7 +2,7 @@ import assert from "node:assert"
 import { test } from "node:test"
 import { dataFromJson, dataToJson } from "../data/index.js"
 
-test("dataFromJson", () => {
+test("dataToJson", () => {
   assert.deepStrictEqual("abc", dataToJson(dataFromJson("abc")))
 
   assert.deepStrictEqual(
