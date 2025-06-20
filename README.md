@@ -42,6 +42,12 @@ can be parsed to:
 ['lambda ['x] 'x :row 0 :colum 0]
 ```
 
+## Install
+
+```sh
+npm install @xieyuheng/x-data.js
+```
+
 ## Development
 
 ```sh
