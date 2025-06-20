@@ -86,6 +86,7 @@ function matchList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
         matchQuote(mode, pattern, data),
         matchQuasiquote(mode, pattern, data),
         matchCons(mode, pattern, data),
+        // matchConsStar(mode, pattern, data),
       ])
     }
 
@@ -102,6 +103,19 @@ function matchList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   }
 }
 
+function matchManyData(
+  mode: Mode,
+  patternArray: Array<X.Data>,
+  dataArray: Array<X.Data>,
+): Effect {
+  return effectSequence([
+    ifEffect(patternArray.length === dataArray.length),
+    ...patternArray
+      .keys()
+      .map((index) => matchData(mode, patternArray[index], dataArray[index])),
+  ])
+}
+
 function matchQuotedList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return guardEffect(
     pattern.kind === "List" &&
@@ -109,15 +123,11 @@ function matchQuotedList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
       pattern.content.length === data.content.length,
     () =>
       effectSequence([
-        ...(pattern as X.List).content
-          .keys()
-          .map((index) =>
-            matchData(
-              mode,
-              (pattern as X.List).content[index],
-              (data as X.List).content[index],
-            ),
-          ),
+        matchManyData(
+          mode,
+          (pattern as X.List).content,
+          (data as X.List).content,
+        ),
         matchAttributes(mode, pattern.attributes, data.attributes),
       ]),
   )
@@ -223,6 +233,33 @@ function matchCons(mode: Mode, pattern: X.Data, data: X.Data): Effect {
     },
   )
 }
+
+// function matchConsStar(mode: Mode, pattern: X.Data, data: X.Data): Effect {
+//   return guardEffect(
+//     pattern.kind === "List" &&
+//       data.kind === "List" &&
+//       pattern.content.length >= 3 &&
+//       pattern.content[0].kind === "String" &&
+//       pattern.content[0].content === "cons*",
+//     () => {
+//       const listPattern = pattern as X.List
+//       const prefixCount = listPattern.content.length - 2
+//       const patternPrefix = listPattern.content.slice(1, prefixCount)
+//       const tailPattern = listPattern.content[listPattern.content.length - 1]
+
+//       const listData = data as X.List
+//       if (listData.content.length < prefixCount) return failEffect()
+//       const dataPrefix = listData.content.slice(0, prefixCount)
+//       const tailData = X.List(listData.content.slice(prefixCount))
+
+//       return effectSequence([
+//         matchData(mode, headPattern, headData),
+//         matchData(mode, tailPattern, tailData),
+//         matchAttributes(mode, pattern.attributes, data.attributes),
+//       ])
+//     },
+//   )
+// }
 
 // effect combinators
 
