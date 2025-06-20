@@ -2,25 +2,43 @@ import * as X from "../data/index.ts"
 import { deepEqual } from "../utils/deepEqual.ts"
 
 export type Subst = Record<string, X.Data>
-export type MatchMode = "NormalMode" | "QuoteMode" | "QuasiquoteMode"
-export type MatchEffect = (subst: Subst) => Subst | undefined
+export type Mode = "NormalMode" | "QuoteMode" | "QuasiquoteMode"
+export type Effect = (subst: Subst) => Subst | void
 
-export function matchData(
-  mode: MatchMode,
-  pattern: X.Data,
-  data: X.Data,
-): MatchEffect {
-  return (subst) =>
-    matchVar(mode, pattern, data)(subst) ||
-    matchBool(mode, pattern, data)(subst) ||
-    matchInt(mode, pattern, data)(subst) ||
-    matchFloat(mode, pattern, data)(subst) ||
-    matchMakeList(mode, pattern, data)(subst) ||
-    matchQuote(mode, pattern, data)(subst) ||
-    matchList(mode, pattern, data)(subst)
+export function effectChoice(effects: Array<Effect>): Effect {
+  return (subst) => {
+    for (const effect of effects) {
+      const newSubst = effect(subst)
+      if (newSubst) return newSubst
+    }
+  }
 }
 
-function matchVar(mode: MatchMode, pattern: X.Data, data: X.Data): MatchEffect {
+export function effectSequence(effects: Array<Effect>): Effect {
+  return (subst) => {
+    for (const effect of effects) {
+      const newSubst = effect(subst)
+      if (!newSubst) return
+      subst = newSubst
+    }
+
+    return subst
+  }
+}
+
+export function matchData(mode: Mode, pattern: X.Data, data: X.Data): Effect {
+  return effectChoice([
+    matchVar(mode, pattern, data),
+    matchBool(mode, pattern, data),
+    matchInt(mode, pattern, data),
+    matchFloat(mode, pattern, data),
+    matchMakeList(mode, pattern, data),
+    matchQuote(mode, pattern, data),
+    matchList(mode, pattern, data),
+  ])
+}
+
+function matchVar(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return (subst) => {
     switch (mode) {
       case "NormalMode": {
@@ -45,11 +63,7 @@ function matchVar(mode: MatchMode, pattern: X.Data, data: X.Data): MatchEffect {
   }
 }
 
-function matchString(
-  mode: MatchMode,
-  pattern: X.Data,
-  data: X.Data,
-): MatchEffect {
+function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return (subst) => {
     if (pattern.kind === "String") {
       if (!deepEqual(pattern.content, data.content)) return
@@ -59,11 +73,7 @@ function matchString(
   }
 }
 
-function matchBool(
-  mode: MatchMode,
-  pattern: X.Data,
-  data: X.Data,
-): MatchEffect {
+function matchBool(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return (subst) => {
     if (pattern.kind === "Bool") {
       if (!deepEqual(pattern.content, data.content)) return
@@ -73,7 +83,7 @@ function matchBool(
   }
 }
 
-function matchInt(mode: MatchMode, pattern: X.Data, data: X.Data): MatchEffect {
+function matchInt(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return (subst) => {
     if (pattern.kind === "Int") {
       if (!deepEqual(pattern.content, data.content)) return
@@ -83,11 +93,7 @@ function matchInt(mode: MatchMode, pattern: X.Data, data: X.Data): MatchEffect {
   }
 }
 
-function matchFloat(
-  mode: MatchMode,
-  pattern: X.Data,
-  data: X.Data,
-): MatchEffect {
+function matchFloat(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return (subst) => {
     if (pattern.kind === "Float") {
       if (!deepEqual(pattern.content, data.content)) return
@@ -98,10 +104,10 @@ function matchFloat(
 }
 
 function matchAttributes(
-  mode: MatchMode,
+  mode: Mode,
   patternAttributes: X.Attributes,
   dataAttributes: X.Attributes,
-): MatchEffect {
+): Effect {
   return (subst) => {
     for (const key of Object.keys(patternAttributes)) {
       const pattern = patternAttributes[key]
@@ -117,11 +123,7 @@ function matchAttributes(
   }
 }
 
-function matchMakeList(
-  mode: MatchMode,
-  pattern: X.Data,
-  data: X.Data,
-): MatchEffect {
+function matchMakeList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return (subst) => {
     if (pattern.kind === "List" && data.kind === "List") {
       if (pattern.content.length === 0) return
@@ -146,11 +148,7 @@ function matchMakeList(
   }
 }
 
-function matchQuote(
-  mode: MatchMode,
-  pattern: X.Data,
-  data: X.Data,
-): MatchEffect {
+function matchQuote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return (subst) => {
     if (pattern.kind === "List") {
       if (pattern.content.length === 0) return
@@ -162,45 +160,16 @@ function matchQuote(
       const firstData = pattern.content[1]
       if (!firstData) return
 
-      {
-        const newSubst = matchData("QuoteMode", firstData, data)(subst)
-
-        if (!newSubst) return
-        subst = newSubst
-      }
-
-      {
-        const newSubst = matchAttributes(
-          mode,
-          pattern.attributes,
-          data.attributes,
-        )(subst)
-
-        if (!newSubst) return
-        subst = newSubst
-      }
-
-      {
-        const newSubst = matchAttributes(
-          "QuoteMode",
-          firstData.attributes,
-          data.attributes,
-        )(subst)
-
-        if (!newSubst) return
-        subst = newSubst
-      }
-
-      return subst
+      return effectSequence([
+        matchData("QuoteMode", firstData, data),
+        matchAttributes(mode, pattern.attributes, data.attributes),
+        matchAttributes("QuoteMode", firstData.attributes, data.attributes),
+      ])(subst)
     }
   }
 }
 
-function matchList(
-  mode: MatchMode,
-  pattern: X.Data,
-  data: X.Data,
-): MatchEffect {
+function matchList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return (subst) => {
     if (mode === "QuoteMode") {
       if (pattern.kind === "List" && data.kind === "List") {
