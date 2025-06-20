@@ -155,28 +155,24 @@ function matchList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
 }
 
 function matchMakeList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
-  return (subst) => {
-    if (pattern.kind === "List" && data.kind === "List") {
-      if (pattern.content.length === 0) return
-
-      const keyword = pattern.content[0]
-      if (keyword.kind !== "String") return
-      if (keyword.content !== "make-list") return
-
-      const patternBody = pattern.content.slice(1)
-      if (patternBody.length !== data.content.length) return
-
-      for (const [index, elementPattern] of patternBody.entries()) {
-        const elementData = data.content[index]
-        const newSubst = matchData(mode, elementPattern, elementData)(subst)
-        if (!newSubst) return
-
-        subst = newSubst
-      }
-
-      return matchAttributes(mode, pattern.attributes, data.attributes)(subst)
-    }
-  }
+  return guardEffect(
+    pattern.kind === "List" &&
+      data.kind === "List" &&
+      pattern.content.length >= 1 &&
+      pattern.content[0].kind === "String" &&
+      pattern.content[0].content === "make-list",
+    () => {
+      const patternBody = (pattern as X.List).content.slice(1)
+      const dataBody = (data as X.List).content
+      return effectSequence([
+        ifEffect(patternBody.length === dataBody.length),
+        ...patternBody
+          .keys()
+          .map((index) => matchData(mode, patternBody[index], dataBody[index])),
+        matchAttributes(mode, pattern.attributes, data.attributes),
+      ])
+    },
+  )
 }
 
 function matchQuote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
