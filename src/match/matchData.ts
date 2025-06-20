@@ -1,23 +1,24 @@
 import * as X from "../data/index.ts"
 import { deepEqual } from "../utils/deepEqual.ts"
 
-export type Substitution = Record<string, X.Data>
+export type Subst = Record<string, X.Data>
 export type MatchMode = "NormalMode" | "QuoteMode" | "QuasiquoteMode"
+export type MatchEffect = (subst: Subst) => Subst | undefined
 
 export function matchData(
   mode: MatchMode,
   pattern: X.Data,
   data: X.Data,
-  substitution: Substitution,
-): Substitution | undefined {
+  subst: Subst,
+): Subst | undefined {
   return (
-    matchVar(mode, pattern, data, substitution) ||
-    matchBool(mode, pattern, data, substitution) ||
-    matchInt(mode, pattern, data, substitution) ||
-    matchFloat(mode, pattern, data, substitution) ||
-    matchMakeList(mode, pattern, data, substitution) ||
-    matchQuote(mode, pattern, data, substitution) ||
-    matchList(mode, pattern, data, substitution)
+    matchVar(mode, pattern, data, subst) ||
+    matchBool(mode, pattern, data, subst) ||
+    matchInt(mode, pattern, data, subst) ||
+    matchFloat(mode, pattern, data, subst) ||
+    matchMakeList(mode, pattern, data, subst) ||
+    matchQuote(mode, pattern, data, subst) ||
+    matchList(mode, pattern, data, subst)
   )
 }
 
@@ -25,26 +26,26 @@ function matchVar(
   mode: MatchMode,
   pattern: X.Data,
   data: X.Data,
-  substitution: Substitution,
-): Substitution | undefined {
+  subst: Subst,
+): Subst | undefined {
   switch (mode) {
     case "NormalMode": {
       if (pattern.kind === "String") {
         const key = pattern.content
-        const foundData = substitution[key]
+        const foundData = subst[key]
         if (foundData) {
           if (!deepEqual(foundData, data)) return
 
-          return substitution
+          return subst
         } else {
-          return { ...substitution, [key]: data }
+          return { ...subst, [key]: data }
         }
       }
     }
 
     case "QuoteMode":
     case "QuasiquoteMode": {
-      return matchString(mode, pattern, data, substitution)
+      return matchString(mode, pattern, data, subst)
     }
   }
 }
@@ -53,17 +54,12 @@ function matchString(
   mode: MatchMode,
   pattern: X.Data,
   data: X.Data,
-  substitution: Substitution,
-): Substitution | undefined {
+  subst: Subst,
+): Subst | undefined {
   if (pattern.kind === "String") {
     if (!deepEqual(pattern.content, data.content)) return
 
-    return matchAttributes(
-      mode,
-      pattern.attributes,
-      data.attributes,
-      substitution,
-    )
+    return matchAttributes(mode, pattern.attributes, data.attributes, subst)
   }
 }
 
@@ -71,17 +67,12 @@ function matchBool(
   mode: MatchMode,
   pattern: X.Data,
   data: X.Data,
-  substitution: Substitution,
-): Substitution | undefined {
+  subst: Subst,
+): Subst | undefined {
   if (pattern.kind === "Bool") {
     if (!deepEqual(pattern.content, data.content)) return
 
-    return matchAttributes(
-      mode,
-      pattern.attributes,
-      data.attributes,
-      substitution,
-    )
+    return matchAttributes(mode, pattern.attributes, data.attributes, subst)
   }
 }
 
@@ -89,17 +80,12 @@ function matchInt(
   mode: MatchMode,
   pattern: X.Data,
   data: X.Data,
-  substitution: Substitution,
-): Substitution | undefined {
+  subst: Subst,
+): Subst | undefined {
   if (pattern.kind === "Int") {
     if (!deepEqual(pattern.content, data.content)) return
 
-    return matchAttributes(
-      mode,
-      pattern.attributes,
-      data.attributes,
-      substitution,
-    )
+    return matchAttributes(mode, pattern.attributes, data.attributes, subst)
   }
 }
 
@@ -107,17 +93,12 @@ function matchFloat(
   mode: MatchMode,
   pattern: X.Data,
   data: X.Data,
-  substitution: Substitution,
-): Substitution | undefined {
+  subst: Subst,
+): Subst | undefined {
   if (pattern.kind === "Float") {
     if (!deepEqual(pattern.content, data.content)) return
 
-    return matchAttributes(
-      mode,
-      pattern.attributes,
-      data.attributes,
-      substitution,
-    )
+    return matchAttributes(mode, pattern.attributes, data.attributes, subst)
   }
 }
 
@@ -125,27 +106,27 @@ function matchAttributes(
   mode: MatchMode,
   patternAttributes: X.Attributes,
   dataAttributes: X.Attributes,
-  substitution: Substitution,
-): Substitution | undefined {
+  subst: Subst,
+): Subst | undefined {
   for (const key of Object.keys(patternAttributes)) {
     const pattern = patternAttributes[key]
     const data = dataAttributes[key]
     if (!data) return
-    const newSubstitution = matchData(mode, pattern, data, substitution)
-    if (!newSubstitution) return
+    const newSubst = matchData(mode, pattern, data, subst)
+    if (!newSubst) return
 
-    substitution = newSubstitution
+    subst = newSubst
   }
 
-  return substitution
+  return subst
 }
 
 function matchMakeList(
   mode: MatchMode,
   pattern: X.Data,
   data: X.Data,
-  substitution: Substitution,
-): Substitution | undefined {
+  subst: Subst,
+): Subst | undefined {
   if (pattern.kind === "List" && data.kind === "List") {
     if (pattern.content.length === 0) return
 
@@ -158,23 +139,13 @@ function matchMakeList(
 
     for (const [index, elementPattern] of patternBody.entries()) {
       const elementData = data.content[index]
-      const newSubstitution = matchData(
-        mode,
-        elementPattern,
-        elementData,
-        substitution,
-      )
-      if (!newSubstitution) return
+      const newSubst = matchData(mode, elementPattern, elementData, subst)
+      if (!newSubst) return
 
-      substitution = newSubstitution
+      subst = newSubst
     }
 
-    return matchAttributes(
-      mode,
-      pattern.attributes,
-      data.attributes,
-      substitution,
-    )
+    return matchAttributes(mode, pattern.attributes, data.attributes, subst)
   }
 }
 
@@ -182,8 +153,8 @@ function matchQuote(
   mode: MatchMode,
   pattern: X.Data,
   data: X.Data,
-  substitution: Substitution,
-): Substitution | undefined {
+  subst: Subst,
+): Subst | undefined {
   if (pattern.kind === "List") {
     if (pattern.content.length === 0) return
 
@@ -194,29 +165,38 @@ function matchQuote(
     const firstData = pattern.content[1]
     if (!firstData) return
 
-    const newSubstitution = matchData(
-      "QuoteMode",
-      firstData,
-      data,
-      substitution,
-    )
-    if (!newSubstitution) return
+    {
+      const newSubst = matchData("QuoteMode", firstData, data, subst)
 
-    substitution = newSubstitution
-    substitution = matchAttributes(
-      mode,
-      pattern.attributes,
-      data.attributes,
-      substitution,
-    )
-    substitution = matchAttributes(
-      "QuoteMode",
-      firstData.attributes,
-      data.attributes,
-      substitution,
-    )
+      if (!newSubst) return
+      subst = newSubst
+    }
 
-    return substitution
+    {
+      const newSubst = matchAttributes(
+        mode,
+        pattern.attributes,
+        data.attributes,
+        subst,
+      )
+
+      if (!newSubst) return
+      subst = newSubst
+    }
+
+    {
+      const newSubst = matchAttributes(
+        "QuoteMode",
+        firstData.attributes,
+        data.attributes,
+        subst,
+      )
+
+      if (!newSubst) return
+      subst = newSubst
+    }
+
+    return subst
   }
 }
 
@@ -224,8 +204,8 @@ function matchList(
   mode: MatchMode,
   pattern: X.Data,
   data: X.Data,
-  substitution: Substitution,
-): Substitution | undefined {
+  subst: Subst,
+): Subst | undefined {
   if (mode === "QuoteMode") {
     if (pattern.kind === "List" && data.kind === "List") {
       const patternBody = pattern.content
@@ -233,23 +213,13 @@ function matchList(
 
       for (const [index, elementPattern] of patternBody.entries()) {
         const elementData = data.content[index]
-        const newSubstitution = matchData(
-          mode,
-          elementPattern,
-          elementData,
-          substitution,
-        )
-        if (!newSubstitution) return
+        const newSubst = matchData(mode, elementPattern, elementData, subst)
+        if (!newSubst) return
 
-        substitution = newSubstitution
+        subst = newSubst
       }
 
-      return matchAttributes(
-        mode,
-        pattern.attributes,
-        data.attributes,
-        substitution,
-      )
+      return matchAttributes(mode, pattern.attributes, data.attributes, subst)
     }
   }
 }

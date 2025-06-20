@@ -15,19 +15,19 @@ function assertMatch(
     typeof dataInput === "string"
       ? dataPruneAttributes(parseData(dataInput), ["span"])
       : dataInput
-  const substitution = matchData("NormalMode", pattern, data, {})
+  const subst = matchData("NormalMode", pattern, data, {})
   const expectedData = dataPruneAttributes(parseData(expectedInput), ["span"])
-  assert.deepStrictEqual(substitution, expectedData.attributes)
+  assert.deepStrictEqual(subst, expectedData.attributes)
 }
 
 function assertMatchFail(patternInput: string, dataInput: string): void {
-  const substitution = matchData(
+  const subst = matchData(
     "NormalMode",
     dataPruneAttributes(parseData(patternInput), ["span"]),
     dataPruneAttributes(parseData(dataInput), ["span"]),
     {},
   )
-  assert.deepStrictEqual(substitution, undefined)
+  assert.deepStrictEqual(subst, undefined)
 }
 
 test("var", () => {
