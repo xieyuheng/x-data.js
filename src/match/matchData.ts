@@ -55,9 +55,9 @@ export function matchData(mode: Mode, pattern: X.Data, data: X.Data): Effect {
 }
 
 function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
-  return (subst) => {
-    switch (mode) {
-      case "NormalMode": {
+  switch (mode) {
+    case "NormalMode": {
+      return (subst) => {
         if (pattern.kind === "String") {
           const key = pattern.content
           const foundData = subst[key]
@@ -69,16 +69,17 @@ function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
             return { ...subst, [key]: data }
           }
         }
+        subst
       }
+    }
 
-      case "QuoteMode":
-      case "QuasiquoteMode": {
-        return effectSequence([
-          ifEffect(pattern.kind === "String"),
-          ifEffect(deepEqual(pattern.content, data.content)),
-          matchAttributes(mode, pattern.attributes, data.attributes),
-        ])(subst)
-      }
+    case "QuoteMode":
+    case "QuasiquoteMode": {
+      return effectSequence([
+        ifEffect(pattern.kind === "String"),
+        ifEffect(deepEqual(pattern.content, data.content)),
+        matchAttributes(mode, pattern.attributes, data.attributes),
+      ])
     }
   }
 }
