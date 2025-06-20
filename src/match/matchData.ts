@@ -40,6 +40,10 @@ export function guardEffect(p: boolean, f: () => Effect): Effect {
   return effectSequence([ifEffect(p), lazyEffect(f)])
 }
 
+export function failEffect(): Effect {
+  return ifEffect(false)
+}
+
 export function matchData(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return effectChoice([
     matchString(mode, pattern, data),
@@ -125,24 +129,30 @@ function matchList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
     ])
   }
 
-  return (subst) => {
-    if (mode === "QuoteMode") {
-      if (pattern.kind === "List" && data.kind === "List") {
-        const patternBody = pattern.content
-        if (patternBody.length !== data.content.length) return
-
-        for (const [index, elementPattern] of patternBody.entries()) {
-          const elementData = data.content[index]
-          const newSubst = matchData(mode, elementPattern, elementData)(subst)
-          if (!newSubst) return
-
-          subst = newSubst
-        }
-
-        return matchAttributes(mode, pattern.attributes, data.attributes)(subst)
-      }
-    }
+  if (mode === "QuoteMode") {
+    return guardEffect(
+      pattern.kind === "List" &&
+        data.kind === "List" &&
+        pattern.content.length === data.content.length,
+      () =>
+        effectSequence([
+          effectSequence(
+            (pattern as X.List).content
+              .keys()
+              .map((index) =>
+                matchData(
+                  mode,
+                  (pattern as X.List).content[index],
+                  (data as X.List).content[index],
+                ),
+              ),
+          ),
+          matchAttributes(mode, pattern.attributes, data.attributes),
+        ]),
+    )
   }
+
+  return failEffect()
 }
 
 function matchMakeList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
