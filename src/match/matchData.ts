@@ -136,17 +136,16 @@ function matchList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
         pattern.content.length === data.content.length,
       () =>
         effectSequence([
-          effectSequence(
-            (pattern as X.List).content
-              .keys()
-              .map((index) =>
-                matchData(
-                  mode,
-                  (pattern as X.List).content[index],
-                  (data as X.List).content[index],
-                ),
+          ...(pattern as X.List).content
+            .keys()
+            .map((index) =>
+              matchData(
+                mode,
+                (pattern as X.List).content[index],
+                (data as X.List).content[index],
               ),
-          ),
+            ),
+
           matchAttributes(mode, pattern.attributes, data.attributes),
         ]),
     )
@@ -181,22 +180,18 @@ function matchMakeList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
 }
 
 function matchQuote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
-  return (subst) => {
-    if (pattern.kind === "List") {
-      if (pattern.content.length === 0) return
-
-      const keyword = pattern.content[0]
-      if (keyword.kind !== "String") return
-      if (keyword.content !== "quote") return
-
-      const firstData = pattern.content[1]
-      if (!firstData) return
-
+  return guardEffect(
+    pattern.kind === "List" &&
+      pattern.content.length >= 2 &&
+      pattern.content[0].kind === "String" &&
+      pattern.content[0].content === "quote",
+    () => {
+      const firstData = (pattern as X.List).content[1]
       return effectSequence([
         matchData("QuoteMode", firstData, data),
         matchAttributes(mode, pattern.attributes, data.attributes),
         matchAttributes("QuoteMode", firstData.attributes, data.attributes),
-      ])(subst)
-    }
-  }
+      ])
+    },
+  )
 }
