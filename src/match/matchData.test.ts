@@ -59,20 +59,28 @@ test("list", () => {
 
 test("quote", () => {
   assertMatch("'x", "x", "[]")
+  assertMatch("(quote x)", "x", "[]")
+  assertMatch("(quote 3)", "3", "[]")
+
   assertMatch("['lambda [x] x]", "(lambda (x) x)", "[:x x]")
   assertMatch("'(lambda (x) x)", "(lambda (x) x)", "[]")
+})
 
+test("quote with attributes", () => {
+  assertMatchFail("(quote x :a 1)", "x")
+  assertMatch("(quote x :a a)", X.String("x", { a: X.Int(1) }), "[:a 1]")
+  assertMatch("(quote 3 :a a)", X.Int(3, { a: X.Bool(false) }), "[:a #f]")
+})
+
+test("quote record", () => {
   assertMatch("'(:x 1 :y 2)", "(:x 1 :y 2 :z 3)", "[]")
-  // assertMatch("'(:x 1 :y 2 :p (:x 1 :y 2))", "(:x 1 :y 2 :z 3 :p (:x 1 :y 2 :z 3))", "[]")
   assertMatchFail("'(:x 1 :y 2)", "(:x 1 :y 3)")
   assertMatchFail("'(:x 1 :y 2 :z 3)", "(:x 1 :y 2)")
-
-  assertMatch("(quote x)", "x", "[]")
-  assertMatch("(quote x :a a)", X.String("x", { a: X.Int(1) }), "[:a 1]")
-  assertMatchFail("(quote x :a 1)", "x")
-
-  assertMatch("(quote 3)", X.Int(3), "[]")
-  assertMatch("(quote 3 :a a)", X.Int(3, { a: X.Bool(false) }), "[:a #f]")
+  assertMatch(
+    "'(:x 1 :y 2 :p (:x 1 :y 2))",
+    "(:x 1 :y 2 :z 3 :p (:x 1 :y 2 :z 3))",
+    "[]",
+  )
 })
 
 test.skip("quasiquote", () => {
