@@ -26,6 +26,12 @@ export function effectSequence(effects: Array<Effect>): Effect {
   }
 }
 
+export function ifEffect(p: boolean): Effect {
+  return (subst) => {
+    if (p) return subst
+  }
+}
+
 export function matchData(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return effectChoice([
     matchVar(mode, pattern, data),
@@ -64,43 +70,35 @@ function matchVar(mode: Mode, pattern: X.Data, data: X.Data): Effect {
 }
 
 function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
-  return (subst) => {
-    if (pattern.kind === "String") {
-      if (!deepEqual(pattern.content, data.content)) return
-
-      return matchAttributes(mode, pattern.attributes, data.attributes)(subst)
-    }
-  }
+  return effectSequence([
+    ifEffect(pattern.kind === "String"),
+    ifEffect(deepEqual(pattern.content, data.content)),
+    matchAttributes(mode, pattern.attributes, data.attributes),
+  ])
 }
 
 function matchBool(mode: Mode, pattern: X.Data, data: X.Data): Effect {
-  return (subst) => {
-    if (pattern.kind === "Bool") {
-      if (!deepEqual(pattern.content, data.content)) return
-
-      return matchAttributes(mode, pattern.attributes, data.attributes)(subst)
-    }
-  }
+  return effectSequence([
+    ifEffect(pattern.kind === "Bool"),
+    ifEffect(deepEqual(pattern.content, data.content)),
+    matchAttributes(mode, pattern.attributes, data.attributes),
+  ])
 }
 
 function matchInt(mode: Mode, pattern: X.Data, data: X.Data): Effect {
-  return (subst) => {
-    if (pattern.kind === "Int") {
-      if (!deepEqual(pattern.content, data.content)) return
-
-      return matchAttributes(mode, pattern.attributes, data.attributes)(subst)
-    }
-  }
+  return effectSequence([
+    ifEffect(pattern.kind === "Int"),
+    ifEffect(deepEqual(pattern.content, data.content)),
+    matchAttributes(mode, pattern.attributes, data.attributes),
+  ])
 }
 
 function matchFloat(mode: Mode, pattern: X.Data, data: X.Data): Effect {
-  return (subst) => {
-    if (pattern.kind === "Float") {
-      if (!deepEqual(pattern.content, data.content)) return
-
-      return matchAttributes(mode, pattern.attributes, data.attributes)(subst)
-    }
-  }
+  return effectSequence([
+    ifEffect(pattern.kind === "Float"),
+    ifEffect(deepEqual(pattern.content, data.content)),
+    matchAttributes(mode, pattern.attributes, data.attributes),
+  ])
 }
 
 function matchAttributes(
@@ -113,6 +111,7 @@ function matchAttributes(
       const pattern = patternAttributes[key]
       const data = dataAttributes[key]
       if (!data) return
+
       const newSubst = matchData(mode, pattern, data)(subst)
       if (!newSubst) return
 
