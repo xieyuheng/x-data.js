@@ -15,7 +15,7 @@ function assertMatch(
     typeof dataInput === "string"
       ? dataPruneAttributes(parseData(dataInput), ["span"])
       : dataInput
-  const subst = matchData("NormalMode", pattern, data, {})
+  const subst = matchData("NormalMode", pattern, data)({})
   const expectedData = dataPruneAttributes(parseData(expectedInput), ["span"])
   assert.deepStrictEqual(subst, expectedData.attributes)
 }
@@ -25,8 +25,7 @@ function assertMatchFail(patternInput: string, dataInput: string): void {
     "NormalMode",
     dataPruneAttributes(parseData(patternInput), ["span"]),
     dataPruneAttributes(parseData(dataInput), ["span"]),
-    {},
-  )
+  )({})
   assert.deepStrictEqual(subst, undefined)
 }
 
