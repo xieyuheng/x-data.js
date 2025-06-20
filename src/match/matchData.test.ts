@@ -91,7 +91,7 @@ test("cons", () => {
   assertMatch("(cons head tail)", "(f x y)", "[:head f :tail (x y)]")
 })
 
-test.skip("cons*", () => {
+test("cons*", () => {
   assertMatch(
     "(cons* head next tail)",
     "(f x y)",

@@ -86,7 +86,7 @@ function matchList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
         matchQuote(mode, pattern, data),
         matchQuasiquote(mode, pattern, data),
         matchCons(mode, pattern, data),
-        // matchConsStar(mode, pattern, data),
+        matchConsStar(mode, pattern, data),
       ])
     }
 
@@ -234,32 +234,39 @@ function matchCons(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   )
 }
 
-// function matchConsStar(mode: Mode, pattern: X.Data, data: X.Data): Effect {
-//   return guardEffect(
-//     pattern.kind === "List" &&
-//       data.kind === "List" &&
-//       pattern.content.length >= 3 &&
-//       pattern.content[0].kind === "String" &&
-//       pattern.content[0].content === "cons*",
-//     () => {
-//       const listPattern = pattern as X.List
-//       const prefixCount = listPattern.content.length - 2
-//       const patternPrefix = listPattern.content.slice(1, prefixCount)
-//       const tailPattern = listPattern.content[listPattern.content.length - 1]
+function matchConsStar(mode: Mode, pattern: X.Data, data: X.Data): Effect {
+  return guardEffect(
+    pattern.kind === "List" &&
+      data.kind === "List" &&
+      pattern.content.length >= 3 &&
+      pattern.content[0].kind === "String" &&
+      pattern.content[0].content === "cons*",
+    () => {
+      const listPattern = pattern as X.List
+      const prefixCount = listPattern.content.length - 2
+      const patternPrefix = listPattern.content.slice(1, prefixCount + 1)
+      const tailPattern = listPattern.content[listPattern.content.length - 1]
 
-//       const listData = data as X.List
-//       if (listData.content.length < prefixCount) return failEffect()
-//       const dataPrefix = listData.content.slice(0, prefixCount)
-//       const tailData = X.List(listData.content.slice(prefixCount))
+      const listData = data as X.List
+      if (listData.content.length < prefixCount) return failEffect()
+      const dataPrefix = listData.content.slice(0, prefixCount)
+      const tailData = X.List(listData.content.slice(prefixCount))
 
-//       return effectSequence([
-//         matchData(mode, headPattern, headData),
-//         matchData(mode, tailPattern, tailData),
-//         matchAttributes(mode, pattern.attributes, data.attributes),
-//       ])
-//     },
-//   )
-// }
+      console.log({
+        patternPrefix,
+        dataPrefix,
+        tailPattern,
+        tailData,
+        prefixCount,
+      })
+      return effectSequence([
+        matchManyData(mode, patternPrefix, dataPrefix),
+        matchData(mode, tailPattern, tailData),
+        matchAttributes(mode, pattern.attributes, data.attributes),
+      ])
+    },
+  )
+}
 
 // effect combinators
 
