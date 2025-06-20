@@ -15,13 +15,14 @@ function assertMatch(
     typeof dataInput === "string"
       ? dataPruneAttributes(parseData(dataInput), ["span"])
       : dataInput
-  const substitution = matchData(pattern, data, {})
+  const substitution = matchData("NormalMode", pattern, data, {})
   const expectedData = dataPruneAttributes(parseData(expectedInput), ["span"])
   assert.deepStrictEqual(substitution, expectedData.attributes)
 }
 
 function assertMatchFail(patternInput: string, dataInput: string): void {
   const substitution = matchData(
+    "NormalMode",
     dataPruneAttributes(parseData(patternInput), ["span"]),
     dataPruneAttributes(parseData(dataInput), ["span"]),
     {},
@@ -62,6 +63,7 @@ test("quote", () => {
   assertMatch("'(lambda (x) x)", "(lambda (x) x)", "[]")
 
   assertMatch("'(:x 1 :y 2)", "(:x 1 :y 2 :z 3)", "[]")
+  // assertMatch("'(:x 1 :y 2 :p (:x 1 :y 2))", "(:x 1 :y 2 :z 3 :p (:x 1 :y 2 :z 3))", "[]")
   assertMatchFail("'(:x 1 :y 2)", "(:x 1 :y 3)")
   assertMatchFail("'(:x 1 :y 2 :z 3)", "(:x 1 :y 2)")
 
