@@ -137,6 +137,10 @@ function matchQuote(
     if (!firstData) return
     if (!deepEqual(firstData.content, data.content)) return
 
-    return matchAttributes(pattern.attributes, data.attributes, substitution)
+    return matchAttributes(
+      { ...firstData.attributes, ...pattern.attributes },
+      data.attributes,
+      substitution,
+    )
   }
 }

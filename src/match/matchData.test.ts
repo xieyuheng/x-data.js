@@ -59,6 +59,11 @@ test("list", () => {
 test("quote", () => {
   assertMatch("'x", "x", "[]")
   assertMatch("['lambda [x] x]", "(lambda (x) x)", "[:x x]")
+  assertMatch("'(lambda (x) x)", "(lambda (x) x)", "[]")
+
+  assertMatch("'(:x 1 :y 2)", "(:x 1 :y 2 :z 3)", "[]")
+  assertMatchFail("'(:x 1 :y 2)", "(:x 1 :y 3)")
+  assertMatchFail("'(:x 1 :y 2 :z 3)", "(:x 1 :y 2)")
 
   assertMatch("(quote x)", "x", "[]")
   assertMatch("(quote x :a a)", X.String("x", { a: X.Int(1) }), "[:a 1]")
