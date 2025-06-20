@@ -5,45 +5,6 @@ export type Subst = Record<string, X.Data>
 export type Mode = "NormalMode" | "QuoteMode" | "QuasiquoteMode"
 export type Effect = (subst: Subst) => Subst | void
 
-export function effectChoice(effects: Array<Effect>): Effect {
-  return (subst) => {
-    for (const effect of effects) {
-      const newSubst = effect(subst)
-      if (newSubst) return newSubst
-    }
-  }
-}
-
-export function effectSequence(effects: Array<Effect>): Effect {
-  return (subst) => {
-    for (const effect of effects) {
-      const newSubst = effect(subst)
-      if (!newSubst) return
-      subst = newSubst
-    }
-
-    return subst
-  }
-}
-
-export function ifEffect(p: boolean): Effect {
-  return (subst) => {
-    if (p) return subst
-  }
-}
-
-export function lazyEffect(f: () => Effect): Effect {
-  return (subst) => f()(subst)
-}
-
-export function guardEffect(p: boolean, f: () => Effect): Effect {
-  return effectSequence([ifEffect(p), lazyEffect(f)])
-}
-
-export function failEffect(): Effect {
-  return ifEffect(false)
-}
-
 export function matchData(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return effectChoice([
     matchString(mode, pattern, data),
@@ -57,20 +18,15 @@ export function matchData(mode: Mode, pattern: X.Data, data: X.Data): Effect {
 function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   switch (mode) {
     case "NormalMode": {
-      return (subst) => {
-        if (pattern.kind === "String") {
-          const key = pattern.content
-          const foundData = subst[key]
-          if (foundData) {
-            if (!deepEqual(foundData, data)) return
-
-            return subst
-          } else {
-            return { ...subst, [key]: data }
-          }
-        }
-        subst
-      }
+      return guardEffect(pattern.kind === "String", (subst) => {
+        const key = (pattern as X.String).content
+        const foundData = subst[key]
+        return effectIfte(
+          Boolean(foundData),
+          ifEffect(deepEqual(foundData, data)),
+          (subst) => ({ ...subst, [key]: data }),
+        )
+      })
     }
 
     case "QuoteMode":
@@ -191,4 +147,55 @@ function matchQuote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
       ])
     },
   )
+}
+
+// effect combinators
+
+export function effectChoice(effects: Array<Effect>): Effect {
+  return (subst) => {
+    for (const effect of effects) {
+      const newSubst = effect(subst)
+      if (newSubst) return newSubst
+    }
+  }
+}
+
+export function effectSequence(effects: Array<Effect>): Effect {
+  return (subst) => {
+    for (const effect of effects) {
+      const newSubst = effect(subst)
+      if (!newSubst) return
+      subst = newSubst
+    }
+
+    return subst
+  }
+}
+
+export function ifEffect(p: boolean): Effect {
+  return (subst) => {
+    if (p) return subst
+  }
+}
+
+export function lazyEffect(f: (subst: Subst) => Effect): Effect {
+  return (subst) => f(subst)(subst)
+}
+
+export function guardEffect(p: boolean, f: (subst: Subst) => Effect): Effect {
+  return effectSequence([ifEffect(p), lazyEffect(f)])
+}
+
+export function failEffect(): Effect {
+  return ifEffect(false)
+}
+
+export function effectIfte(p: boolean, t: Effect, f: Effect): Effect {
+  return (subst) => {
+    if (p) {
+      return t(subst)
+    } else {
+      return f(subst)
+    }
+  }
 }
