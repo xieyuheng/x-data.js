@@ -32,19 +32,25 @@ export function ifEffect(p: boolean): Effect {
   }
 }
 
+export function lazyEffect(f: () => Effect): Effect {
+  return (subst) => f()(subst)
+}
+
+export function guardEffect(p: boolean, f: () => Effect): Effect {
+  return effectSequence([ifEffect(p), lazyEffect(f)])
+}
+
 export function matchData(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return effectChoice([
-    matchVar(mode, pattern, data),
+    matchString(mode, pattern, data),
     matchBool(mode, pattern, data),
     matchInt(mode, pattern, data),
     matchFloat(mode, pattern, data),
-    matchMakeList(mode, pattern, data),
-    matchQuote(mode, pattern, data),
     matchList(mode, pattern, data),
   ])
 }
 
-function matchVar(mode: Mode, pattern: X.Data, data: X.Data): Effect {
+function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return (subst) => {
     switch (mode) {
       case "NormalMode": {
@@ -63,18 +69,14 @@ function matchVar(mode: Mode, pattern: X.Data, data: X.Data): Effect {
 
       case "QuoteMode":
       case "QuasiquoteMode": {
-        return matchString(mode, pattern, data)(subst)
+        return effectSequence([
+          ifEffect(pattern.kind === "String"),
+          ifEffect(deepEqual(pattern.content, data.content)),
+          matchAttributes(mode, pattern.attributes, data.attributes),
+        ])(subst)
       }
     }
   }
-}
-
-function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
-  return effectSequence([
-    ifEffect(pattern.kind === "String"),
-    ifEffect(deepEqual(pattern.content, data.content)),
-    matchAttributes(mode, pattern.attributes, data.attributes),
-  ])
 }
 
 function matchBool(mode: Mode, pattern: X.Data, data: X.Data): Effect {
@@ -106,19 +108,40 @@ function matchAttributes(
   patternAttributes: X.Attributes,
   dataAttributes: X.Attributes,
 ): Effect {
+  return effectSequence(
+    Object.keys(patternAttributes).map((key) =>
+      guardEffect(Boolean(dataAttributes[key]), () =>
+        matchData(mode, patternAttributes[key], dataAttributes[key]),
+      ),
+    ),
+  )
+}
+
+function matchList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
+  if (mode === "NormalMode") {
+    return effectChoice([
+      matchMakeList(mode, pattern, data),
+      matchQuote(mode, pattern, data),
+    ])
+  }
+
   return (subst) => {
-    for (const key of Object.keys(patternAttributes)) {
-      const pattern = patternAttributes[key]
-      const data = dataAttributes[key]
-      if (!data) return
+    if (mode === "QuoteMode") {
+      if (pattern.kind === "List" && data.kind === "List") {
+        const patternBody = pattern.content
+        if (patternBody.length !== data.content.length) return
 
-      const newSubst = matchData(mode, pattern, data)(subst)
-      if (!newSubst) return
+        for (const [index, elementPattern] of patternBody.entries()) {
+          const elementData = data.content[index]
+          const newSubst = matchData(mode, elementPattern, elementData)(subst)
+          if (!newSubst) return
 
-      subst = newSubst
+          subst = newSubst
+        }
+
+        return matchAttributes(mode, pattern.attributes, data.attributes)(subst)
+      }
     }
-
-    return subst
   }
 }
 
@@ -164,27 +187,6 @@ function matchQuote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
         matchAttributes(mode, pattern.attributes, data.attributes),
         matchAttributes("QuoteMode", firstData.attributes, data.attributes),
       ])(subst)
-    }
-  }
-}
-
-function matchList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
-  return (subst) => {
-    if (mode === "QuoteMode") {
-      if (pattern.kind === "List" && data.kind === "List") {
-        const patternBody = pattern.content
-        if (patternBody.length !== data.content.length) return
-
-        for (const [index, elementPattern] of patternBody.entries()) {
-          const elementData = data.content[index]
-          const newSubst = matchData(mode, elementPattern, elementData)(subst)
-          if (!newSubst) return
-
-          subst = newSubst
-        }
-
-        return matchAttributes(mode, pattern.attributes, data.attributes)(subst)
-      }
     }
   }
 }
