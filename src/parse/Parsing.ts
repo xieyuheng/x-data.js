@@ -1,14 +1,9 @@
 import * as X from "../data/index.ts"
-import { type Data } from "../data/index.ts"
+import { dataFromJson, type Data } from "../data/index.ts"
 import { InternalError, ParsingError } from "../errors/index.ts"
 import { type Lexer } from "../lexer/index.ts"
 import { initPosition } from "../position/index.ts"
-import {
-  Span,
-  spanFromAttributes,
-  spanToAttributes,
-  spanUnion,
-} from "../span/index.ts"
+import { Span, spanFromData, spanUnion } from "../span/index.ts"
 import { Token } from "../token/index.ts"
 
 type Result = { data: Data; remain: Array<Token> }
@@ -35,14 +30,14 @@ export class Parsing {
       case "Symbol": {
         if (token.value === "#f") {
           return {
-            data: X.Bool(false, spanToAttributes(token.span)),
+            data: X.Bool(false, { span: dataFromJson(token.span) }),
             remain: tokens.slice(1),
           }
         }
 
         if (token.value === "#t") {
           return {
-            data: X.Bool(true, spanToAttributes(token.span)),
+            data: X.Bool(true, { span: dataFromJson(token.span) }),
             remain: tokens.slice(1),
           }
         }
@@ -55,7 +50,7 @@ export class Parsing {
         }
 
         return {
-          data: X.String(token.value, spanToAttributes(token.span)),
+          data: X.String(token.value, { span: dataFromJson(token.span) }),
           remain: tokens.slice(1),
         }
       }
@@ -70,12 +65,12 @@ export class Parsing {
 
         if (Number.isInteger(value)) {
           return {
-            data: X.Int(value, spanToAttributes(token.span)),
+            data: X.Int(value, { span: dataFromJson(token.span) }),
             remain: tokens.slice(1),
           }
         } else {
           return {
-            data: X.Float(value, spanToAttributes(token.span)),
+            data: X.Float(value, { span: dataFromJson(token.span) }),
             remain: tokens.slice(1),
           }
         }
@@ -90,7 +85,7 @@ export class Parsing {
         }
 
         return {
-          data: X.String(value, spanToAttributes(token.span)),
+          data: X.String(value, { span: dataFromJson(token.span) }),
           remain: tokens.slice(1),
         }
       }
@@ -113,16 +108,15 @@ export class Parsing {
 
         const quoteSymbol = X.String(
           this.lexer.config.findQuoteSymbolOrFail(token.value),
-          spanToAttributes(token.span),
+          { span: dataFromJson(token.span) },
         )
 
         return {
-          data: X.List(
-            [quoteSymbol, data],
-            spanToAttributes(
-              spanUnion(token.span, spanFromAttributes(data.attributes)),
+          data: X.List([quoteSymbol, data], {
+            span: dataFromJson(
+              spanUnion(token.span, spanFromData(data.attributes["span"])),
             ),
-          ),
+          }),
           remain,
         }
       }
@@ -148,7 +142,7 @@ export class Parsing {
         return {
           data: X.List(array, {
             ...attributes,
-            ...spanToAttributes(spanUnion(start.span, token.span)),
+            span: dataFromJson(spanUnion(start.span, token.span)),
           }),
           remain: tokens.slice(1),
         }

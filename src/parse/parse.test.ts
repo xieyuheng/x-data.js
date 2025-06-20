@@ -1,10 +1,11 @@
 import assert from "node:assert"
 import { test } from "node:test"
 import * as X from "../data/index.ts"
+import { dataPruneAttributes } from "../data/index.ts"
 import { parseData } from "../parse/index.ts"
 
 function assertParse(text: string, data: X.Data): void {
-  assert.partialDeepStrictEqual(parseData(text), data)
+  assert.deepStrictEqual(dataPruneAttributes(parseData(text), ["span"]), data)
 }
 
 test("symbol", () => {
