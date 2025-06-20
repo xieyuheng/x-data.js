@@ -53,3 +53,8 @@ test("list", () => {
   assertMatchFail("[x y x]", "(1 2 3)")
   assertMatchFail("[x 0 z]", "(1 2 3)")
 })
+
+test("quote", () => {
+  // assertMatch("'x", "x", "[:x x]")
+  // assertMatch("['lambda ['x] 'x]", "(lambda (x) x)", "[:x x]")
+})
