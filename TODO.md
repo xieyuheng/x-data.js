@@ -1,3 +1,5 @@
 # match
 
-[match] `matchData` -- just view data as pattern
+[match] `matchList`
+[match] `matchQuote`
+[match] `matchQuasiquote`
