@@ -252,13 +252,6 @@ function matchConsStar(mode: Mode, pattern: X.Data, data: X.Data): Effect {
       const dataPrefix = listData.content.slice(0, prefixCount)
       const tailData = X.List(listData.content.slice(prefixCount))
 
-      console.log({
-        patternPrefix,
-        dataPrefix,
-        tailPattern,
-        tailData,
-        prefixCount,
-      })
       return effectSequence([
         matchManyData(mode, patternPrefix, dataPrefix),
         matchData(mode, tailPattern, tailData),
