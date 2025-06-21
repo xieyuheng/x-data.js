@@ -10,8 +10,8 @@ export function matcher<A>(
   patternText: string,
   f: (subst: Subst, options: { span: Span }) => A | undefined,
 ): Matcher<A> {
+  const pattern = dataPruneAttributes(parseData(patternText), ["span"])
   return (data) => {
-    const pattern = dataPruneAttributes(parseData(patternText), ["span"])
     const subst = matchData("NormalMode", pattern, data)({})
     if (!subst) return undefined
     return f(subst, { span: spanFromData(data.attributes["span"]) })
