@@ -1,6 +1,8 @@
-dataToString
-dataToArray
-matcher combinators
+[matcher] `matcher` -- to create combinators
+[matcher] `matcherChoice` -- to create combinators
+
+[example] examples/lambda -- `Exp`
+[example] examples/lambda -- `expMatcher`
 
 ```typescript
 export function matchStmt(data: X.Data): Stmt {

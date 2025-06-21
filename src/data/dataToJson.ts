@@ -19,3 +19,35 @@ export function dataToJson(data: X.Data): Json {
     }
   }
 }
+
+export function dataToString(data: X.Data): string {
+  if (data.kind !== "String") {
+    throw new Error("[dataToString] wrong data kind: ${data.kind}")
+  }
+
+  return data.content
+}
+
+export function dataToBoolean(data: X.Data): boolean {
+  if (data.kind !== "Bool") {
+    throw new Error("[dataToBoolean] wrong data kind: ${data.kind}")
+  }
+
+  return data.content
+}
+
+export function dataToNumber(data: X.Data): number {
+  if (data.kind !== "Int" && data.kind !== "Float") {
+    throw new Error("[dataToNumber] wrong data kind: ${data.kind}")
+  }
+
+  return data.content
+}
+
+export function dataToArray(data: X.Data): Array<X.Data> {
+  if (data.kind !== "List") {
+    throw new Error("[dataToArray] wrong data kind: ${data.kind}")
+  }
+
+  return data.content
+}
