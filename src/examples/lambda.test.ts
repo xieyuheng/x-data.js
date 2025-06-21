@@ -1,13 +1,13 @@
 import assert from "node:assert"
 import { test } from "node:test"
-import { dataToString } from "../data/index.ts"
 import {
+  dataToString,
   match,
   matcher,
   matcherChoice,
+  parseData,
   type Matcher,
-} from "../matcher/index.ts"
-import { parseData } from "../parse/index.ts"
+} from "../index.ts"
 
 type Exp = Var | Lambda | Apply | Let
 type Var = { kind: "Var"; name: string }
@@ -38,44 +38,42 @@ const expMatcher: Matcher<Exp> = matcherChoice<Exp>([
   })),
 ])
 
+function assertParse(text: string, exp: Exp): void {
+  assert.deepStrictEqual(match(expMatcher, parseData(text)), exp)
+}
+
 test("lambda", () => {
-  assert.deepStrictEqual(match(expMatcher, parseData("x")), {
+  assertParse("x", {
     kind: "Var",
     name: "x",
   })
 
-  assert.deepStrictEqual(match(expMatcher, parseData("(f x)")), {
+  assertParse("(f x)", {
     kind: "Apply",
     target: { kind: "Var", name: "f" },
     arg: { kind: "Var", name: "x" },
   })
 
-  assert.deepStrictEqual(match(expMatcher, parseData("(lambda (x) x)")), {
+  assertParse("(lambda (x) x)", {
     kind: "Lambda",
     name: "x",
     ret: { kind: "Var", name: "x" },
   })
 
-  assert.deepStrictEqual(
-    match(expMatcher, parseData("((lambda (x) x) (lambda (x) x))")),
-    {
-      kind: "Apply",
-      target: { kind: "Lambda", name: "x", ret: { kind: "Var", name: "x" } },
-      arg: { kind: "Lambda", name: "x", ret: { kind: "Var", name: "x" } },
-    },
-  )
+  assertParse("((lambda (x) x) (lambda (x) x))", {
+    kind: "Apply",
+    target: { kind: "Lambda", name: "x", ret: { kind: "Var", name: "x" } },
+    arg: { kind: "Lambda", name: "x", ret: { kind: "Var", name: "x" } },
+  })
 
-  assert.deepStrictEqual(
-    match(expMatcher, parseData("(let ((id (lambda (x) x))) (id id))")),
-    {
-      kind: "Let",
-      name: "id",
-      rhs: { kind: "Lambda", name: "x", ret: { kind: "Var", name: "x" } },
-      body: {
-        kind: "Apply",
-        target: { kind: "Var", name: "id" },
-        arg: { kind: "Var", name: "id" },
-      },
+  assertParse("(let ((id (lambda (x) x))) (id id))", {
+    kind: "Let",
+    name: "id",
+    rhs: { kind: "Lambda", name: "x", ret: { kind: "Var", name: "x" } },
+    body: {
+      kind: "Apply",
+      target: { kind: "Var", name: "id" },
+      arg: { kind: "Var", name: "id" },
     },
-  )
+  })
 })
