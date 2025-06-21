@@ -50,7 +50,7 @@ npm install @xieyuheng/x-data.js
 
 ## Examples
 
-`examples/lambda.test.ts`:
+[src/examples/lambda.test.ts](src/examples/lambda.test.ts):
 
 ```typescript
 import assert from "node:assert"
