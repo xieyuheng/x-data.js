@@ -2,18 +2,19 @@ import * as X from "../data/index.ts"
 import { dataPruneAttributes } from "../data/index.ts"
 import { matchData, type Subst } from "../match/index.ts"
 import { parseData } from "../parse/index.ts"
+import { spanFromData, type Span } from "../span/index.ts"
 
 export type Matcher<A> = (data: X.Data) => A | undefined
 
 export function matcher<A>(
   patternText: string,
-  f: (subst: Subst) => A | undefined,
+  f: (subst: Subst, options: { span: Span }) => A | undefined,
 ): Matcher<A> {
   return (data) => {
     const pattern = dataPruneAttributes(parseData(patternText), ["span"])
     const subst = matchData("NormalMode", pattern, data)({})
     if (!subst) return undefined
-    return f(subst)
+    return f(subst, { span: spanFromData(data) })
   }
 }
 
