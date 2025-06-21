@@ -39,15 +39,10 @@ test("list in round brackets", () => {
 })
 
 test("list in square brackets", () => {
-  assertParse("[]", X.List([X.String("make-list")]))
+  assertParse("[]", X.List([X.String("tael")]))
   assertParse(
     "[a b c]",
-    X.List([
-      X.String("make-list"),
-      X.String("a"),
-      X.String("b"),
-      X.String("c"),
-    ]),
+    X.List([X.String("tael"), X.String("a"), X.String("b"), X.String("c")]),
   )
 })
 

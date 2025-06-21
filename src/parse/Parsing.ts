@@ -93,7 +93,7 @@ export class Parsing {
       case "BracketStart": {
         if (token.value === "[") {
           const { data, remain } = this.parseList(token, tokens.slice(1))
-          return { data: X.Cons(X.String("make-list"), data), remain }
+          return { data: X.Cons(X.String("tael"), data), remain }
         } else {
           return this.parseList(token, tokens.slice(1))
         }

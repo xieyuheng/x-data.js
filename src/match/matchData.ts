@@ -82,7 +82,7 @@ function matchList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   switch (mode) {
     case "NormalMode": {
       return effectChoice([
-        matchMakeList(mode, pattern, data),
+        matchTael(mode, pattern, data),
         matchQuote(mode, pattern, data),
         matchQuasiquote(mode, pattern, data),
         matchCons(mode, pattern, data),
@@ -149,13 +149,13 @@ function matchUnquote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   )
 }
 
-function matchMakeList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
+function matchTael(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return guardEffect(
     pattern.kind === "List" &&
       data.kind === "List" &&
       pattern.content.length >= 1 &&
       pattern.content[0].kind === "String" &&
-      pattern.content[0].content === "make-list",
+      pattern.content[0].content === "tael",
     () => {
       const patternBody = (pattern as X.List).content.slice(1)
       const dataBody = (data as X.List).content
