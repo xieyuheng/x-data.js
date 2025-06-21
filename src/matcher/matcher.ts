@@ -15,3 +15,12 @@ export function matcher<A>(
     return f(subst)
   }
 }
+
+export function matcherChoice<A>(matchers: Array<Matcher<A>>): Matcher<A> {
+  return (data) => {
+    for (const matcher of matchers) {
+      const result = matcher(data)
+      if (result) return result
+    }
+  }
+}

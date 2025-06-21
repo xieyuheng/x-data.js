@@ -1,5 +1,3 @@
-[matcher] `matcherChoice` -- to create combinators
-
 [example] examples/lambda -- `Exp`
 [example] examples/lambda -- `expMatcher`
 
