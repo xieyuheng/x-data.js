@@ -85,6 +85,8 @@ test("quote record", () => {
 test("quasiquote", () => {
   assertMatch("`x", "x", "[]")
   assertMatch("`(lambda (,x) ,x)", "(lambda (x) x)", "[:x x]")
+  assertMatch("`(lambda (,name) ,ret)", "(lambda (x) x)", "[:name x :ret x]")
+  assertMatch("`(,target ,arg)", "(f x)", "[:target f :arg x]")
 })
 
 test("cons", () => {
