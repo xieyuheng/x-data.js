@@ -1,4 +1,3 @@
-[matcher] `matcher` -- to create combinators
 [matcher] `matcherChoice` -- to create combinators
 
 [example] examples/lambda -- `Exp`
