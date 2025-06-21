@@ -5,5 +5,19 @@ import { Span } from "./index.ts"
 
 export function spanFromData(data: X.Data): Span {
   const json: any = dataToJson(X.Record(data.attributes))
-  return new Span(new Position(json.start), new Position(json.end))
+  try {
+    return new Span(new Position(json.start), new Position(json.end))
+  } catch (error) {
+    console.dir(
+      {
+        who: "spanFromData",
+        message: "fail to create span",
+        json,
+        data,
+        error,
+      },
+      { depth: null },
+    )
+    throw error
+  }
 }

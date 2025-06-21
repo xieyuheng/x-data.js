@@ -14,7 +14,7 @@ export function matcher<A>(
     const pattern = dataPruneAttributes(parseData(patternText), ["span"])
     const subst = matchData("NormalMode", pattern, data)({})
     if (!subst) return undefined
-    return f(subst, { span: spanFromData(data) })
+    return f(subst, { span: spanFromData(data.attributes["span"]) })
   }
 }
 
