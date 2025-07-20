@@ -147,16 +147,6 @@ npm run test    # Run test
 - [Some Thoughts on JSON vs S-expressions](https://eli.thegreenplace.net/2012/03/04/some-thoughts-on-json-vs-s-expressions), by Eli Bendersky, 2012.
 - [with-meta in clojure.core](https://clojuredocs.org/clojure.core/with-meta)
 
-## Contributions
-
-To make a contribution, fork this project and create a pull request.
-
-Please read the [STYLE-GUIDE.md](STYLE-GUIDE.md) before you change the code.
-
-Remember to add yourself to [AUTHORS](AUTHORS).
-Your line belongs to you, you can write a little
-introduction to yourself but not too long.
-
 ## License
 
 [GPLv3](LICENSE)
