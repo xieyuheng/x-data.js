@@ -90,4 +90,9 @@ test("tau example", () => {
     "(inter A B C)",
     Inter([TypeVar("A"), TypeVar("B"), TypeVar("C")]),
   )
+
+  assertParse(
+    "(tau A B C)",
+    Tau([TypeVar("A"), TypeVar("B"), TypeVar("C")], {}),
+  )
 })
