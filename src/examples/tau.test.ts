@@ -62,7 +62,7 @@ const typeMatcher: X.Matcher<Type> = X.matcherChoice<Type>([
     Inter(X.dataToArray(types).map(matchType)),
   ),
 
-  X.matcher("(cons 'tau types)", ({ types }) =>
+  X.matcher("(cons 'tau types)", ({ types, data }) =>
     Tau(X.dataToArray(types).map(matchType), {}),
   ),
 
