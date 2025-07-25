@@ -1,4 +1,4 @@
-[example] lambda -- extract `matchExp`
+update example in readme
 [example] type of lattice-lisp as example
 test parse
 test match with attributes

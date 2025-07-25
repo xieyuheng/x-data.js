@@ -8,6 +8,10 @@ type Lambda = { kind: "Lambda"; name: string; ret: Exp }
 type Apply = { kind: "Apply"; target: Exp; arg: Exp }
 type Let = { kind: "Let"; name: string; rhs: Exp; body: Exp }
 
+function matchExp(data: X.Data): Exp {
+  return X.match(expMatcher, data)
+}
+
 const expMatcher: X.Matcher<Exp> = X.matcherChoice<Exp>([
   X.matcher("`(lambda (,name) ,ret)", ({ name, ret }) => ({
     kind: "Lambda",
@@ -32,7 +36,7 @@ const expMatcher: X.Matcher<Exp> = X.matcherChoice<Exp>([
 ])
 
 function assertParse(text: string, exp: Exp): void {
-  assert.deepStrictEqual(X.match(expMatcher, X.parseData(text)), exp)
+  assert.deepStrictEqual(matchExp(X.parseData(text)), exp)
 }
 
 test("lambda", () => {
