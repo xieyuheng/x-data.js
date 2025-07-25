@@ -1,4 +1,3 @@
-[example] tau -- test union and inter
 [example] tau -- test arrow
 [example] tau -- test tau
 

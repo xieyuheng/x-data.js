@@ -80,4 +80,14 @@ test("tau example", () => {
     "(-> A B C)",
     Arrow(TypeVar("A"), Arrow(TypeVar("B"), TypeVar("C"))),
   )
+
+  assertParse(
+    "(union A B C)",
+    Union([TypeVar("A"), Arrow(TypeVar("B"), TypeVar("C"))]),
+  )
+
+  assertParse(
+    "(inter A B C)",
+    Inter([TypeVar("A"), Arrow(TypeVar("B"), TypeVar("C"))]),
+  )
 })
