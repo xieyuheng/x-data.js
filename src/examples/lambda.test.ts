@@ -1,13 +1,6 @@
 import assert from "node:assert"
 import { test } from "node:test"
-import {
-  dataToString,
-  match,
-  matcher,
-  matcherChoice,
-  parseData,
-  type Matcher,
-} from "../index.ts"
+import * as X from "../index.ts"
 
 type Exp = Var | Lambda | Apply | Let
 type Var = { kind: "Var"; name: string }
@@ -15,31 +8,31 @@ type Lambda = { kind: "Lambda"; name: string; ret: Exp }
 type Apply = { kind: "Apply"; target: Exp; arg: Exp }
 type Let = { kind: "Let"; name: string; rhs: Exp; body: Exp }
 
-const expMatcher: Matcher<Exp> = matcherChoice<Exp>([
-  matcher("`(lambda (,name) ,ret)", ({ name, ret }) => ({
+const expMatcher: X.Matcher<Exp> = X.matcherChoice<Exp>([
+  X.matcher("`(lambda (,name) ,ret)", ({ name, ret }) => ({
     kind: "Lambda",
-    name: dataToString(name),
-    ret: match(expMatcher, ret),
+    name: X.dataToString(name),
+    ret: X.match(expMatcher, ret),
   })),
-  matcher("`(let ((,name ,rhs)) ,body)", ({ name, rhs, body }) => ({
+  X.matcher("`(let ((,name ,rhs)) ,body)", ({ name, rhs, body }) => ({
     kind: "Let",
-    name: dataToString(name),
-    rhs: match(expMatcher, rhs),
-    body: match(expMatcher, body),
+    name: X.dataToString(name),
+    rhs: X.match(expMatcher, rhs),
+    body: X.match(expMatcher, body),
   })),
-  matcher("`(,target ,arg)", ({ target, arg }) => ({
+  X.matcher("`(,target ,arg)", ({ target, arg }) => ({
     kind: "Apply",
-    target: match(expMatcher, target),
-    arg: match(expMatcher, arg),
+    target: X.match(expMatcher, target),
+    arg: X.match(expMatcher, arg),
   })),
-  matcher("name", ({ name }) => ({
+  X.matcher("name", ({ name }) => ({
     kind: "Var",
-    name: dataToString(name),
+    name: X.dataToString(name),
   })),
 ])
 
 function assertParse(text: string, exp: Exp): void {
-  assert.deepStrictEqual(match(expMatcher, parseData(text)), exp)
+  assert.deepStrictEqual(X.match(expMatcher, X.parseData(text)), exp)
 }
 
 test("lambda", () => {
