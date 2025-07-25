@@ -6,15 +6,20 @@ import { spanFromData, type Span } from "../span/index.ts"
 
 export type Matcher<A> = (data: X.Data) => A | undefined
 
+export type MatcherCallback<A> = (
+  subst: Subst,
+  options: { data: X.Data; span: Span },
+) => A | undefined
+
 export function matcher<A>(
   patternText: string,
-  f: (subst: Subst, options: { span: Span }) => A | undefined,
+  f: MatcherCallback<A>,
 ): Matcher<A> {
   const pattern = dataPruneAttributes(parseData(patternText), ["span"])
   return (data) => {
     const subst = matchData("NormalMode", pattern, data)({})
     if (!subst) return undefined
-    return f(subst, { span: spanFromData(data.attributes["span"]) })
+    return f(subst, { data, span: spanFromData(data.attributes["span"]) })
   }
 }
 
