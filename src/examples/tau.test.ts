@@ -56,8 +56,27 @@ function assertParse(text: string, type: Type): void {
 }
 
 test("tau example", () => {
-  assertParse("x", {
+  assertParse("A", {
     kind: "TypeVar",
-    name: "x",
+    name: "A",
+  })
+
+  assertParse("(-> A B C)", {
+    kind: "Arrow",
+    argType: {
+      kind: "TypeVar",
+      name: "A",
+    },
+    retType: {
+      kind: "Arrow",
+      argType: {
+        kind: "TypeVar",
+        name: "B",
+      },
+      retType: {
+        kind: "TypeVar",
+        name: "C",
+      },
+    },
   })
 })

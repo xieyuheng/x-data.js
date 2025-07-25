@@ -1,7 +1,10 @@
-[example] type -- test union and inter
-[example] type -- test arrow
-[example] type -- test tau
+add constructors to tau example
+
+[example] tau -- test union and inter
+[example] tau -- test arrow
+[example] tau -- test tau
 
 test match with attributes
 `matcher` passback the data it self? or all the unmatched `attributes`
-[example] type -- support tau with attributes
+
+[example] tau -- support tau with attributes
