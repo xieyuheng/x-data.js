@@ -2,16 +2,45 @@ import assert from "node:assert"
 import { test } from "node:test"
 import * as X from "../index.ts"
 
-export type Type = TypeVar | Arrow | Union | Inter | Tau
-export type TypeVar = { kind: "TypeVar"; name: string }
-export type Arrow = { kind: "Arrow"; argType: Type; retType: Type }
-export type Union = { kind: "Union"; candidateTypes: Array<Type> }
-export type Inter = { kind: "Inter"; aspectTypes: Array<Type> }
-export type Tau = {
+type Type = TypeVar | Arrow | Union | Inter | Tau
+type TypeVar = { kind: "TypeVar"; name: string }
+type Arrow = { kind: "Arrow"; argType: Type; retType: Type }
+type Union = { kind: "Union"; candidateTypes: Array<Type> }
+type Inter = { kind: "Inter"; aspectTypes: Array<Type> }
+type Tau = {
   kind: "Tau"
   elementTypes: Array<Type>
   attrTypes: Record<string, Type>
   restType?: Type
+}
+
+function TypeVar(name: string): TypeVar {
+  return { kind: "TypeVar", name }
+}
+
+function Arrow(argType: Type, retType: Type): Arrow {
+  return { kind: "Arrow", argType, retType }
+}
+
+function Union(candidateTypes: Array<Type>): Union {
+  return { kind: "Union", candidateTypes }
+}
+
+function Inter(aspectTypes: Array<Type>): Inter {
+  return { kind: "Inter", aspectTypes }
+}
+
+function Tau(
+  elementTypes: Array<Type>,
+  attrTypes: Record<string, Type>,
+  restType?: Type,
+): Tau {
+  return {
+    kind: "Tau",
+    elementTypes,
+    attrTypes,
+    restType,
+  }
 }
 
 function matchType(data: X.Data): Type {
@@ -22,33 +51,22 @@ const typeMatcher: X.Matcher<Type> = X.matcherChoice<Type>([
   X.matcher("(cons '-> types)", ({ types }) =>
     X.dataToArray(types)
       .map(matchType)
-      .reduceRight((retType, argType) => ({
-        kind: "Arrow",
-        argType,
-        retType,
-      })),
+      .reduceRight((retType, argType) => Arrow(argType, retType)),
   ),
 
-  X.matcher("(cons 'union types)", ({ types }) => ({
-    kind: "Union",
-    candidateTypes: X.dataToArray(types).map(matchType),
-  })),
+  X.matcher("(cons 'union types)", ({ types }) =>
+    Union(X.dataToArray(types).map(matchType)),
+  ),
 
-  X.matcher("(cons 'inter types)", ({ types }) => ({
-    kind: "Inter",
-    aspectTypes: X.dataToArray(types).map(matchType),
-  })),
+  X.matcher("(cons 'inter types)", ({ types }) =>
+    Inter(X.dataToArray(types).map(matchType)),
+  ),
 
-  X.matcher("(cons 'tau types)", ({ types }) => ({
-    kind: "Tau",
-    elementTypes: X.dataToArray(types).map(matchType),
-    attrTypes: {},
-  })),
+  X.matcher("(cons 'tau types)", ({ types }) =>
+    Tau(X.dataToArray(types).map(matchType), {}),
+  ),
 
-  X.matcher("name", ({ name }) => ({
-    kind: "TypeVar",
-    name: X.dataToString(name),
-  })),
+  X.matcher("name", ({ name }) => TypeVar(X.dataToString(name))),
 ])
 
 function assertParse(text: string, type: Type): void {
@@ -56,27 +74,10 @@ function assertParse(text: string, type: Type): void {
 }
 
 test("tau example", () => {
-  assertParse("A", {
-    kind: "TypeVar",
-    name: "A",
-  })
+  assertParse("A", TypeVar("A"))
 
-  assertParse("(-> A B C)", {
-    kind: "Arrow",
-    argType: {
-      kind: "TypeVar",
-      name: "A",
-    },
-    retType: {
-      kind: "Arrow",
-      argType: {
-        kind: "TypeVar",
-        name: "B",
-      },
-      retType: {
-        kind: "TypeVar",
-        name: "C",
-      },
-    },
-  })
+  assertParse(
+    "(-> A B C)",
+    Arrow(TypeVar("A"), Arrow(TypeVar("B"), TypeVar("C"))),
+  )
 })
