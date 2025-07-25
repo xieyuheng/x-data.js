@@ -39,7 +39,7 @@ function assertParse(text: string, exp: Exp): void {
   assert.deepStrictEqual(matchExp(X.parseData(text)), exp)
 }
 
-test("lambda", () => {
+test("lambda example", () => {
   assertParse("x", {
     kind: "Var",
     name: "x",
