@@ -1,4 +1,4 @@
-improve `matchData`
+refactor `matchData`
 
 [example] tau -- support tau with attributes -- use `recordMap`
 
