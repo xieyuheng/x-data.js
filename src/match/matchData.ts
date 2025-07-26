@@ -20,11 +20,13 @@ function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
       return ifEffect(pattern.kind === "String", ({ subst }) => {
         const key = (pattern as X.String).content
         const foundData = subst[key]
-        return ifteEffect(
-          Boolean(foundData),
-          guardEffect(() => X.dataEqual(foundData, data)),
-          (subst) => ({ ...subst, [key]: data }),
-        )
+        return (subst) => {
+          if (foundData) {
+            return guardEffect(() => X.dataEqual(foundData, data))(subst)
+          } else {
+            return { ...subst, [key]: data }
+          }
+        }
       })
     }
 
@@ -298,14 +300,4 @@ function ifEffect(
 
 function failEffect(): Effect {
   return guardEffect(() => false)
-}
-
-function ifteEffect(p: boolean, t: Effect, f: Effect): Effect {
-  return (subst) => {
-    if (p) {
-      return t(subst)
-    } else {
-      return f(subst)
-    }
-  }
 }

@@ -1,5 +1,3 @@
-refactor `matchData` -- inline `ifteEffect`
-
 [example] tau -- support tau with attributes -- use `recordMap`
 
 `matcher` -- passback all not matched attributes
