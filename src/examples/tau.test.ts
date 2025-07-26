@@ -96,4 +96,22 @@ test("tau example", () => {
     "(tau A B C)",
     Tau([TypeVar("A"), TypeVar("B"), TypeVar("C")], {}),
   )
+
+  assertParse(
+    "(tau :x A :y B :z C)",
+    Tau([], {
+      x: TypeVar("A"),
+      y: TypeVar("B"),
+      z: TypeVar("C"),
+    }),
+  )
+
+  assertParse(
+    "(tau A B C :x A :y B :z C)",
+    Tau([TypeVar("A"), TypeVar("B"), TypeVar("C")], {
+      x: TypeVar("A"),
+      y: TypeVar("B"),
+      z: TypeVar("C"),
+    }),
+  )
 })
