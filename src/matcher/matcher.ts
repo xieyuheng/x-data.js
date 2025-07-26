@@ -3,12 +3,13 @@ import { dataPruneAttributes } from "../data/index.ts"
 import { matchData, type Subst } from "../match/index.ts"
 import { parseData } from "../parse/index.ts"
 import { spanFromData, type Span } from "../span/index.ts"
+import { recordRemoveKeys } from "../utils/record/recordRemoveKeys.ts"
 
 export type Matcher<A> = (data: X.Data) => A | undefined
 
 export type MatcherCallback<A> = (
   subst: Subst,
-  options: { data: X.Data; span: Span },
+  options: { attributes: X.Attributes; span: Span },
 ) => A | undefined
 
 export function matcher<A>(
@@ -19,7 +20,10 @@ export function matcher<A>(
   return (data) => {
     const subst = matchData("NormalMode", pattern, data)({})
     if (!subst) return undefined
-    return f(subst, { data, span: spanFromData(data.attributes["span"]) })
+    return f(subst, {
+      attributes: recordRemoveKeys(data.attributes, ["span"]),
+      span: spanFromData(data.attributes["span"]),
+    })
   }
 }
 
