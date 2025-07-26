@@ -1,28 +1,26 @@
 import * as X from "../data/index.ts"
-import { dataPruneAttributes } from "../data/index.ts"
 import { matchData, type Subst } from "../match/index.ts"
 import { parseData } from "../parse/index.ts"
 import { spanFromData, type Span } from "../span/index.ts"
-import { recordRemoveKeys } from "../utils/record/recordRemoveKeys.ts"
 
 export type Matcher<A> = (data: X.Data) => A | undefined
 
 export type MatcherCallback<A> = (
   subst: Subst,
-  options: { attributes: X.Attributes; span: Span },
+  options: { data: X.Data; span: Span },
 ) => A | undefined
 
 export function matcher<A>(
   patternText: string,
   f: MatcherCallback<A>,
 ): Matcher<A> {
-  const pattern = dataPruneAttributes(parseData(patternText), ["span"])
+  const pattern = parseData(patternText)
   return (data) => {
     const subst = matchData("NormalMode", pattern, data)({})
     if (!subst) return undefined
     return f(subst, {
-      attributes: recordRemoveKeys(data.attributes, ["span"]),
-      span: spanFromData(data.attributes["span"]),
+      data: data,
+      span: spanFromData(data.meta["span"]),
     })
   }
 }

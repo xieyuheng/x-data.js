@@ -22,7 +22,7 @@ export function dataFromJson(json: any): X.Data {
   }
 
   if (isJsonArray(json)) {
-    return X.List(json.map(dataFromJson))
+    return X.Tael(json.map(dataFromJson), {})
   }
 
   if (isJsonObject(json)) {

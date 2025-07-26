@@ -1,11 +1,10 @@
 import assert from "node:assert"
 import { test } from "node:test"
 import * as X from "../data/index.ts"
-import { dataPruneAttributes } from "../data/index.ts"
 import { parseData } from "../parse/index.ts"
 
 function assertParse(text: string, data: X.Data): void {
-  assert.deepStrictEqual(dataPruneAttributes(parseData(text), ["span"]), data)
+  assert(X.dataEqual(parseData(text), data))
 }
 
 test("symbol", () => {
@@ -50,7 +49,7 @@ test("list with attributes", () => {
   assertParse("(:x 1 :y 2)", X.Record({ x: X.Int(1), y: X.Int(2) }))
   assertParse(
     "(a b c :x 1 :y 2)",
-    X.List([X.String("a"), X.String("b"), X.String("c")], {
+    X.Tael([X.String("a"), X.String("b"), X.String("c")], {
       x: X.Int(1),
       y: X.Int(2),
     }),

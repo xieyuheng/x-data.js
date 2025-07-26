@@ -8,7 +8,7 @@ test("dataFromJson", () => {
 
   assert.deepStrictEqual(
     dataFromJson(["a", "b", "c"]),
-    X.List([X.String("a"), X.String("b"), X.String("c")]),
+    X.Tael([X.String("a"), X.String("b"), X.String("c")], {}),
   )
 
   assert.deepStrictEqual(

@@ -1,7 +1,6 @@
 import assert from "node:assert"
 import { test } from "node:test"
 import * as X from "../data/index.ts"
-import { dataPruneAttributes } from "../data/index.ts"
 import { matchData } from "../match/index.ts"
 import { parseData } from "../parse/index.ts"
 
@@ -10,21 +9,20 @@ function assertMatch(
   dataInput: string | X.Data,
   expectedInput: string,
 ): void {
-  const pattern = dataPruneAttributes(parseData(patternInput), ["span"])
-  const data =
-    typeof dataInput === "string"
-      ? dataPruneAttributes(parseData(dataInput), ["span"])
-      : dataInput
+  const pattern = parseData(patternInput)
+  const data = typeof dataInput === "string" ? parseData(dataInput) : dataInput
   const subst = matchData("NormalMode", pattern, data)({})
-  const expectedData = dataPruneAttributes(parseData(expectedInput), ["span"])
-  assert.deepStrictEqual(subst, expectedData.attributes)
+  const expectedData = parseData(expectedInput)
+  assert(expectedData.kind === "Tael")
+  assert(subst)
+  assert(X.attributesEqual(subst, expectedData.attributes))
 }
 
 function assertMatchFail(patternInput: string, dataInput: string): void {
   const subst = matchData(
     "NormalMode",
-    dataPruneAttributes(parseData(patternInput), ["span"]),
-    dataPruneAttributes(parseData(dataInput), ["span"]),
+    parseData(patternInput),
+    parseData(dataInput),
   )({})
   assert.deepStrictEqual(subst, undefined)
 }
@@ -63,12 +61,6 @@ test("quote", () => {
 
   assertMatch("['lambda [x] x]", "(lambda (x) x)", "[:x x]")
   assertMatch("'(lambda (x) x)", "(lambda (x) x)", "[]")
-})
-
-test("quote with attributes", () => {
-  assertMatchFail("(quote x :a 1)", "x")
-  assertMatch("(quote x :a a)", X.String("x", { a: X.Int(1) }), "[:a 1]")
-  assertMatch("(quote 3 :a a)", X.Int(3, { a: X.Bool(false) }), "[:a #f]")
 })
 
 test("quote record", () => {

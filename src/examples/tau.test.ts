@@ -63,9 +63,13 @@ const typeMatcher: X.Matcher<Type> = X.matcherChoice<Type>([
     Inter(X.dataToArray(types).map(matchType)),
   ),
 
-  X.matcher("(cons 'tau types)", ({ types }, { attributes }) =>
-    Tau(X.dataToArray(types).map(matchType), recordMap(attributes, matchType)),
-  ),
+  X.matcher("(cons 'tau types)", ({ types }, { data }) => {
+    assert(data.kind === "Tael")
+    return Tau(
+      X.dataToArray(types).map(matchType),
+      recordMap(data.attributes, matchType),
+    )
+  }),
 
   X.matcher("name", ({ name }) => TypeVar(X.dataToString(name))),
 ])

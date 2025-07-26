@@ -2,8 +2,6 @@ import { arrayZip } from "../utils/array/arrayZip.ts"
 import type { Attributes, Data } from "./Data.ts"
 
 export function dataEqual(x: Data, y: Data): boolean {
-  if (!attributesEqual(x.attributes, y.attributes)) return false
-
   if (
     (x.kind === "Bool" && y.kind === "Bool") ||
     (x.kind === "String" && y.kind === "String") ||
@@ -13,8 +11,11 @@ export function dataEqual(x: Data, y: Data): boolean {
     return x.content === y.content
   }
 
-  if (x.kind === "List" && y.kind === "List") {
-    return dataArrayEqual(x.content, y.content)
+  if (x.kind === "Tael" && y.kind === "Tael") {
+    return (
+      dataArrayEqual(x.content, y.content) &&
+      attributesEqual(x.attributes, y.attributes)
+    )
   }
 
   return false
@@ -29,7 +30,7 @@ export function dataArrayEqual(xs: Array<Data>, ys: Array<Data>): boolean {
   return true
 }
 
-function attributesEqual(x: Attributes, y: Attributes): boolean {
+export function attributesEqual(x: Attributes, y: Attributes): boolean {
   if (Object.keys(x).length !== Object.keys(y).length) return false
 
   for (const key of Object.keys(x)) {

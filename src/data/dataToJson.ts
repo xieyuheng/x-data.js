@@ -11,7 +11,7 @@ export function dataToJson(data: X.Data): Json {
     return data.content
   }
 
-  if (data.kind === "List") {
+  if (data.kind === "Tael") {
     if (data.content.length === 0) {
       return recordMap(data.attributes, dataToJson)
     } else {
@@ -45,7 +45,7 @@ export function dataToNumber(data: X.Data): number {
 }
 
 export function dataToArray(data: X.Data): Array<X.Data> {
-  if (data.kind !== "List") {
+  if (data.kind !== "Tael") {
     throw new Error(`[dataToArray] wrong data kind: ${data.kind}`)
   }
 

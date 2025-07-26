@@ -114,7 +114,7 @@ export class Parsing {
         return {
           data: X.List([quoteSymbol, data], {
             span: dataFromJson(
-              spanUnion(token.span, spanFromData(data.attributes["span"])),
+              spanUnion(token.span, spanFromData(data.meta["span"])),
             ),
           }),
           remain,
@@ -140,8 +140,7 @@ export class Parsing {
         }
 
         return {
-          data: X.List(array, {
-            ...attributes,
+          data: X.Tael(array, attributes, {
             span: dataFromJson(spanUnion(start.span, token.span)),
           }),
           remain: tokens.slice(1),
