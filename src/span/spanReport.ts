@@ -1,6 +1,4 @@
-import { color, type ColorMode } from "../utils/color.ts"
 import { intervalOverlap } from "../utils/interval.ts"
-import { isBrowser } from "../utils/isBrowser.ts"
 import { type Span } from "./Span.ts"
 
 // TODO The code is copied from `@cicada-lang/partech`,
@@ -13,21 +11,11 @@ export function spanReport(span: Span, context: string): string {
   return s
 }
 
-const color_mode: ColorMode = isBrowser() ? "html" : "escape-code"
-
-function repr_in_context(
-  span: Span,
-  context: string,
-  opts: {
-    mode: ColorMode
-  } = {
-    mode: color_mode,
-  },
-): string {
+function repr_in_context(span: Span, context: string): string {
   let s = ""
   for (let i = 0; i < context.length; i++) {
     if (span.start.index <= i && i < span.end.index) {
-      s += color(context.charAt(i), { ...opts, background: "red" })
+      s += context.charAt(i)
     } else {
       s += context.charAt(i)
     }
@@ -37,7 +25,7 @@ function repr_in_context(
     span.start.index === context.length &&
     span.end.index === context.length
   ) {
-    s += color(" ", { ...opts, background: "red" })
+    s += " "
   }
   return s
 }

@@ -1,6 +1,3 @@
-quit using `color`
-remove `picocolors`
-
 org utils by topic
 
 improve `matchData`

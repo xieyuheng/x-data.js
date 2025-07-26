@@ -16,9 +16,6 @@
     "test": "node --test lib/**/*.test.js",
     "format": "prettier src --write"
   },
-  "dependencies": {
-    "picocolors": "^1.1.1"
-  },
   "devDependencies": {
     "@types/node": "^24.0.15",
     "prettier": "^3.6.2",
