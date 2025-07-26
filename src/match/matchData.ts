@@ -262,7 +262,7 @@ function matchConsStar(mode: Mode, pattern: X.Data, data: X.Data): Effect {
 
 // effect combinators
 
-export function effectChoice(effects: Array<Effect>): Effect {
+function effectChoice(effects: Array<Effect>): Effect {
   return (subst) => {
     for (const effect of effects) {
       const newSubst = effect(subst)
@@ -271,7 +271,7 @@ export function effectChoice(effects: Array<Effect>): Effect {
   }
 }
 
-export function effectSequence(effects: Array<Effect>): Effect {
+function effectSequence(effects: Array<Effect>): Effect {
   return (subst) => {
     for (const effect of effects) {
       const newSubst = effect(subst)
@@ -283,25 +283,25 @@ export function effectSequence(effects: Array<Effect>): Effect {
   }
 }
 
-export function ifEffect(p: boolean): Effect {
+function ifEffect(p: boolean): Effect {
   return (subst) => {
     if (p) return subst
   }
 }
 
-export function lazyEffect(f: (subst: Subst) => Effect): Effect {
+function lazyEffect(f: (subst: Subst) => Effect): Effect {
   return (subst) => f(subst)(subst)
 }
 
-export function guardEffect(p: boolean, f: (subst: Subst) => Effect): Effect {
+function guardEffect(p: boolean, f: (subst: Subst) => Effect): Effect {
   return effectSequence([ifEffect(p), lazyEffect(f)])
 }
 
-export function failEffect(): Effect {
+function failEffect(): Effect {
   return ifEffect(false)
 }
 
-export function effectIfte(p: boolean, t: Effect, f: Effect): Effect {
+function effectIfte(p: boolean, t: Effect, f: Effect): Effect {
   return (subst) => {
     if (p) {
       return t(subst)
