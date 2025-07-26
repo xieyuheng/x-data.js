@@ -1,5 +1,4 @@
 import * as X from "../data/index.ts"
-import { deepEqual } from "../utils/deepEqual.ts"
 
 export type Subst = Record<string, X.Data>
 export type Mode = "NormalMode" | "QuoteMode" | "QuasiquoteMode"
@@ -23,7 +22,7 @@ function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
         const foundData = subst[key]
         return effectIfte(
           Boolean(foundData),
-          ifEffect(deepEqual(foundData, data)),
+          ifEffect(foundData && X.dataEqual(foundData, data)),
           (subst) => ({ ...subst, [key]: data }),
         )
       })
@@ -33,7 +32,7 @@ function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
     case "QuasiquoteMode": {
       return effectSequence([
         ifEffect(pattern.kind === "String"),
-        ifEffect(deepEqual(pattern.content, data.content)),
+        ifEffect(pattern.content === data.content),
         matchAttributes(mode, pattern.attributes, data.attributes),
       ])
     }
@@ -43,7 +42,7 @@ function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
 function matchBool(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return effectSequence([
     ifEffect(pattern.kind === "Bool"),
-    ifEffect(deepEqual(pattern.content, data.content)),
+    ifEffect(pattern.content === data.content),
     matchAttributes(mode, pattern.attributes, data.attributes),
   ])
 }
@@ -51,7 +50,7 @@ function matchBool(mode: Mode, pattern: X.Data, data: X.Data): Effect {
 function matchInt(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return effectSequence([
     ifEffect(pattern.kind === "Int"),
-    ifEffect(deepEqual(pattern.content, data.content)),
+    ifEffect(pattern.content === data.content),
     matchAttributes(mode, pattern.attributes, data.attributes),
   ])
 }
@@ -59,7 +58,7 @@ function matchInt(mode: Mode, pattern: X.Data, data: X.Data): Effect {
 function matchFloat(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return effectSequence([
     ifEffect(pattern.kind === "Float"),
-    ifEffect(deepEqual(pattern.content, data.content)),
+    ifEffect(pattern.content === data.content),
     matchAttributes(mode, pattern.attributes, data.attributes),
   ])
 }

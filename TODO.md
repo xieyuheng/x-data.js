@@ -1,5 +1,3 @@
-`dataEqual`
-use `dataEqual` instead of `deepEqual`
 remove fast-deep-equal
 
 quit using `color`
