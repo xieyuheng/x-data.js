@@ -17,7 +17,7 @@ export function matchData(mode: Mode, pattern: X.Data, data: X.Data): Effect {
 function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   switch (mode) {
     case "NormalMode": {
-      return ifEffect(pattern.kind === "String", (subst) => {
+      return ifEffect(pattern.kind === "String", ({ subst }) => {
         const key = (pattern as X.String).content
         const foundData = subst[key]
         return ifteEffect(
@@ -289,12 +289,11 @@ function guardEffect(p: () => boolean): Effect {
   }
 }
 
-function lazyEffect(f: (subst: Subst) => Effect): Effect {
-  return (subst) => f(subst)(subst)
-}
-
-function ifEffect(p: boolean, f: (subst: Subst) => Effect): Effect {
-  return sequenceEffect([guardEffect(() => p), lazyEffect(f)])
+function ifEffect(
+  p: boolean,
+  f: (options: { subst: Subst }) => Effect,
+): Effect {
+  return sequenceEffect([guardEffect(() => p), (subst) => f({ subst })(subst)])
 }
 
 function failEffect(): Effect {

@@ -1,4 +1,4 @@
-refactor `matchData`
+refactor `matchData` -- inline `ifteEffect`
 
 [example] tau -- support tau with attributes -- use `recordMap`
 
