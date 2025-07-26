@@ -1,5 +1,5 @@
-import { recordMap } from "../utils/recordMap.ts"
-import { recordRemoveKeys } from "../utils/recordRemoveKeys.ts"
+import { recordMap } from "../utils/record/recordMap.ts"
+import { recordRemoveKeys } from "../utils/record/recordRemoveKeys.ts"
 import * as X from "./Data.ts"
 
 export function dataPruneAttributes(data: X.Data, keys: Array<string>): X.Data {
