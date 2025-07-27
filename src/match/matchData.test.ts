@@ -13,9 +13,8 @@ function assertMatch(
   const data = typeof dataInput === "string" ? parseData(dataInput) : dataInput
   const subst = matchData("NormalMode", pattern, data)({})
   const expectedData = parseData(expectedInput)
-  assert(expectedData.kind === "Tael")
   assert(subst)
-  assert(X.attributesEqual(subst, expectedData.attributes))
+  assert(X.attributesEqual(subst, X.asTael(expectedData).attributes))
 }
 
 function assertMatchFail(patternInput: string, dataInput: string): void {

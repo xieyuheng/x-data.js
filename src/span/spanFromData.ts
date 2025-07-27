@@ -1,11 +1,9 @@
-import assert from "node:assert"
 import * as X from "../data/index.ts"
 import { dataToJson } from "../data/index.ts"
 import { type Span } from "./index.ts"
 
 export function spanFromData(data: X.Data): Span {
-  assert(data.kind === "Tael")
-  const json: any = dataToJson(X.Record(data.attributes))
+  const json: any = dataToJson(X.Record(X.asTael(data).attributes))
   try {
     return { start: json.start, end: json.end }
   } catch (error) {

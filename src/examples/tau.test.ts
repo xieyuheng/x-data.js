@@ -64,10 +64,9 @@ const typeMatcher: X.Matcher<Type> = X.matcherChoice<Type>([
   ),
 
   X.matcher("(cons 'tau types)", ({ types }, { data }) => {
-    assert(data.kind === "Tael")
     return Tau(
       X.dataToArray(types).map(matchType),
-      recordMap(data.attributes, matchType),
+      recordMap(X.asTael(data).attributes, matchType),
     )
   }),
 
