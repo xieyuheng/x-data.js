@@ -7,7 +7,7 @@ export class Lexing implements Iterator<Token> {
   position = initPosition()
 
   handlers: Array<CharHandler> = [
-    // NOTE The order matters, we must
+    // The order matters, we must
     //   try `NumberHandler` before `SymbolHandler`.
     new SpaceHandler(this),
     new QuoteHandler(this),
@@ -176,7 +176,7 @@ class StringHandler extends CharHandler {
 
   handle(char: string): string {
     const text = this.lexing.rest.split("\n")[0] || ""
-    let index = 2 // NOTE over first `"` and the folloing char.
+    let index = 2 // over first `"` and the folloing char.
     while (index <= text.length) {
       const head = text.slice(0, index)
       const str = this.tryToParseString(head)
