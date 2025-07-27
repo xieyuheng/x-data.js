@@ -1,30 +1,31 @@
-export class Position {
+export type Position = {
   index: number
   row: number
   column: number
-
-  constructor(options: { index: number; row: number; column: number }) {
-    this.index = options.index
-    this.row = options.row
-    this.column = options.column
-  }
-
-  step(char: string): void {
-    if (char.length !== 1) {
-      throw new Error(`I expect the char to be length of one: ${char}`)
-    }
-
-    this.index++
-
-    if (char === "\n") {
-      this.column = 0
-      this.row++
-    } else {
-      this.column++
-    }
-  }
 }
 
 export function initPosition(): Position {
-  return new Position({ index: 0, column: 0, row: 0 })
+  return { index: 0, column: 0, row: 0 }
+}
+
+export function positionForwardChar(
+  position: Position,
+  char: string,
+): Position {
+  if (char.length !== 1) {
+    throw new Error(`I expect the char to be length of one: ${char}`)
+  }
+
+  const nextPosition = { ...position }
+
+  nextPosition.index++
+
+  if (char === "\n") {
+    nextPosition.column = 0
+    nextPosition.row++
+  } else {
+    nextPosition.column++
+  }
+
+  return nextPosition
 }

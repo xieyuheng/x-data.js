@@ -1,6 +1,6 @@
 import { InternalError, ParsingError } from "../errors/index.ts"
 import { Lexer } from "../lexer/index.ts"
-import { initPosition, Position, Span } from "../span/index.ts"
+import { initPosition, positionForwardChar, Span } from "../span/index.ts"
 import { Token, type TokenKind } from "../token/index.ts"
 
 export class Lexing implements Iterator<Token> {
@@ -43,7 +43,7 @@ export class Lexing implements Iterator<Token> {
     if (this.char === undefined) return
 
     while (count-- > 0) {
-      this.position.step(this.char)
+      this.position = positionForwardChar(this.position, this.char)
     }
   }
 
@@ -59,10 +59,10 @@ export class Lexing implements Iterator<Token> {
   private handleChar(char: string): IteratorResult<Token> | undefined {
     for (const handler of this.handlers) {
       if (handler.canHandle(char)) {
-        const start = new Position(this.position)
+        const start = this.position
         const value = handler.handle(char)
         if (handler.kind === undefined) return undefined
-        const end = new Position(this.position)
+        const end = this.position
         const span = new Span(start, end)
         const token = new Token(handler.kind, value, span)
         return { done: false, value: token }
@@ -188,9 +188,8 @@ class StringHandler extends CharHandler {
       }
     }
 
-    const start = new Position(this.lexing.position)
-    const end = new Position(this.lexing.position)
-    end.step('"')
+    const start = this.lexing.position
+    const end = positionForwardChar(start, '"')
     const span = new Span(start, end)
     throw new ParsingError(`Fail to parse JSON string: ${text}`, span)
   }

@@ -1,6 +1,6 @@
 import { InternalError } from "../errors/index.ts"
 
-export interface LexerOptions {
+export type LexerOptions = {
   quotes: Array<{ mark: string; symbol: string }>
   brackets: Array<{ start: string; end: string }>
   comments: Array<string>
