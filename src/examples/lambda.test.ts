@@ -28,6 +28,8 @@ function matchExp(data: X.Data): Exp {
   return X.match(expMatcher, data)
 }
 
+const keywords = ["lambda", "let"]
+
 const expMatcher: X.Matcher<Exp> = X.matcherChoice<Exp>([
   X.matcher("`(lambda (,name) ,ret)", ({ name, ret }) =>
     Lambda(X.dataToString(name), X.match(expMatcher, ret)),
@@ -45,7 +47,15 @@ const expMatcher: X.Matcher<Exp> = X.matcherChoice<Exp>([
     Apply(X.match(expMatcher, target), X.match(expMatcher, arg)),
   ),
 
-  X.matcher("name", ({ name }) => Var(X.dataToString(name))),
+  X.matcher("name", ({ name }, { span }) => {
+    const nameString = X.dataToString(name)
+    if (keywords.includes(nameString)) {
+      const message = "keywork should not be used as variable"
+      throw new X.ParsingError(message, span)
+    }
+
+    return Var(nameString)
+  }),
 ])
 
 function assertParse(text: string, exp: Exp): void {
@@ -79,10 +89,15 @@ function assertParsingError(text: string): void {
       return
     }
 
+    console.log(error)
     throw error
   }
 }
 
 test("examples/lambda -- parsing errors", () => {
   assertParsingError("(f x")
+  assertParsingError("(f x\n(g y)")
+  assertParsingError("f x)")
+
+  assertParsingError("(lambda x)")
 })
