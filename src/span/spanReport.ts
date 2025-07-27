@@ -19,7 +19,7 @@ export function spanReport(span: Span, context: string): string {
 }
 
 function lineIsCloseToSpan(line: Line, span: Span): boolean {
-  return line.index > span.start.column - 3 && line.index < span.end.column + 3
+  return span.start.row - 3 < line.index && line.index < span.end.row + 3
 }
 
 function linesLeftMargin(lines: Array<Line>): number {

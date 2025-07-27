@@ -17,10 +17,10 @@ export class Parsing {
 
   parse(tokens: Array<Token>): Result {
     if (tokens[0] === undefined) {
-      throw new ParsingError(
-        "I expect to see a token, but there is no token remain.",
-        { start: initPosition(), end: initPosition() },
-      )
+      throw new ParsingError("I expect a token, but there is no token remain", {
+        start: initPosition(),
+        end: initPosition(),
+      })
     }
 
     const token = tokens[0]
@@ -43,7 +43,7 @@ export class Parsing {
 
         if (token.value.startsWith("#")) {
           throw new ParsingError(
-            `unknown special symbol: ${token.value}`,
+            `I found unknown special symbol: ${token.value}`,
             token.span,
           )
         }
@@ -91,10 +91,10 @@ export class Parsing {
 
       case "BracketStart": {
         if (token.value === "[") {
-          const { data, remain } = this.parseList(token, tokens.slice(1))
+          const { data, remain } = this.parseTael(token, tokens.slice(1))
           return { data: X.Cons(X.String("tael"), data), remain }
         } else {
-          return this.parseList(token, tokens.slice(1))
+          return this.parseTael(token, tokens.slice(1))
         }
       }
 
@@ -122,13 +122,13 @@ export class Parsing {
     }
   }
 
-  private parseList(start: Token, tokens: Array<Token>): Result {
+  private parseTael(start: Token, tokens: Array<Token>): Result {
     const array: Array<X.Data> = []
     const attributes: X.Attributes = {}
 
     while (true) {
       if (tokens[0] === undefined) {
-        throw new ParsingError(`Missing BracketEnd`, start.span)
+        throw new ParsingError(`I found missing BracketEnd`, start.span)
       }
 
       const token = tokens[0]
@@ -148,6 +148,13 @@ export class Parsing {
 
       if (token.kind === "Symbol" && token.value.startsWith(":")) {
         const head = this.parse(tokens.slice(1))
+        if (head.data.kind === "String" && head.data.content.startsWith(":")) {
+          throw new ParsingError(
+            `I found key after key in attributes`,
+            token.span,
+          )
+        }
+
         attributes[token.value.slice(1)] = head.data
         tokens = head.remain
         continue
