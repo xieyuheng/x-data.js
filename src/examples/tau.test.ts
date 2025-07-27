@@ -130,3 +130,20 @@ test("examples/tau", () => {
     }),
   )
 })
+
+function assertParsingError(text: string): void {
+  try {
+    matchType(X.parseData(text))
+  } catch (error) {
+    if (error instanceof X.ParsingError) {
+      console.log("[assertParsingError]", error.report({ text }))
+      return
+    }
+
+    throw error
+  }
+}
+
+test("examples/test -- parsing errors", () => {
+  assertParsingError("(-> A B")
+})
