@@ -63,18 +63,18 @@ const typeMatcher: X.Matcher<Type> = X.matcherChoice<Type>([
     Inter(X.dataToArray(types).map(matchType)),
   ),
 
-  X.matcher("(cons 'tau types)", ({ types }, { data }) => {
-    return Tau(
+  X.matcher("(cons 'tau types)", ({ types }, { data }) =>
+    Tau(
       X.dataToArray(types).map(matchType),
       recordMap(X.asTael(data).attributes, matchType),
-    )
-  }),
+    ),
+  ),
 
   X.matcher("name", ({ name }) => TypeVar(X.dataToString(name))),
 ])
 
 function assertParse(text: string, type: Type): void {
-  assert.deepStrictEqual(X.match(typeMatcher, X.parseData(text)), type)
+  assert.deepStrictEqual(matchType(X.parseData(text)), type)
 }
 
 test("tau example", () => {
