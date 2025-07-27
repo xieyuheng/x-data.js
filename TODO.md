@@ -1,1 +1,1 @@
-[example] tau -- test span by report in context
+[example] tau -- test span by report in context -- use `~~~` instead of color
