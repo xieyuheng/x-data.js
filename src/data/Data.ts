@@ -24,8 +24,9 @@ export function isAtom(data: Data): data is Atom {
   )
 }
 
-export function asBool(data: Data): data is Bool {
-  return data.kind === "Bool"
+export function asBool(data: Data): Bool {
+  if (data.kind === "Bool") return data
+  throw new Error(`[asBool] fail on: ${data.kind}`)
 }
 
 export function Bool(content: boolean, meta?: Attributes): Bool {
@@ -36,8 +37,9 @@ export function Bool(content: boolean, meta?: Attributes): Bool {
   }
 }
 
-export function asString(data: Data): data is String {
-  return data.kind === "String"
+export function asString(data: Data): String {
+  if (data.kind === "String") return data
+  throw new Error(`[asString] fail on: ${data.kind}`)
 }
 
 export function String(content: string, meta?: Attributes): String {
@@ -48,8 +50,9 @@ export function String(content: string, meta?: Attributes): String {
   }
 }
 
-export function asInt(data: Data): data is Int {
-  return data.kind === "Int"
+export function asInt(data: Data): Int {
+  if (data.kind === "Int") return data
+  throw new Error(`[asInt] fail on: ${data.kind}`)
 }
 
 export function Int(content: number, meta?: Attributes): Int {
@@ -64,8 +67,9 @@ export function Int(content: number, meta?: Attributes): Int {
   }
 }
 
-export function asFloat(data: Data): data is Float {
-  return data.kind === "Float"
+export function asFloat(data: Data): Float {
+  if (data.kind === "Float") return data
+  throw new Error(`[asFloat] fail on: ${data.kind}`)
 }
 
 export function Float(content: number, meta?: Attributes): Float {
@@ -76,8 +80,9 @@ export function Float(content: number, meta?: Attributes): Float {
   }
 }
 
-export function asTael(data: Data): data is Tael {
-  return data.kind === "Tael"
+export function asTael(data: Data): Tael {
+  if (data.kind === "Tael") return data
+  throw new Error(`[asTael] fail on: ${data.kind}`)
 }
 
 export function Tael(

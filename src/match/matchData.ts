@@ -18,7 +18,7 @@ function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   switch (mode) {
     case "NormalMode": {
       return ifEffect(pattern.kind === "String", ({ subst }) => {
-        const key = (pattern as X.String).content
+        const key = X.asString(pattern).content
         const foundData = subst[key]
         return (subst) => {
           if (foundData) {
@@ -120,15 +120,11 @@ function matchQuotedList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
       pattern.content.length === data.content.length,
     () =>
       sequenceEffect([
-        matchManyData(
-          mode,
-          (pattern as X.Tael).content,
-          (data as X.Tael).content,
-        ),
+        matchManyData(mode, X.asTael(pattern).content, X.asTael(data).content),
         matchAttributes(
           mode,
-          (pattern as X.Tael).attributes,
-          (data as X.Tael).attributes,
+          X.asTael(pattern).attributes,
+          X.asTael(data).attributes,
         ),
       ]),
   )
@@ -141,7 +137,7 @@ function matchUnquote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
       pattern.content[0].kind === "String" &&
       pattern.content[0].content === "unquote",
     () => {
-      const firstData = (pattern as X.Tael).content[1]
+      const firstData = X.asTael(pattern).content[1]
       return sequenceEffect([matchData("NormalMode", firstData, data)])
     },
   )
@@ -155,8 +151,8 @@ function matchTael(mode: Mode, pattern: X.Data, data: X.Data): Effect {
       pattern.content[0].kind === "String" &&
       pattern.content[0].content === "tael",
     () => {
-      const patternBody = (pattern as X.Tael).content.slice(1)
-      const dataBody = (data as X.Tael).content
+      const patternBody = X.asTael(pattern).content.slice(1)
+      const dataBody = X.asTael(data).content
       return sequenceEffect([
         guardEffect(() => patternBody.length === dataBody.length),
         ...patternBody
@@ -164,8 +160,8 @@ function matchTael(mode: Mode, pattern: X.Data, data: X.Data): Effect {
           .map((index) => matchData(mode, patternBody[index], dataBody[index])),
         matchAttributes(
           mode,
-          (pattern as X.Tael).attributes,
-          (data as X.Tael).attributes,
+          X.asTael(pattern).attributes,
+          X.asTael(data).attributes,
         ),
       ])
     },
@@ -179,7 +175,7 @@ function matchQuote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
       pattern.content[0].kind === "String" &&
       pattern.content[0].content === "quote",
     () => {
-      const firstData = (pattern as X.Tael).content[1]
+      const firstData = X.asTael(pattern).content[1]
       return sequenceEffect([matchData("QuoteMode", firstData, data)])
     },
   )
@@ -192,7 +188,7 @@ function matchQuasiquote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
       pattern.content[0].kind === "String" &&
       pattern.content[0].content === "quasiquote",
     () => {
-      const firstData = (pattern as X.Tael).content[1]
+      const firstData = X.asTael(pattern).content[1]
       return sequenceEffect([matchData("QuasiquoteMode", firstData, data)])
     },
   )
@@ -206,11 +202,11 @@ function matchCons(mode: Mode, pattern: X.Data, data: X.Data): Effect {
       pattern.content[0].kind === "String" &&
       pattern.content[0].content === "cons",
     () => {
-      const listPattern = pattern as X.Tael
+      const listPattern = X.asTael(pattern)
       const headPattern = listPattern.content[1]
       const tailPattern = listPattern.content[2]
 
-      const listData = data as X.Tael
+      const listData = X.asTael(data)
       if (listData.content.length === 0) return failEffect()
       const headData = listData.content[0]
       const tailData = X.Tael(listData.content.slice(1), {})
@@ -231,12 +227,12 @@ function matchConsStar(mode: Mode, pattern: X.Data, data: X.Data): Effect {
       pattern.content[0].kind === "String" &&
       pattern.content[0].content === "cons*",
     () => {
-      const listPattern = pattern as X.Tael
+      const listPattern = X.asTael(pattern)
       const prefixCount = listPattern.content.length - 2
       const patternPrefix = listPattern.content.slice(1, prefixCount + 1)
       const tailPattern = listPattern.content[listPattern.content.length - 1]
 
-      const listData = data as X.Tael
+      const listData = X.asTael(data)
       if (listData.content.length < prefixCount) return failEffect()
       const dataPrefix = listData.content.slice(0, prefixCount)
       const tailData = X.Tael(listData.content.slice(prefixCount), {})
