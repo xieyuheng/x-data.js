@@ -3,7 +3,7 @@ import { dataFromJson, type Data } from "../data/index.ts"
 import { InternalError, ParsingError } from "../errors/index.ts"
 import { type Lexer } from "../lexer/index.ts"
 import { initPosition, spanFromData, spanUnion } from "../span/index.ts"
-import { Token } from "../token/index.ts"
+import { type Token } from "../token/index.ts"
 
 type Result = { data: Data; remain: Array<Token> }
 

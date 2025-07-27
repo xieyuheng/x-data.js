@@ -1,7 +1,7 @@
 import { InternalError, ParsingError } from "../errors/index.ts"
 import { Lexer } from "../lexer/index.ts"
 import { initPosition, positionForwardChar } from "../span/index.ts"
-import { Token, type TokenKind } from "../token/index.ts"
+import { type Token, type TokenKind } from "../token/index.ts"
 
 export class Lexing implements Iterator<Token> {
   position = initPosition()
@@ -64,7 +64,7 @@ export class Lexing implements Iterator<Token> {
         if (handler.kind === undefined) return undefined
         const end = this.position
         const span = { start, end }
-        const token = new Token(handler.kind, value, span)
+        const token = { kind: handler.kind, value, span }
         return { done: false, value: token }
       }
     }

@@ -8,14 +8,8 @@ export type TokenKind =
   | "BracketEnd"
   | "Quote"
 
-export class Token {
+export type Token = {
   kind: TokenKind
   value: string
   span: Span
-
-  constructor(kind: TokenKind, value: string, span: Span) {
-    this.kind = kind
-    this.value = value
-    this.span = span
-  }
 }

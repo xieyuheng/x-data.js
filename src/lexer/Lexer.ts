@@ -1,5 +1,5 @@
 import { LexerConfig, type LexerOptions } from "../lexer/index.ts"
-import { Token } from "../token/index.ts"
+import { type Token } from "../token/index.ts"
 import { Lexing } from "./Lexing.ts"
 
 export class Lexer {
