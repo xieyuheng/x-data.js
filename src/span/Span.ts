@@ -1,4 +1,4 @@
-import { Position } from "../position/index.ts"
+import { Position } from "./Position.ts"
 
 export class Span {
   start: Position

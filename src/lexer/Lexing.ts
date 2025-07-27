@@ -1,7 +1,6 @@
 import { InternalError, ParsingError } from "../errors/index.ts"
 import { Lexer } from "../lexer/index.ts"
-import { initPosition, Position } from "../position/index.ts"
-import { Span } from "../span/index.ts"
+import { initPosition, Position, Span } from "../span/index.ts"
 import { Token, type TokenKind } from "../token/index.ts"
 
 export class Lexing implements Iterator<Token> {
