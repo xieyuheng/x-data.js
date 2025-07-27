@@ -24,6 +24,10 @@ export function isAtom(data: Data): data is Atom {
   )
 }
 
+export function asBool(data: Data): data is Bool {
+  return data.kind === "Bool"
+}
+
 export function Bool(content: boolean, meta?: Attributes): Bool {
   return {
     kind: "Bool",
@@ -32,12 +36,20 @@ export function Bool(content: boolean, meta?: Attributes): Bool {
   }
 }
 
+export function asString(data: Data): data is String {
+  return data.kind === "String"
+}
+
 export function String(content: string, meta?: Attributes): String {
   return {
     kind: "String",
     content,
     meta: meta || {},
   }
+}
+
+export function asInt(data: Data): data is Int {
+  return data.kind === "Int"
 }
 
 export function Int(content: number, meta?: Attributes): Int {
@@ -52,12 +64,20 @@ export function Int(content: number, meta?: Attributes): Int {
   }
 }
 
+export function asFloat(data: Data): data is Float {
+  return data.kind === "Float"
+}
+
 export function Float(content: number, meta?: Attributes): Float {
   return {
     kind: "Float",
     content,
     meta: meta || {},
   }
+}
+
+export function asTael(data: Data): data is Tael {
+  return data.kind === "Tael"
 }
 
 export function Tael(
