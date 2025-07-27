@@ -8,7 +8,7 @@ export class ParsingError extends Error {
     this.span = span
   }
 
-  report(text: string): string {
-    return [this.message + "\n", spanReport(this.span, text)].join("\n")
+  report(options: { text: string }): string {
+    return [this.message + "\n", spanReport(this.span, options.text)].join("\n")
   }
 }

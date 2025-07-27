@@ -77,7 +77,7 @@ function assertParse(text: string, type: Type): void {
   assert.deepStrictEqual(matchType(X.parseData(text)), type)
 }
 
-test("tau example", () => {
+test("examples/tau", () => {
   assertParse("A", TypeVar("A"))
 
   assertParse(

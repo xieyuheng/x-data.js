@@ -52,7 +52,7 @@ function assertParse(text: string, exp: Exp): void {
   assert.deepStrictEqual(matchExp(X.parseData(text)), exp)
 }
 
-test("lambda example", () => {
+test("examples/lambda", () => {
   assertParse("x", Var("x"))
 
   assertParse("(f x)", Apply(Var("f"), Var("x")))
@@ -68,4 +68,21 @@ test("lambda example", () => {
     "(let ((id (lambda (x) x))) (id id))",
     Let("id", Lambda("x", Var("x")), Apply(Var("id"), Var("id"))),
   )
+})
+
+function assertParsingError(text: string): void {
+  try {
+    matchExp(X.parseData(text))
+  } catch (error) {
+    if (error instanceof X.ParsingError) {
+      console.log("[assertParsingError]", error.report({ text }))
+      return
+    }
+
+    throw error
+  }
+}
+
+test("examples/lambda -- parsing errors", () => {
+  assertParsingError("(f x")
 })
