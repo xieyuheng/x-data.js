@@ -147,4 +147,5 @@ function assertParsingError(text: string): void {
 test("examples/test -- parsing errors", () => {
   assertParsingError("(-> A B")
   assertParsingError("(tau :x :y)")
+  assertParsingError("(tau A B C :x A :y B :z (tau :x :y))")
 })
