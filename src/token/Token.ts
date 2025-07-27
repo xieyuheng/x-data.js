@@ -1,4 +1,4 @@
-import { Span } from "../span/index.ts"
+import { type Span } from "../span/index.ts"
 
 export type TokenKind =
   | "Symbol"

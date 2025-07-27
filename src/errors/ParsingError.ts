@@ -1,4 +1,4 @@
-import { Span, spanReport } from "../span/index.ts"
+import { type Span, spanReport } from "../span/index.ts"
 
 export class ParsingError extends Error {
   span: Span
