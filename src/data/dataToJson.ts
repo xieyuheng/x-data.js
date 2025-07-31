@@ -20,9 +20,9 @@ export function dataToJson(data: X.Data): Json {
   }
 }
 
-export function dataToString(data: X.Data): string {
-  if (data.kind !== "String") {
-    throw new Error(`[dataToString] wrong data kind: ${data.kind}`)
+export function dataToSymbol(data: X.Data): string {
+  if (data.kind !== "Symbol") {
+    throw new Error(`[dataToSymbol] wrong data kind: ${data.kind}`)
   }
 
   return data.content

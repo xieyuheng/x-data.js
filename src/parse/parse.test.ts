@@ -8,12 +8,12 @@ function assertParse(text: string, data: X.Data): void {
 }
 
 test("symbol", () => {
-  assertParse("abc", X.String("abc"))
-  assertParse("3-sphere", X.String("3-sphere"))
+  assertParse("abc", X.Symbol("abc"))
+  assertParse("3-sphere", X.Symbol("3-sphere"))
 })
 
 test("doublequoted string", () => {
-  assertParse('"abc"', X.List([X.String("quote"), X.String("abc")]))
+  assertParse('"abc"', X.List([X.Symbol("quote"), X.Symbol("abc")]))
 })
 
 test("bool", () => {
@@ -31,18 +31,18 @@ test("number", () => {
 
 test("list in round brackets", () => {
   assertParse("()", X.List([]))
-  assertParse("(a b c)", X.List([X.String("a"), X.String("b"), X.String("c")]))
+  assertParse("(a b c)", X.List([X.Symbol("a"), X.Symbol("b"), X.Symbol("c")]))
   assertParse(
     "(a (b) c)",
-    X.List([X.String("a"), X.List([X.String("b")]), X.String("c")]),
+    X.List([X.Symbol("a"), X.List([X.Symbol("b")]), X.Symbol("c")]),
   )
 })
 
 test("list in square brackets", () => {
-  assertParse("[]", X.List([X.String("tael")]))
+  assertParse("[]", X.List([X.Symbol("tael")]))
   assertParse(
     "[a b c]",
-    X.List([X.String("tael"), X.String("a"), X.String("b"), X.String("c")]),
+    X.List([X.Symbol("tael"), X.Symbol("a"), X.Symbol("b"), X.Symbol("c")]),
   )
 })
 
@@ -50,7 +50,7 @@ test("list with attributes", () => {
   assertParse("(:x 1 :y 2)", X.Record({ x: X.Int(1), y: X.Int(2) }))
   assertParse(
     "(a b c :x 1 :y 2)",
-    X.Tael([X.String("a"), X.String("b"), X.String("c")], {
+    X.Tael([X.Symbol("a"), X.Symbol("b"), X.Symbol("c")], {
       x: X.Int(1),
       y: X.Int(2),
     }),
@@ -58,30 +58,30 @@ test("list with attributes", () => {
 })
 
 test("quotes", () => {
-  assertParse("'a", X.List([X.String("quote"), X.String("a")]))
-  assertParse("'(a)", X.List([X.String("quote"), X.List([X.String("a")])]))
+  assertParse("'a", X.List([X.Symbol("quote"), X.Symbol("a")]))
+  assertParse("'(a)", X.List([X.Symbol("quote"), X.List([X.Symbol("a")])]))
   assertParse(
     "'(a b c)",
     X.List([
-      X.String("quote"),
-      X.List([X.String("a"), X.String("b"), X.String("c")]),
+      X.Symbol("quote"),
+      X.List([X.Symbol("a"), X.Symbol("b"), X.Symbol("c")]),
     ]),
   )
   assertParse(
     ",(a b c)",
     X.List([
-      X.String("unquote"),
-      X.List([X.String("a"), X.String("b"), X.String("c")]),
+      X.Symbol("unquote"),
+      X.List([X.Symbol("a"), X.Symbol("b"), X.Symbol("c")]),
     ]),
   )
   assertParse(
     "`(a ,b c)",
     X.List([
-      X.String("quasiquote"),
+      X.Symbol("quasiquote"),
       X.List([
-        X.String("a"),
-        X.List([X.String("unquote"), X.String("b")]),
-        X.String("c"),
+        X.Symbol("a"),
+        X.List([X.Symbol("unquote"), X.Symbol("b")]),
+        X.Symbol("c"),
       ]),
     ]),
   )

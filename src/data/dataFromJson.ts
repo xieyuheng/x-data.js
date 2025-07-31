@@ -6,7 +6,7 @@ import * as X from "./Data.ts"
 
 export function dataFromJson(json: any): X.Data {
   if (typeof json === "string") {
-    return X.String(json)
+    return X.Symbol(json)
   }
 
   if (typeof json === "number") {

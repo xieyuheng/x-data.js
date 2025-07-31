@@ -4,11 +4,11 @@ import * as X from "../data/index.js"
 import { dataFromJson } from "../data/index.js"
 
 test("dataFromJson", () => {
-  assert.deepStrictEqual(dataFromJson("abc"), X.String("abc"))
+  assert.deepStrictEqual(dataFromJson("abc"), X.Symbol("abc"))
 
   assert.deepStrictEqual(
     dataFromJson(["a", "b", "c"]),
-    X.Tael([X.String("a"), X.String("b"), X.String("c")], {}),
+    X.Tael([X.Symbol("a"), X.Symbol("b"), X.Symbol("c")], {}),
   )
 
   assert.deepStrictEqual(

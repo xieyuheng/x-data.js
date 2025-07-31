@@ -1,8 +1,8 @@
 export type Data = Atom | Tael
 
-export type Atom = Bool | String | Int | Float
+export type Atom = Bool | Symbol | Int | Float
 export type Bool = { kind: "Bool"; content: boolean; meta: Attributes }
-export type String = { kind: "String"; content: string; meta: Attributes }
+export type Symbol = { kind: "Symbol"; content: string; meta: Attributes }
 export type Int = { kind: "Int"; content: number; meta: Attributes }
 export type Float = { kind: "Float"; content: number; meta: Attributes }
 
@@ -18,7 +18,7 @@ export type Attributes = Record<string, Data>
 export function isAtom(data: Data): data is Atom {
   return (
     data.kind === "Bool" ||
-    data.kind === "String" ||
+    data.kind === "Symbol" ||
     data.kind === "Int" ||
     data.kind === "Float"
   )
@@ -37,14 +37,14 @@ export function Bool(content: boolean, meta?: Attributes): Bool {
   }
 }
 
-export function asString(data: Data): String {
-  if (data.kind === "String") return data
-  throw new Error(`[asString] fail on: ${data.kind}`)
+export function asSymbol(data: Data): Symbol {
+  if (data.kind === "Symbol") return data
+  throw new Error(`[asSymbol] fail on: ${data.kind}`)
 }
 
-export function String(content: string, meta?: Attributes): String {
+export function Symbol(content: string, meta?: Attributes): Symbol {
   return {
-    kind: "String",
+    kind: "Symbol",
     content,
     meta: meta || {},
   }

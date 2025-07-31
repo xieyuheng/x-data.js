@@ -6,7 +6,7 @@ export type Effect = (subst: Subst) => Subst | void
 
 export function matchData(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return choiceEffect([
-    matchString(mode, pattern, data),
+    matchSymbol(mode, pattern, data),
     matchBool(mode, pattern, data),
     matchInt(mode, pattern, data),
     matchFloat(mode, pattern, data),
@@ -14,11 +14,11 @@ export function matchData(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   ])
 }
 
-function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
+function matchSymbol(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   switch (mode) {
     case "NormalMode": {
-      return ifEffect(pattern.kind === "String", ({ subst }) => {
-        const key = X.asString(pattern).content
+      return ifEffect(pattern.kind === "Symbol", ({ subst }) => {
+        const key = X.asSymbol(pattern).content
         const foundData = subst[key]
         return (subst) => {
           if (foundData) {
@@ -33,7 +33,7 @@ function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
     case "QuoteMode":
     case "QuasiquoteMode": {
       return sequenceEffect([
-        guardEffect(() => pattern.kind === "String"),
+        guardEffect(() => pattern.kind === "Symbol"),
         guardEffect(() => pattern.content === data.content),
       ])
     }
@@ -134,7 +134,7 @@ function matchUnquote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return ifEffect(
     pattern.kind === "Tael" &&
       pattern.content.length >= 2 &&
-      pattern.content[0].kind === "String" &&
+      pattern.content[0].kind === "Symbol" &&
       pattern.content[0].content === "unquote",
     () => {
       const firstData = X.asTael(pattern).content[1]
@@ -148,7 +148,7 @@ function matchTael(mode: Mode, pattern: X.Data, data: X.Data): Effect {
     pattern.kind === "Tael" &&
       data.kind === "Tael" &&
       pattern.content.length >= 1 &&
-      pattern.content[0].kind === "String" &&
+      pattern.content[0].kind === "Symbol" &&
       pattern.content[0].content === "tael",
     () => {
       const patternBody = X.asTael(pattern).content.slice(1)
@@ -172,7 +172,7 @@ function matchQuote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return ifEffect(
     pattern.kind === "Tael" &&
       pattern.content.length >= 2 &&
-      pattern.content[0].kind === "String" &&
+      pattern.content[0].kind === "Symbol" &&
       pattern.content[0].content === "quote",
     () => {
       const firstData = X.asTael(pattern).content[1]
@@ -185,7 +185,7 @@ function matchQuasiquote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return ifEffect(
     pattern.kind === "Tael" &&
       pattern.content.length >= 2 &&
-      pattern.content[0].kind === "String" &&
+      pattern.content[0].kind === "Symbol" &&
       pattern.content[0].content === "quasiquote",
     () => {
       const firstData = X.asTael(pattern).content[1]
@@ -199,7 +199,7 @@ function matchCons(mode: Mode, pattern: X.Data, data: X.Data): Effect {
     pattern.kind === "Tael" &&
       data.kind === "Tael" &&
       pattern.content.length === 3 &&
-      pattern.content[0].kind === "String" &&
+      pattern.content[0].kind === "Symbol" &&
       pattern.content[0].content === "cons",
     () => {
       const listPattern = X.asTael(pattern)
@@ -224,7 +224,7 @@ function matchConsStar(mode: Mode, pattern: X.Data, data: X.Data): Effect {
     pattern.kind === "Tael" &&
       data.kind === "Tael" &&
       pattern.content.length >= 3 &&
-      pattern.content[0].kind === "String" &&
+      pattern.content[0].kind === "Symbol" &&
       pattern.content[0].content === "cons*",
     () => {
       const listPattern = X.asTael(pattern)

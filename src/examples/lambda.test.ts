@@ -32,12 +32,12 @@ const keywords = ["lambda", "let"]
 
 const expMatcher: X.Matcher<Exp> = X.matcherChoice<Exp>([
   X.matcher("`(lambda (,name) ,ret)", ({ name, ret }) =>
-    Lambda(X.dataToString(name), X.match(expMatcher, ret)),
+    Lambda(X.dataToSymbol(name), X.match(expMatcher, ret)),
   ),
 
   X.matcher("`(let ((,name ,rhs)) ,body)", ({ name, rhs, body }) =>
     Let(
-      X.dataToString(name),
+      X.dataToSymbol(name),
       X.match(expMatcher, rhs),
       X.match(expMatcher, body),
     ),
@@ -48,13 +48,13 @@ const expMatcher: X.Matcher<Exp> = X.matcherChoice<Exp>([
   ),
 
   X.matcher("name", ({ name }, { span }) => {
-    const nameString = X.dataToString(name)
-    if (keywords.includes(nameString)) {
+    const nameSymbol = X.dataToSymbol(name)
+    if (keywords.includes(nameSymbol)) {
       const message = "keywork should not be used as variable"
       throw new X.ParsingError(message, span)
     }
 
-    return Var(nameString)
+    return Var(nameSymbol)
   }),
 ])
 

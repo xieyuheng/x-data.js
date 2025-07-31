@@ -49,7 +49,7 @@ export class Parsing {
         }
 
         return {
-          data: X.String(token.value, { span: dataFromJson(token.span) }),
+          data: X.Symbol(token.value, { span: dataFromJson(token.span) }),
           remain: tokens.slice(1),
         }
       }
@@ -85,8 +85,8 @@ export class Parsing {
 
         return {
           data: X.List([
-            X.String("quote"),
-            X.String(value, { span: dataFromJson(token.span) }),
+            X.Symbol("quote"),
+            X.Symbol(value, { span: dataFromJson(token.span) }),
           ]),
           remain: tokens.slice(1),
         }
@@ -95,7 +95,7 @@ export class Parsing {
       case "BracketStart": {
         if (token.value === "[") {
           const { data, remain } = this.parseTael(token, tokens.slice(1))
-          return { data: X.Cons(X.String("tael"), data), remain }
+          return { data: X.Cons(X.Symbol("tael"), data), remain }
         } else {
           return this.parseTael(token, tokens.slice(1))
         }
@@ -108,7 +108,7 @@ export class Parsing {
       case "Quote": {
         const { data, remain } = this.parse(tokens.slice(1))
 
-        const quoteSymbol = X.String(
+        const quoteSymbol = X.Symbol(
           this.lexer.config.findQuoteSymbolOrFail(token.value),
           { span: dataFromJson(token.span) },
         )
@@ -151,7 +151,7 @@ export class Parsing {
 
       if (token.kind === "Symbol" && token.value.startsWith(":")) {
         const head = this.parse(tokens.slice(1))
-        if (head.data.kind === "String" && head.data.content.startsWith(":")) {
+        if (head.data.kind === "Symbol" && head.data.content.startsWith(":")) {
           throw new ParsingError(
             `I found key after key in attributes`,
             token.span,
