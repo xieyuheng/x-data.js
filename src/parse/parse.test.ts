@@ -13,7 +13,7 @@ test("symbol", () => {
 })
 
 test("doublequoted string", () => {
-  assertParse('"abc"', X.List([X.Symbol("quote"), X.Symbol("abc")]))
+  assertParse('"abc"', X.String("abc"))
 })
 
 test("bool", () => {

@@ -84,10 +84,7 @@ export class Parsing {
         }
 
         return {
-          data: X.List([
-            X.Symbol("quote"),
-            X.Symbol(value, { span: dataFromJson(token.span) }),
-          ]),
+          data: X.String(value, { span: dataFromJson(token.span) }),
           remain: tokens.slice(1),
         }
       }
