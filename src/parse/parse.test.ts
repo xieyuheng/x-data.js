@@ -12,7 +12,7 @@ test("symbol", () => {
   assertParse("3-sphere", X.Symbol("3-sphere"))
 })
 
-test("doublequoted string", () => {
+test("string", () => {
   assertParse('"abc"', X.String("abc"))
 })
 
