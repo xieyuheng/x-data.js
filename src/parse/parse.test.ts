@@ -12,8 +12,8 @@ test("symbol", () => {
   assertParse("3-sphere", X.String("3-sphere"))
 })
 
-test("string", () => {
-  assertParse('"abc"', X.String("abc"))
+test("doublequoted string", () => {
+  assertParse('"abc"', X.List([X.String("quote"), X.String("abc")]))
 })
 
 test("bool", () => {
