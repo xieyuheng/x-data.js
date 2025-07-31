@@ -85,12 +85,12 @@ function matchExp(data: X.Data): Exp {
 
 const expMatcher: X.Matcher<Exp> = X.matcherChoice<Exp>([
   X.matcher("`(lambda (,name) ,ret)", ({ name, ret }) =>
-    Lambda(X.dataToString(name), X.match(expMatcher, ret)),
+    Lambda(X.symbolToString(name), X.match(expMatcher, ret)),
   ),
 
   X.matcher("`(let ((,name ,rhs)) ,body)", ({ name, rhs, body }) =>
     Let(
-      X.dataToString(name),
+      X.symbolToString(name),
       X.match(expMatcher, rhs),
       X.match(expMatcher, body),
     ),
@@ -100,7 +100,7 @@ const expMatcher: X.Matcher<Exp> = X.matcherChoice<Exp>([
     Apply(X.match(expMatcher, target), X.match(expMatcher, arg)),
   ),
 
-  X.matcher("name", ({ name }) => Var(X.dataToString(name))),
+  X.matcher("name", ({ name }) => Var(X.symbolToString(name))),
 ])
 
 function assertParse(text: string, exp: Exp): void {
