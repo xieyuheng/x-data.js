@@ -25,6 +25,7 @@ test("number", () => {
   assertParse("1", X.Int(1))
   assertParse("0", X.Int(0))
   assertParse("-1", X.Int(-1))
+  assertParse("0.0", X.Float(0.0))
   assertParse("3.14", X.Float(3.14))
 })
 

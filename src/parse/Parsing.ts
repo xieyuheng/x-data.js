@@ -62,14 +62,14 @@ export class Parsing {
           )
         }
 
-        if (Number.isInteger(value)) {
+        if (token.value.includes(".") || token.value.includes("e")) {
           return {
-            data: X.Int(value, { span: dataFromJson(token.span) }),
+            data: X.Float(value, { span: dataFromJson(token.span) }),
             remain: tokens.slice(1),
           }
         } else {
           return {
-            data: X.Float(value, { span: dataFromJson(token.span) }),
+            data: X.Int(value, { span: dataFromJson(token.span) }),
             remain: tokens.slice(1),
           }
         }
