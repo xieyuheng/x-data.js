@@ -14,7 +14,7 @@ export function dataEqual(x: Data, y: Data): boolean {
 
   if (x.kind === "Tael" && y.kind === "Tael") {
     return (
-      dataArrayEqual(x.content, y.content) &&
+      dataArrayEqual(x.elements, y.elements) &&
       attributesEqual(x.attributes, y.attributes)
     )
   }

@@ -9,7 +9,7 @@ export type Float = { kind: "Float"; content: number; meta: Attributes }
 
 export type Tael = {
   kind: "Tael"
-  content: Array<Data>
+  elements: Array<Data>
   attributes: Attributes
   meta: Attributes
 }
@@ -101,22 +101,22 @@ export function asTael(data: Data): Tael {
 }
 
 export function Tael(
-  content: Array<Data>,
+  elements: Array<Data>,
   attributes: Attributes,
   meta?: Attributes,
 ): Tael {
   return {
     kind: "Tael",
-    content,
+    elements,
     attributes,
     meta: meta || {},
   }
 }
 
-export function List(content: Array<Data>, meta?: Attributes): Tael {
+export function List(elements: Array<Data>, meta?: Attributes): Tael {
   return {
     kind: "Tael",
-    content,
+    elements,
     attributes: {},
     meta: meta || {},
   }
@@ -129,7 +129,7 @@ export function Cons(head: Data, tail: Data): Tael {
 
   return {
     kind: "Tael",
-    content: [head, ...tail.content],
+    elements: [head, ...tail.elements],
     attributes: tail.attributes,
     meta: tail.meta,
   }
@@ -138,7 +138,7 @@ export function Cons(head: Data, tail: Data): Tael {
 export function Record(attributes: Attributes, meta?: Attributes): Tael {
   return {
     kind: "Tael",
-    content: [],
+    elements: [],
     attributes,
     meta: meta || {},
   }

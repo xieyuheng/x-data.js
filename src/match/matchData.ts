@@ -33,40 +33,50 @@ function matchSymbol(mode: Mode, pattern: X.Data, data: X.Data): Effect {
 
     case "QuoteMode":
     case "QuasiquoteMode": {
-      return sequenceEffect([
-        guardEffect(() => pattern.kind === "Symbol"),
-        guardEffect(() => pattern.content === data.content),
-      ])
+      return guardEffect(
+        () =>
+          pattern.kind === "Symbol" &&
+          data.kind === "Symbol" &&
+          pattern.content === data.content,
+      )
     }
   }
 }
 
 function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
-  return sequenceEffect([
-    guardEffect(() => pattern.kind === "String"),
-    guardEffect(() => pattern.content === data.content),
-  ])
+  return guardEffect(
+    () =>
+      pattern.kind === "String" &&
+      data.kind === "String" &&
+      pattern.content === data.content,
+  )
 }
 
 function matchBool(mode: Mode, pattern: X.Data, data: X.Data): Effect {
-  return sequenceEffect([
-    guardEffect(() => pattern.kind === "Bool"),
-    guardEffect(() => pattern.content === data.content),
-  ])
+  return guardEffect(
+    () =>
+      pattern.kind === "Bool" &&
+      data.kind === "Bool" &&
+      pattern.content === data.content,
+  )
 }
 
 function matchInt(mode: Mode, pattern: X.Data, data: X.Data): Effect {
-  return sequenceEffect([
-    guardEffect(() => pattern.kind === "Int"),
-    guardEffect(() => pattern.content === data.content),
-  ])
+  return guardEffect(
+    () =>
+      pattern.kind === "Int" &&
+      data.kind === "Int" &&
+      pattern.content === data.content,
+  )
 }
 
 function matchFloat(mode: Mode, pattern: X.Data, data: X.Data): Effect {
-  return sequenceEffect([
-    guardEffect(() => pattern.kind === "Float"),
-    guardEffect(() => pattern.content === data.content),
-  ])
+  return guardEffect(
+    () =>
+      pattern.kind === "Float" &&
+      data.kind === "Float" &&
+      pattern.content === data.content,
+  )
 }
 
 function matchAttributes(
@@ -125,10 +135,14 @@ function matchQuotedList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return ifEffect(
     pattern.kind === "Tael" &&
       data.kind === "Tael" &&
-      pattern.content.length === data.content.length,
+      pattern.elements.length === data.elements.length,
     () =>
       sequenceEffect([
-        matchManyData(mode, X.asTael(pattern).content, X.asTael(data).content),
+        matchManyData(
+          mode,
+          X.asTael(pattern).elements,
+          X.asTael(data).elements,
+        ),
         matchAttributes(
           mode,
           X.asTael(pattern).attributes,
@@ -141,11 +155,11 @@ function matchQuotedList(mode: Mode, pattern: X.Data, data: X.Data): Effect {
 function matchUnquote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return ifEffect(
     pattern.kind === "Tael" &&
-      pattern.content.length >= 2 &&
-      pattern.content[0].kind === "Symbol" &&
-      pattern.content[0].content === "unquote",
+      pattern.elements.length >= 2 &&
+      pattern.elements[0].kind === "Symbol" &&
+      pattern.elements[0].content === "unquote",
     () => {
-      const firstData = X.asTael(pattern).content[1]
+      const firstData = X.asTael(pattern).elements[1]
       return sequenceEffect([matchData("NormalMode", firstData, data)])
     },
   )
@@ -155,12 +169,12 @@ function matchTael(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return ifEffect(
     pattern.kind === "Tael" &&
       data.kind === "Tael" &&
-      pattern.content.length >= 1 &&
-      pattern.content[0].kind === "Symbol" &&
-      pattern.content[0].content === "tael",
+      pattern.elements.length >= 1 &&
+      pattern.elements[0].kind === "Symbol" &&
+      pattern.elements[0].content === "tael",
     () => {
-      const patternBody = X.asTael(pattern).content.slice(1)
-      const dataBody = X.asTael(data).content
+      const patternBody = X.asTael(pattern).elements.slice(1)
+      const dataBody = X.asTael(data).elements
       return sequenceEffect([
         guardEffect(() => patternBody.length === dataBody.length),
         ...patternBody
@@ -179,11 +193,11 @@ function matchTael(mode: Mode, pattern: X.Data, data: X.Data): Effect {
 function matchQuote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return ifEffect(
     pattern.kind === "Tael" &&
-      pattern.content.length >= 2 &&
-      pattern.content[0].kind === "Symbol" &&
-      pattern.content[0].content === "quote",
+      pattern.elements.length >= 2 &&
+      pattern.elements[0].kind === "Symbol" &&
+      pattern.elements[0].content === "quote",
     () => {
-      const firstData = X.asTael(pattern).content[1]
+      const firstData = X.asTael(pattern).elements[1]
       return sequenceEffect([matchData("QuoteMode", firstData, data)])
     },
   )
@@ -192,11 +206,11 @@ function matchQuote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
 function matchQuasiquote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return ifEffect(
     pattern.kind === "Tael" &&
-      pattern.content.length >= 2 &&
-      pattern.content[0].kind === "Symbol" &&
-      pattern.content[0].content === "quasiquote",
+      pattern.elements.length >= 2 &&
+      pattern.elements[0].kind === "Symbol" &&
+      pattern.elements[0].content === "quasiquote",
     () => {
-      const firstData = X.asTael(pattern).content[1]
+      const firstData = X.asTael(pattern).elements[1]
       return sequenceEffect([matchData("QuasiquoteMode", firstData, data)])
     },
   )
@@ -206,18 +220,18 @@ function matchCons(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return ifEffect(
     pattern.kind === "Tael" &&
       data.kind === "Tael" &&
-      pattern.content.length === 3 &&
-      pattern.content[0].kind === "Symbol" &&
-      pattern.content[0].content === "cons",
+      pattern.elements.length === 3 &&
+      pattern.elements[0].kind === "Symbol" &&
+      pattern.elements[0].content === "cons",
     () => {
       const listPattern = X.asTael(pattern)
-      const headPattern = listPattern.content[1]
-      const tailPattern = listPattern.content[2]
+      const headPattern = listPattern.elements[1]
+      const tailPattern = listPattern.elements[2]
 
       const listData = X.asTael(data)
-      if (listData.content.length === 0) return failEffect()
-      const headData = listData.content[0]
-      const tailData = X.Tael(listData.content.slice(1), {})
+      if (listData.elements.length === 0) return failEffect()
+      const headData = listData.elements[0]
+      const tailData = X.Tael(listData.elements.slice(1), {})
 
       return sequenceEffect([
         matchData(mode, headPattern, headData),
@@ -231,19 +245,19 @@ function matchConsStar(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return ifEffect(
     pattern.kind === "Tael" &&
       data.kind === "Tael" &&
-      pattern.content.length >= 3 &&
-      pattern.content[0].kind === "Symbol" &&
-      pattern.content[0].content === "cons*",
+      pattern.elements.length >= 3 &&
+      pattern.elements[0].kind === "Symbol" &&
+      pattern.elements[0].content === "cons*",
     () => {
       const listPattern = X.asTael(pattern)
-      const prefixCount = listPattern.content.length - 2
-      const patternPrefix = listPattern.content.slice(1, prefixCount + 1)
-      const tailPattern = listPattern.content[listPattern.content.length - 1]
+      const prefixCount = listPattern.elements.length - 2
+      const patternPrefix = listPattern.elements.slice(1, prefixCount + 1)
+      const tailPattern = listPattern.elements[listPattern.elements.length - 1]
 
       const listData = X.asTael(data)
-      if (listData.content.length < prefixCount) return failEffect()
-      const dataPrefix = listData.content.slice(0, prefixCount)
-      const tailData = X.Tael(listData.content.slice(prefixCount), {})
+      if (listData.elements.length < prefixCount) return failEffect()
+      const dataPrefix = listData.elements.slice(0, prefixCount)
+      const tailData = X.Tael(listData.elements.slice(prefixCount), {})
 
       return sequenceEffect([
         matchManyData(mode, patternPrefix, dataPrefix),

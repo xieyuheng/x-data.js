@@ -12,10 +12,10 @@ export function dataToJson(data: X.Data): Json {
   }
 
   if (data.kind === "Tael") {
-    if (data.content.length === 0) {
+    if (data.elements.length === 0) {
       return recordMap(data.attributes, dataToJson)
     } else {
-      return data.content.map(dataToJson)
+      return data.elements.map(dataToJson)
     }
   }
 }
@@ -57,5 +57,5 @@ export function dataToArray(data: X.Data): Array<X.Data> {
     throw new Error(`[dataToArray] wrong data kind: ${data.kind}`)
   }
 
-  return data.content
+  return data.elements
 }
