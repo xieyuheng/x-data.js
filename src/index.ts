@@ -1,5 +1,6 @@
 export * from "./data/index.ts"
 export * from "./errors/index.ts"
+export * from "./format/index.ts"
 export * from "./lexer/index.ts"
 export * from "./match/index.ts"
 export * from "./matcher/index.ts"
