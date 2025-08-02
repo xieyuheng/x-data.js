@@ -7,7 +7,7 @@ export type Matcher<A> = (data: X.Data) => A | undefined
 
 export type MatcherCallback<A> = (
   subst: Subst,
-  options: { data: X.Data; span: Span },
+  options: { data: X.Data; meta: X.Attributes; span: Span },
 ) => A | undefined
 
 export function matcher<A>(
@@ -20,6 +20,7 @@ export function matcher<A>(
     if (!subst) return undefined
     return f(subst, {
       data: data,
+      meta: data.meta,
       span: spanFromData(data.meta["span"]),
     })
   }
