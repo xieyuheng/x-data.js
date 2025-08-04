@@ -59,7 +59,8 @@ function lineUnderline(
 }
 
 function formatLine(line: Line, leftMargin: number): string {
-  const prefix = leftPad(line.index.toString(), leftMargin, " ")
+  const lineno = line.index + 1
+  const prefix = leftPad(lineno.toString(), leftMargin, " ")
   if (line.underline) {
     const emptyPrefix = leftPad("", leftMargin, " ")
     return `${prefix}|${line.text}\n${emptyPrefix} ${line.underline}\n`
