@@ -41,13 +41,6 @@ export class Parsing {
           }
         }
 
-        if (token.value.startsWith("#")) {
-          throw new ParsingError(
-            `I found unknown special symbol: ${token.value}`,
-            token.span,
-          )
-        }
-
         return {
           data: X.Symbol(token.value, { span: dataFromJson(token.span) }),
           remain: tokens.slice(1),
