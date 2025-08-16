@@ -10,6 +10,8 @@ function assertParse(text: string, data: X.Data): void {
 test("symbol", () => {
   assertParse("abc", X.Symbol("abc"))
   assertParse("3-sphere", X.Symbol("3-sphere"))
+  assertParse("#abc", X.Symbol("#abc"))
+  assertParse("#3-sphere", X.Symbol("#3-sphere"))
 })
 
 test("string", () => {
