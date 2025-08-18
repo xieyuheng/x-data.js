@@ -85,11 +85,6 @@ export function Float(content: number, meta?: Attributes): Float {
   }
 }
 
-export function asTael(data: Data): Tael {
-  if (data.kind === "Tael") return data
-  throw new Error(`[asTael] fail on: ${data.kind}`)
-}
-
 export function Tael(
   elements: Array<Data>,
   attributes: Attributes,
@@ -98,37 +93,6 @@ export function Tael(
   return {
     kind: "Tael",
     elements,
-    attributes,
-    meta: meta || {},
-  }
-}
-
-export function List(elements: Array<Data>, meta?: Attributes): Tael {
-  return {
-    kind: "Tael",
-    elements,
-    attributes: {},
-    meta: meta || {},
-  }
-}
-
-export function Cons(head: Data, tail: Data): Tael {
-  if (tail.kind !== "Tael") {
-    throw new Error(`[Cons] tail to be a list, tail kind: ${tail.kind}.`)
-  }
-
-  return {
-    kind: "Tael",
-    elements: [head, ...tail.elements],
-    attributes: tail.attributes,
-    meta: tail.meta,
-  }
-}
-
-export function Record(attributes: Attributes, meta?: Attributes): Tael {
-  return {
-    kind: "Tael",
-    elements: [],
     attributes,
     meta: meta || {},
   }

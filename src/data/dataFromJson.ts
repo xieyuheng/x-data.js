@@ -1,5 +1,5 @@
+import * as X from "../data/index.ts"
 import { isJsonArray, isJsonObject } from "../utils/json/Json.ts"
-import * as X from "./Data.ts"
 
 // Can not handle null and undefined,
 // when found in a record, they will be ignored.
