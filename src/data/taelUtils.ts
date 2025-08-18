@@ -5,6 +5,10 @@ export function asTael(data: X.Data): X.Tael {
   throw new Error(`[asTael] fail on: ${data.kind}`)
 }
 
+export function isTael(data: X.Data): data is X.Tael {
+  return data.kind === "Tael"
+}
+
 export function List(elements: Array<X.Data>, meta: X.Attributes = {}): X.Tael {
   return X.Tael(elements, {}, meta)
 }

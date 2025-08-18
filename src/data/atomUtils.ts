@@ -10,6 +10,26 @@ export function isAtom(data: X.Data): data is X.Atom {
   )
 }
 
+export function isBool(data: X.Data): data is X.Bool {
+  return data.kind === "Bool"
+}
+
+export function isSymbol(data: X.Data): data is X.Symbol {
+  return data.kind === "Symbol"
+}
+
+export function isString(data: X.Data): data is X.String {
+  return data.kind === "String"
+}
+
+export function isInt(data: X.Data): data is X.Int {
+  return data.kind === "Int"
+}
+
+export function isFloat(data: X.Data): data is X.Float {
+  return data.kind === "Float"
+}
+
 export function asBool(data: X.Data): X.Bool {
   if (data.kind === "Bool") return data
   throw new Error(`[asBool] fail on: ${data.kind}`)
