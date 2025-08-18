@@ -6,12 +6,11 @@ export function asTael(data: X.Data): X.Tael {
 }
 
 export function List(elements: Array<X.Data>, meta?: X.Attributes): X.Tael {
-  return {
-    kind: "Tael",
-    elements,
-    attributes: {},
-    meta: meta || {},
-  }
+  return X.Tael(elements, {}, meta)
+}
+
+export function Record(attributes: X.Attributes, meta?: X.Attributes): X.Tael {
+  return X.Tael([], attributes, meta)
 }
 
 export function Cons(head: X.Data, tail: X.Data): X.Tael {
@@ -19,19 +18,5 @@ export function Cons(head: X.Data, tail: X.Data): X.Tael {
     throw new Error(`[Cons] tail to be a list, tail kind: ${tail.kind}.`)
   }
 
-  return {
-    kind: "Tael",
-    elements: [head, ...tail.elements],
-    attributes: tail.attributes,
-    meta: tail.meta,
-  }
-}
-
-export function Record(attributes: X.Attributes, meta?: X.Attributes): X.Tael {
-  return {
-    kind: "Tael",
-    elements: [],
-    attributes,
-    meta: meta || {},
-  }
+  return X.Tael([head, ...tail.elements], tail.attributes, tail.meta)
 }
