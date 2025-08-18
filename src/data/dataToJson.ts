@@ -1,6 +1,6 @@
+import * as X from "../data/index.ts"
 import { type Json } from "../utils/json/Json.ts"
 import { recordMap } from "../utils/record/recordMap.ts"
-import * as X from "./Data.ts"
 
 // Only translate those data that can be translated to JSON,
 // i.e. only pure list and pure record,
