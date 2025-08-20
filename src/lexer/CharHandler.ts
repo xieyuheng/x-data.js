@@ -1,0 +1,222 @@
+import { InternalError, ParsingError } from "../errors/index.ts"
+import { positionForwardChar } from "../span/index.ts"
+import { type TokenKind } from "../token/index.ts"
+import type { Lexing } from "./Lexing.ts"
+
+export function useCharHandlers(lexing: Lexing): Array<CharHandler> {
+  return [
+    // The order matters, we must
+    //   try `NumberHandler` before `SymbolHandler`.
+    new SpaceHandler(lexing),
+    new QuoteHandler(lexing),
+    new BracketStartHandler(lexing),
+    new BracketEndHandler(lexing),
+    new CommentHandler(lexing),
+    new StringHandler(lexing),
+    new NumberHandler(lexing),
+    new SymbolHandler(lexing),
+  ]
+}
+
+export abstract class CharHandler {
+  lexing: Lexing
+
+  constructor(lexing: Lexing) {
+    this.lexing = lexing
+  }
+
+  abstract kind: TokenKind | undefined
+
+  abstract canHandle(char: string): boolean
+  abstract handle(char: string): string
+}
+
+class SpaceHandler extends CharHandler {
+  kind = undefined
+
+  canHandle(char: string): boolean {
+    return char.trim() === ""
+  }
+
+  handle(char: string): string {
+    let value = char
+    this.lexing.forward(1)
+    while (this.lexing.char !== undefined && this.lexing.char.trim() === "") {
+      value += this.lexing.char
+      this.lexing.forward(1)
+    }
+
+    return value
+  }
+}
+
+class BracketStartHandler extends CharHandler {
+  kind = "BracketStart" as const
+
+  canHandle(char: string): boolean {
+    return this.lexing.config.brackets.map(({ start }) => start).includes(char)
+  }
+
+  handle(char: string): string {
+    this.lexing.forward(1)
+    return char
+  }
+}
+
+class BracketEndHandler extends CharHandler {
+  kind = "BracketEnd" as const
+
+  canHandle(char: string): boolean {
+    return this.lexing.config.brackets.map(({ end }) => end).includes(char)
+  }
+
+  handle(char: string): string {
+    this.lexing.forward(1)
+    return char
+  }
+}
+
+class QuoteHandler extends CharHandler {
+  kind = "Quote" as const
+
+  canHandle(char: string): boolean {
+    return this.lexing.config.quotes.map(({ mark }) => mark).includes(char)
+  }
+
+  handle(char: string): string {
+    this.lexing.forward(1)
+    return char
+  }
+}
+
+class CommentHandler extends CharHandler {
+  kind = undefined
+
+  canHandle(char: string): boolean {
+    const text = char + this.lexing.rest
+    return this.lexing.config.comments.some((prefix) => text.startsWith(prefix))
+  }
+
+  handle(char: string): string {
+    let value = char
+    this.lexing.forward(1)
+    while (this.lexing.char !== undefined && this.lexing.char !== "\n") {
+      value += this.lexing.char
+      this.lexing.forward(1)
+    }
+
+    return value
+  }
+}
+
+class StringHandler extends CharHandler {
+  kind = "String" as const
+
+  canHandle(char: string): boolean {
+    return char === '"'
+  }
+
+  handle(char: string): string {
+    const text = this.lexing.rest.split("\n")[0] || ""
+    let index = 2 // over first `"` and the folloing char.
+    while (index <= text.length) {
+      const head = text.slice(0, index)
+      const str = this.tryToParseString(head)
+      if (str === undefined) {
+        index++
+      } else {
+        this.lexing.forward(index)
+        return head
+      }
+    }
+
+    const start = this.lexing.position
+    const end = positionForwardChar(start, '"')
+    const span = { start, end }
+    throw new ParsingError(`Fail to parse JSON string: ${text}`, span)
+  }
+
+  private tryToParseString(text: string): string | undefined {
+    try {
+      return JSON.parse(text)
+    } catch (error) {
+      return undefined
+    }
+  }
+}
+
+class NumberHandler extends CharHandler {
+  kind = "Number" as const
+
+  canHandle(char: string): boolean {
+    const text = this.lexing.rest.split("\n")[0] || ""
+    return this.lastSuccessAt(text) !== undefined
+  }
+
+  handle(char: string): string {
+    const text = this.lexing.rest.split("\n")[0] || ""
+    const index = this.lastSuccessAt(text)
+    if (index === undefined) {
+      throw new InternalError(`Expect to find lastSuccessAt in text: ${text}`)
+    }
+
+    this.lexing.forward(index)
+    return text.slice(0, index)
+  }
+
+  private lastSuccessAt(text: string): number | undefined {
+    let index = 0
+    let lastSuccessAt: number | undefined = undefined
+    while (index <= text.length) {
+      const head = text.slice(0, index)
+      const result = this.tryToParseNumber(head)
+      if (
+        result !== undefined &&
+        text[index - 1] !== undefined &&
+        text[index - 1].trim() !== "" &&
+        (text[index] === undefined ||
+          text[index].trim() === "" ||
+          this.lexing.config.isMark(text[index]))
+      ) {
+        lastSuccessAt = index
+      }
+
+      index++
+    }
+
+    return lastSuccessAt
+  }
+
+  private tryToParseNumber(text: string): number | undefined {
+    try {
+      const value = JSON.parse(text)
+      if (typeof value === "number") return value
+      else return undefined
+    } catch (error) {
+      return undefined
+    }
+  }
+}
+
+class SymbolHandler extends CharHandler {
+  kind = "Symbol" as const
+
+  canHandle(char: string): boolean {
+    return true
+  }
+
+  handle(char: string): string {
+    let value = char
+    this.lexing.forward(1)
+    while (
+      this.lexing.char !== undefined &&
+      this.lexing.char.trim() !== "" &&
+      !this.lexing.config.marks.includes(this.lexing.char)
+    ) {
+      value += this.lexing.char
+      this.lexing.forward(1)
+    }
+
+    return value
+  }
+}

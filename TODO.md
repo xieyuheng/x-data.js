@@ -1,7 +1,6 @@
-[lexer] extract `CharHandler`
 [lexer] inline `Lexing` to `Lexer`
-[lexer] be able to `lex` `text` little by little
-[parser] be able to `parse` `text` little by little
+[lexer] `Lexer` be stateful -- be able to `lex` `text` little by little
+[parser] `Parser` be stateful -- be able to `parse` `text` little by little
 
 [repl] `Repl` -- has `commitedTokens`
 [repl] `Repl` -- has `currentTokens`
