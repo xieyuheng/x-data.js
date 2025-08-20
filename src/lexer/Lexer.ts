@@ -10,7 +10,7 @@ export class Lexer {
   }
 
   lex(text: string): Array<Token> {
-    const lexing = new Lexing(this, text)
+    const lexing = new Lexing(this.config, text)
     const tokens: Array<Token> = []
     while (true) {
       const token = lexing.next()

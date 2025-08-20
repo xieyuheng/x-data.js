@@ -1,5 +1,5 @@
 import { InternalError, ParsingError } from "../errors/index.ts"
-import { Lexer } from "../lexer/index.ts"
+import { LexerConfig } from "../lexer/index.ts"
 import { initPosition, positionForwardChar } from "../span/index.ts"
 import { type Token, type TokenKind } from "../token/index.ts"
 
@@ -19,11 +19,11 @@ export class Lexing {
     new SymbolHandler(this),
   ]
 
-  lexer: Lexer
+  config: LexerConfig
   text: string
 
-  constructor(lexer: Lexer, text: string) {
-    this.lexer = lexer
+  constructor(config: LexerConfig, text: string) {
+    this.config = config
     this.text = text
   }
 
@@ -71,6 +71,7 @@ export class Lexing {
 
 abstract class CharHandler {
   lexing: Lexing
+
   constructor(lexing: Lexing) {
     this.lexing = lexing
   }
@@ -79,10 +80,6 @@ abstract class CharHandler {
 
   abstract canHandle(char: string): boolean
   abstract handle(char: string): string
-
-  get lexer(): Lexer {
-    return this.lexing.lexer
-  }
 }
 
 class SpaceHandler extends CharHandler {
@@ -108,7 +105,7 @@ class BracketStartHandler extends CharHandler {
   kind = "BracketStart" as const
 
   canHandle(char: string): boolean {
-    return this.lexer.config.brackets.map(({ start }) => start).includes(char)
+    return this.lexing.config.brackets.map(({ start }) => start).includes(char)
   }
 
   handle(char: string): string {
@@ -121,7 +118,7 @@ class BracketEndHandler extends CharHandler {
   kind = "BracketEnd" as const
 
   canHandle(char: string): boolean {
-    return this.lexer.config.brackets.map(({ end }) => end).includes(char)
+    return this.lexing.config.brackets.map(({ end }) => end).includes(char)
   }
 
   handle(char: string): string {
@@ -134,7 +131,7 @@ class QuoteHandler extends CharHandler {
   kind = "Quote" as const
 
   canHandle(char: string): boolean {
-    return this.lexer.config.quotes.map(({ mark }) => mark).includes(char)
+    return this.lexing.config.quotes.map(({ mark }) => mark).includes(char)
   }
 
   handle(char: string): string {
@@ -148,7 +145,7 @@ class CommentHandler extends CharHandler {
 
   canHandle(char: string): boolean {
     const text = char + this.lexing.rest
-    return this.lexer.config.comments.some((prefix) => text.startsWith(prefix))
+    return this.lexing.config.comments.some((prefix) => text.startsWith(prefix))
   }
 
   handle(char: string): string {
@@ -230,7 +227,7 @@ class NumberHandler extends CharHandler {
         text[index - 1].trim() !== "" &&
         (text[index] === undefined ||
           text[index].trim() === "" ||
-          this.lexer.config.isMark(text[index]))
+          this.lexing.config.isMark(text[index]))
       ) {
         lastSuccessAt = index
       }
@@ -265,7 +262,7 @@ class SymbolHandler extends CharHandler {
     while (
       this.lexing.char !== undefined &&
       this.lexing.char.trim() !== "" &&
-      !this.lexer.config.marks.includes(this.lexing.char)
+      !this.lexing.config.marks.includes(this.lexing.char)
     ) {
       value += this.lexing.char
       this.lexing.forward(1)
