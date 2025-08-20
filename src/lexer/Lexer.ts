@@ -15,7 +15,7 @@ export class Lexer {
   }
 
   lex(text: string): Array<Token> {
-    this.text = text
+    this.text += text
     const tokens: Array<Token> = []
     while (true) {
       const token = this.next()
@@ -25,6 +25,15 @@ export class Lexer {
         return tokens
       }
     }
+  }
+
+  next(): Token | undefined {
+    while (this.char !== undefined) {
+      const token = this.handleChar(this.char)
+      if (token !== undefined) return token
+    }
+
+    return undefined
   }
 
   get char(): string | undefined {
@@ -43,25 +52,16 @@ export class Lexer {
     }
   }
 
-  next(): Token | undefined {
-    while (this.char !== undefined) {
-      const result = this.handleChar(this.char)
-      if (result !== undefined) return result
-    }
-
-    return undefined
-  }
-
   private handleChar(char: string): Token | undefined {
     for (const handler of this.handlers) {
       if (handler.canHandle(char)) {
         const start = this.position
         const value = handler.handle(char)
         if (handler.kind === undefined) return undefined
+
         const end = this.position
         const span = { start, end }
-        const token = { kind: handler.kind, value, span }
-        return token
+        return { kind: handler.kind, value, span }
       }
     }
 
