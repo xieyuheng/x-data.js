@@ -7,9 +7,11 @@ import { type Token } from "../token/index.ts"
 
 type Result = { data: Data; remain: Array<Token> }
 
-export class Parser {
-  index = 0
+export type ParserMeta = {
+  url?: URL
+}
 
+export class Parser {
   lexer = new Lexer({
     quotes: [
       { mark: "'", symbol: "quote" },
@@ -23,9 +25,9 @@ export class Parser {
     comments: [";"],
   })
 
-  parse(text: string): Array<Data> {
+  parse(text: string, meta: ParserMeta = {}): Array<Data> {
+    let tokens = this.lexer.lex(text, meta)
     const array: Array<Data> = []
-    let tokens = this.lexer.lex(text)
     while (tokens.length > 0) {
       const { data, remain } = this.handleTokens(tokens)
       array.push(data)

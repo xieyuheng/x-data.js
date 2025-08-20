@@ -1,6 +1,7 @@
 import { InternalError } from "../errors/InternalError.ts"
 import { LexerConfig, type LexerOptions } from "../lexer/index.ts"
-import { initPosition, positionForwardChar } from "../span/Position.ts"
+import type { ParserMeta } from "../parser/index.ts"
+import { initPosition, positionForwardChar } from "../span/index.ts"
 import { type Token } from "../token/index.ts"
 import { useCharHandlers } from "./CharHandler.ts"
 
@@ -9,13 +10,16 @@ export class Lexer {
   position = initPosition()
   handlers = useCharHandlers(this)
   text: string = ""
+  url?: URL
 
   constructor(options: LexerOptions) {
     this.config = new LexerConfig(options)
   }
 
-  lex(text: string): Array<Token> {
+  lex(text: string, options: ParserMeta = {}): Array<Token> {
     this.text += text
+    this.url = options.url
+
     const tokens: Array<Token> = []
     while (true) {
       const token = this.next()
@@ -27,7 +31,7 @@ export class Lexer {
     }
   }
 
-  next(): Token | undefined {
+  private next(): Token | undefined {
     while (this.char !== undefined) {
       const token = this.handleChar(this.char)
       if (token !== undefined) return token
