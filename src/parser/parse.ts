@@ -1,19 +1,5 @@
 import { type Data } from "../data/index.ts"
-import { Lexer } from "../lexer/index.ts"
 import { Parser } from "./Parser.ts"
-
-const lexer = new Lexer({
-  quotes: [
-    { mark: "'", symbol: "quote" },
-    { mark: ",", symbol: "unquote" },
-    { mark: "`", symbol: "quasiquote" },
-  ],
-  brackets: [
-    { start: "(", end: ")" },
-    { start: "[", end: "]" },
-  ],
-  comments: [";"],
-})
 
 export function parseData(text: string): Data {
   const array = parseDataArray(text)
@@ -26,11 +12,11 @@ export function parseData(text: string): Data {
 }
 
 export function parseDataArray(text: string): Array<Data> {
+  const parser = new Parser()
   const array: Array<Data> = []
-  const parser = new Parser(lexer)
   let tokens = parser.lexer.lex(text)
   while (tokens.length > 0) {
-    const { data, remain } = parser.parse(tokens)
+    const { data, remain } = parser.handleTokens(tokens)
     array.push(data)
     if (remain.length === 0) return array
     tokens = remain

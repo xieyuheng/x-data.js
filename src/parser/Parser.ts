@@ -1,21 +1,29 @@
 import * as X from "../data/index.ts"
 import { dataFromJson, type Data } from "../data/index.ts"
 import { InternalError, ParsingError } from "../errors/index.ts"
-import { type Lexer } from "../lexer/index.ts"
+import { Lexer } from "../lexer/index.ts"
 import { initPosition, spanFromData, spanUnion } from "../span/index.ts"
 import { type Token } from "../token/index.ts"
 
 type Result = { data: Data; remain: Array<Token> }
 
 export class Parser {
-  lexer: Lexer
   index = 0
 
-  constructor(lexer: Lexer) {
-    this.lexer = lexer
-  }
+  lexer = new Lexer({
+    quotes: [
+      { mark: "'", symbol: "quote" },
+      { mark: ",", symbol: "unquote" },
+      { mark: "`", symbol: "quasiquote" },
+    ],
+    brackets: [
+      { start: "(", end: ")" },
+      { start: "[", end: "]" },
+    ],
+    comments: [";"],
+  })
 
-  parse(tokens: Array<Token>): Result {
+  handleTokens(tokens: Array<Token>): Result {
     if (tokens[0] === undefined) {
       throw new ParsingError("I expect a token, but there is no token remain", {
         start: initPosition(),
@@ -84,10 +92,13 @@ export class Parser {
 
       case "BracketStart": {
         if (token.value === "[") {
-          const { data, remain } = this.parseTael(token, tokens.slice(1))
+          const { data, remain } = this.handleTokensInBracket(
+            token,
+            tokens.slice(1),
+          )
           return { data: X.Cons(X.Symbol("tael"), data), remain }
         } else {
-          return this.parseTael(token, tokens.slice(1))
+          return this.handleTokensInBracket(token, tokens.slice(1))
         }
       }
 
@@ -96,7 +107,7 @@ export class Parser {
       }
 
       case "Quote": {
-        const { data, remain } = this.parse(tokens.slice(1))
+        const { data, remain } = this.handleTokens(tokens.slice(1))
 
         const quoteSymbol = X.Symbol(
           this.lexer.config.findQuoteSymbolOrFail(token.value),
@@ -115,7 +126,7 @@ export class Parser {
     }
   }
 
-  private parseTael(start: Token, tokens: Array<Token>): Result {
+  private handleTokensInBracket(start: Token, tokens: Array<Token>): Result {
     const array: Array<X.Data> = []
     const attributes: X.Attributes = {}
 
@@ -140,7 +151,7 @@ export class Parser {
       }
 
       if (token.kind === "Symbol" && token.value.startsWith(":")) {
-        const head = this.parse(tokens.slice(1))
+        const head = this.handleTokens(tokens.slice(1))
         if (head.data.kind === "Symbol" && head.data.content.startsWith(":")) {
           throw new ParsingError(
             `I found key after key in attributes`,
@@ -153,7 +164,7 @@ export class Parser {
         continue
       }
 
-      const head = this.parse(tokens)
+      const head = this.handleTokens(tokens)
       array.push(head.data)
       tokens = head.remain
     }
