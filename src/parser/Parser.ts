@@ -7,7 +7,7 @@ import { type Token } from "../token/index.ts"
 
 type Result = { data: Data; remain: Array<Token> }
 
-export class Parsing {
+export class Parser {
   lexer: Lexer
   index = 0
 

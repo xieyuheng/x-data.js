@@ -1,7 +1,7 @@
 import { type Data } from "../data/index.ts"
 import { Lexer } from "../lexer/index.ts"
 import { type Token } from "../token/index.ts"
-import { Parsing } from "./Parsing.ts"
+import { Parser } from "./Parser.ts"
 
 const lexer = new Lexer({
   quotes: [
@@ -43,6 +43,6 @@ function parseDataFromTokens(tokens: Array<Token>): {
   data: Data
   remain: Array<Token>
 } {
-  const parsing = new Parsing(lexer)
+  const parsing = new Parser(lexer)
   return parsing.parse(tokens)
 }
