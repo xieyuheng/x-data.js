@@ -23,7 +23,20 @@ export class Parser {
     comments: [";"],
   })
 
-  handleTokens(tokens: Array<Token>): Result {
+  parse(text: string): Array<Data> {
+    const array: Array<Data> = []
+    let tokens = this.lexer.lex(text)
+    while (tokens.length > 0) {
+      const { data, remain } = this.handleTokens(tokens)
+      array.push(data)
+      if (remain.length === 0) return array
+      tokens = remain
+    }
+
+    return array
+  }
+
+  private handleTokens(tokens: Array<Token>): Result {
     if (tokens[0] === undefined) {
       throw new ParsingError("I expect a token, but there is no token remain", {
         start: initPosition(),

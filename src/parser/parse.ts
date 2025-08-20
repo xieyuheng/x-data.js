@@ -12,15 +12,5 @@ export function parseData(text: string): Data {
 }
 
 export function parseDataArray(text: string): Array<Data> {
-  const parser = new Parser()
-  const array: Array<Data> = []
-  let tokens = parser.lexer.lex(text)
-  while (tokens.length > 0) {
-    const { data, remain } = parser.handleTokens(tokens)
-    array.push(data)
-    if (remain.length === 0) return array
-    tokens = remain
-  }
-
-  return array
+  return new Parser().parse(text)
 }
