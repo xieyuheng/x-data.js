@@ -1,6 +1,5 @@
 import { type Data } from "../data/index.ts"
 import { Lexer } from "../lexer/index.ts"
-import { type Token } from "../token/index.ts"
 import { Parser } from "./Parser.ts"
 
 const lexer = new Lexer({
@@ -28,21 +27,14 @@ export function parseData(text: string): Data {
 
 export function parseDataArray(text: string): Array<Data> {
   const array: Array<Data> = []
-  let tokens = lexer.lex(text)
+  const parser = new Parser(lexer)
+  let tokens = parser.lexer.lex(text)
   while (tokens.length > 0) {
-    const { data, remain } = parseDataFromTokens(tokens)
+    const { data, remain } = parser.parse(tokens)
     array.push(data)
     if (remain.length === 0) return array
     tokens = remain
   }
 
   return array
-}
-
-function parseDataFromTokens(tokens: Array<Token>): {
-  data: Data
-  remain: Array<Token>
-} {
-  const parsing = new Parser(lexer)
-  return parsing.parse(tokens)
 }

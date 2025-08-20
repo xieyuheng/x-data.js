@@ -1,4 +1,3 @@
-[parser] inline `parseDataFromTokens`
 [parser] inline `lexer` to `parsing`
 
 [lexer] extract `CharHandler`
