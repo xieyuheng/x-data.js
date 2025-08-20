@@ -1,5 +1,4 @@
 import { type Data } from "../data/index.ts"
-import { ParsingError } from "../errors/index.ts"
 import { Lexer } from "../lexer/index.ts"
 import { type Token } from "../token/index.ts"
 import { Parsing } from "./Parsing.ts"
@@ -18,16 +17,13 @@ const lexer = new Lexer({
 })
 
 export function parseData(text: string): Data {
-  const tokens = lexer.lex(text)
-  const { data, remain } = parseDataFromTokens(tokens)
-  if (remain.length !== 0) {
-    throw new ParsingError(
-      `I expect to consume all the tokens, but there are ${remain.length} tokens remain.`,
-      remain[0].span,
-    )
+  const array = parseDataArray(text)
+  if (array.length === 1) {
+    return array[0]
   }
 
-  return data
+  let message = `[parseData] expecting one data, but found multiple data\n`
+  throw new Error(message)
 }
 
 export function parseDataArray(text: string): Array<Data> {
