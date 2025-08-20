@@ -16,9 +16,9 @@ export class Lexer {
     this.config = new LexerConfig(options)
   }
 
-  lex(text: string, options: ParserMeta = {}): Array<Token> {
+  lex(text: string, meta: ParserMeta = {}): Array<Token> {
     this.text += text
-    this.url = options.url
+    this.url = meta.url
 
     const tokens: Array<Token> = []
     while (true) {
