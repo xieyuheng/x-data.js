@@ -1,6 +1,6 @@
 import * as X from "../data/index.ts"
 import { matchData, type Subst } from "../match/index.ts"
-import { parseData } from "../parse/index.ts"
+import { parseData } from "../parser/index.ts"
 import { spanFromData, type Span } from "../span/index.ts"
 
 export type Matcher<A> = (data: X.Data) => A | undefined

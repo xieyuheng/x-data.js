@@ -1,4 +1,3 @@
-rename `parse/` to `parser/`
 [parser] inline `parseDataFromTokens`
 [parser] inline `lexer` to `parsing`
 [parser] rename `Parsing` to `Parser`

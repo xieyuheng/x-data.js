@@ -1,7 +1,7 @@
 import assert from "node:assert"
 import { test } from "node:test"
 import * as X from "../data/index.ts"
-import { parseData } from "../parse/index.ts"
+import { parseData } from "./index.ts"
 
 function assertParse(text: string, data: X.Data): void {
   assert(X.dataEqual(parseData(text), data))

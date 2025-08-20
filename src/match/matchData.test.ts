@@ -2,7 +2,7 @@ import assert from "node:assert"
 import { test } from "node:test"
 import * as X from "../data/index.ts"
 import { matchData } from "../match/index.ts"
-import { parseData } from "../parse/index.ts"
+import { parseData } from "../parser/index.ts"
 
 function assertMatch(
   patternInput: string,
