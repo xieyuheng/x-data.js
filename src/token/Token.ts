@@ -12,4 +12,6 @@ export type Token = {
   kind: TokenKind
   value: string
   span: Span
+  text: string
+  url?: URL
 }

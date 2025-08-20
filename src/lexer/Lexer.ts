@@ -60,8 +60,12 @@ export class Lexer {
         if (handler.kind === undefined) return undefined
 
         const end = this.position
-        const span = { start, end }
-        return { kind: handler.kind, value, span }
+        return {
+          kind: handler.kind,
+          value,
+          span: { start, end },
+          text: this.text,
+        }
       }
     }
 

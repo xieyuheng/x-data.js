@@ -1,5 +1,6 @@
-[lexer] `Lexer` be stateful -- be able to `lex` `text` little by little
-[parser] `Parser` be stateful -- be able to `parse` `text` little by little
+[lexer] `lex` take optional `meta.url`
+`ParsingError.report` no need to take text
+`Data`'s `meta` has optional `url` and `text`
 
 [repl] `Repl` -- has `commitedTokens`
 [repl] `Repl` -- has `currentTokens`
