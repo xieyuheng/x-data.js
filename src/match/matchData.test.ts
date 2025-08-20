@@ -26,12 +26,12 @@ function assertMatchFail(patternInput: string, dataInput: string): void {
   assert.deepStrictEqual(subst, undefined)
 }
 
-test("var", () => {
+test("matchData -- var", () => {
   assertMatch("x", "1", "[:x 1]")
   assertMatch("x", "hi", "[:x hi]")
 })
 
-test("bool int float", () => {
+test("matchData -- bool int float", () => {
   assertMatch("#f", "#f", "[]")
   assertMatch("1", "1", "[]")
   assertMatch("3.14", "3.14", "[]")
@@ -41,7 +41,7 @@ test("bool int float", () => {
   assertMatchFail("3.14", "3.1415")
 })
 
-test("list", () => {
+test("matchData -- list", () => {
   assertMatch("[x y z]", "(1 2 3)", "[:x 1 :y 2 :z 3]")
   assertMatch(
     "[x y z :a a :b b]",
@@ -53,7 +53,7 @@ test("list", () => {
   assertMatchFail("[x 0 z]", "(1 2 3)")
 })
 
-test("quote", () => {
+test("matchData -- quote", () => {
   assertMatch("'x", "x", "[]")
   assertMatch("(quote x)", "x", "[]")
   assertMatch("(quote 3)", "3", "[]")
@@ -62,7 +62,7 @@ test("quote", () => {
   assertMatch("'(lambda (x) x)", "(lambda (x) x)", "[]")
 })
 
-test("quote record", () => {
+test("matchData -- quote record", () => {
   assertMatch("'(:x 1 :y 2)", "(:x 1 :y 2 :z 3)", "[]")
   assertMatchFail("'(:x 1 :y 2)", "(:x 1 :y 3)")
   assertMatchFail("'(:x 1 :y 2 :z 3)", "(:x 1 :y 2)")
@@ -73,18 +73,18 @@ test("quote record", () => {
   )
 })
 
-test("quasiquote", () => {
+test("matchData -- quasiquote", () => {
   assertMatch("`x", "x", "[]")
   assertMatch("`(lambda (,x) ,x)", "(lambda (x) x)", "[:x x]")
   assertMatch("`(lambda (,name) ,ret)", "(lambda (x) x)", "[:name x :ret x]")
   assertMatch("`(,target ,arg)", "(f x)", "[:target f :arg x]")
 })
 
-test("cons", () => {
+test("matchData -- cons", () => {
   assertMatch("(cons head tail)", "(f x y)", "[:head f :tail (x y)]")
 })
 
-test("cons*", () => {
+test("matchData -- cons*", () => {
   assertMatch(
     "(cons* head next tail)",
     "(f x y)",

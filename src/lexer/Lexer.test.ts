@@ -3,25 +3,25 @@ import { test } from "node:test"
 import { Lexer } from "../lexer/index.ts"
 import { type Token } from "../token/index.ts"
 
-const lexer = new Lexer({
-  quotes: [
-    { mark: "'", symbol: "quote" },
-    { mark: ",", symbol: "unquote" },
-    { mark: "`", symbol: "quasiquote" },
-  ],
-  brackets: [
-    { start: "(", end: ")" },
-    { start: "[", end: "]" },
-  ],
-  comments: [";"],
-})
-
 function assertTokens(text: string, tokens: Array<Omit<Token, "span">>): void {
+  const lexer = new Lexer({
+    quotes: [
+      { mark: "'", symbol: "quote" },
+      { mark: ",", symbol: "unquote" },
+      { mark: "`", symbol: "quasiquote" },
+    ],
+    brackets: [
+      { start: "(", end: ")" },
+      { start: "[", end: "]" },
+    ],
+    comments: [";"],
+  })
+
   const results = lexer.lex(text).map(({ kind, value }) => ({ kind, value }))
   assert.deepStrictEqual(results, tokens)
 }
 
-test("blank", () => {
+test("lexer -- blank", () => {
   assertTokens("", [])
   assertTokens("\n", [])
   assertTokens(" \n ", [])
@@ -29,7 +29,7 @@ test("blank", () => {
   assertTokens("    ", [])
 })
 
-test("symbol", () => {
+test("lexer -- symbol", () => {
   assertTokens("a b c", [
     { kind: "Symbol", value: "a" },
     { kind: "Symbol", value: "b" },
@@ -41,7 +41,7 @@ test("symbol", () => {
   assertTokens("3-sphere", [{ kind: "Symbol", value: "3-sphere" }])
 })
 
-test("quotes", () => {
+test("lexer -- quotes", () => {
   assertTokens("'a", [
     { kind: "Quote", value: "'" },
     { kind: "Symbol", value: "a" },
@@ -53,7 +53,7 @@ test("quotes", () => {
   ])
 })
 
-test("brackets", () => {
+test("lexer -- brackets", () => {
   assertTokens("()", [
     { kind: "BracketStart", value: "(" },
     { kind: "BracketEnd", value: ")" },
@@ -92,13 +92,13 @@ test("brackets", () => {
   assertTokens("abc", [{ kind: "Symbol", value: "abc" }])
 })
 
-test("comments", () => {
+test("lexer -- comments", () => {
   assertTokens("; abc", [])
   assertTokens("; abc\n", [])
   assertTokens("; abc\nabc", [{ kind: "Symbol", value: "abc" }])
 })
 
-test("string", () => {
+test("lexer -- string", () => {
   assertTokens('"abc"', [{ kind: "String", value: '"abc"' }])
 
   assertTokens('"abc" "abc"', [
@@ -114,7 +114,7 @@ test("string", () => {
   assertTokens('";;"', [{ kind: "String", value: '";;"' }])
 })
 
-test("number", () => {
+test("lexer -- number", () => {
   assertTokens("1", [{ kind: "Number", value: "1" }])
   assertTokens("-1", [{ kind: "Number", value: "-1" }])
 

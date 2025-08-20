@@ -7,23 +7,23 @@ function assertParse(text: string, data: X.Data): void {
   assert(X.dataEqual(parseData(text), data))
 }
 
-test("symbol", () => {
+test("parse -- symbol", () => {
   assertParse("abc", X.Symbol("abc"))
   assertParse("3-sphere", X.Symbol("3-sphere"))
   assertParse("#abc", X.Symbol("#abc"))
   assertParse("#3-sphere", X.Symbol("#3-sphere"))
 })
 
-test("string", () => {
+test("parse -- string", () => {
   assertParse('"abc"', X.String("abc"))
 })
 
-test("bool", () => {
+test("parse -- bool", () => {
   assertParse("#t", X.Bool(true))
   assertParse("#f", X.Bool(false))
 })
 
-test("number", () => {
+test("parse -- number", () => {
   assertParse("1", X.Int(1))
   assertParse("0", X.Int(0))
   assertParse("-1", X.Int(-1))
@@ -31,7 +31,7 @@ test("number", () => {
   assertParse("3.14", X.Float(3.14))
 })
 
-test("list in round brackets", () => {
+test("parse -- list in round brackets", () => {
   assertParse("()", X.List([]))
   assertParse("(a b c)", X.List([X.Symbol("a"), X.Symbol("b"), X.Symbol("c")]))
   assertParse(
@@ -40,7 +40,7 @@ test("list in round brackets", () => {
   )
 })
 
-test("list in square brackets", () => {
+test("parse -- list in square brackets", () => {
   assertParse("[]", X.List([X.Symbol("tael")]))
   assertParse(
     "[a b c]",
@@ -48,7 +48,7 @@ test("list in square brackets", () => {
   )
 })
 
-test("list with attributes", () => {
+test("parse -- list with attributes", () => {
   assertParse("(:x 1 :y 2)", X.Record({ x: X.Int(1), y: X.Int(2) }))
   assertParse(
     "(a b c :x 1 :y 2)",
@@ -59,7 +59,7 @@ test("list with attributes", () => {
   )
 })
 
-test("quotes", () => {
+test("parse -- quotes", () => {
   assertParse("'a", X.List([X.Symbol("quote"), X.Symbol("a")]))
   assertParse("'(a)", X.List([X.Symbol("quote"), X.List([X.Symbol("a")])]))
   assertParse(

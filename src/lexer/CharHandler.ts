@@ -1,28 +1,28 @@
 import { InternalError, ParsingError } from "../errors/index.ts"
 import { positionForwardChar } from "../span/index.ts"
 import { type TokenKind } from "../token/index.ts"
-import type { Lexing } from "./Lexing.ts"
+import { Lexer } from "./Lexer.ts"
 
-export function useCharHandlers(lexing: Lexing): Array<CharHandler> {
+export function useCharHandlers(lexer: Lexer): Array<CharHandler> {
   return [
     // The order matters, we must
     //   try `NumberHandler` before `SymbolHandler`.
-    new SpaceHandler(lexing),
-    new QuoteHandler(lexing),
-    new BracketStartHandler(lexing),
-    new BracketEndHandler(lexing),
-    new CommentHandler(lexing),
-    new StringHandler(lexing),
-    new NumberHandler(lexing),
-    new SymbolHandler(lexing),
+    new SpaceHandler(lexer),
+    new QuoteHandler(lexer),
+    new BracketStartHandler(lexer),
+    new BracketEndHandler(lexer),
+    new CommentHandler(lexer),
+    new StringHandler(lexer),
+    new NumberHandler(lexer),
+    new SymbolHandler(lexer),
   ]
 }
 
 export abstract class CharHandler {
-  lexing: Lexing
+  lexer: Lexer
 
-  constructor(lexing: Lexing) {
-    this.lexing = lexing
+  constructor(lexer: Lexer) {
+    this.lexer = lexer
   }
 
   abstract kind: TokenKind | undefined
@@ -40,10 +40,10 @@ class SpaceHandler extends CharHandler {
 
   handle(char: string): string {
     let value = char
-    this.lexing.forward(1)
-    while (this.lexing.char !== undefined && this.lexing.char.trim() === "") {
-      value += this.lexing.char
-      this.lexing.forward(1)
+    this.lexer.forward(1)
+    while (this.lexer.char !== undefined && this.lexer.char.trim() === "") {
+      value += this.lexer.char
+      this.lexer.forward(1)
     }
 
     return value
@@ -54,11 +54,11 @@ class BracketStartHandler extends CharHandler {
   kind = "BracketStart" as const
 
   canHandle(char: string): boolean {
-    return this.lexing.config.brackets.map(({ start }) => start).includes(char)
+    return this.lexer.config.brackets.map(({ start }) => start).includes(char)
   }
 
   handle(char: string): string {
-    this.lexing.forward(1)
+    this.lexer.forward(1)
     return char
   }
 }
@@ -67,11 +67,11 @@ class BracketEndHandler extends CharHandler {
   kind = "BracketEnd" as const
 
   canHandle(char: string): boolean {
-    return this.lexing.config.brackets.map(({ end }) => end).includes(char)
+    return this.lexer.config.brackets.map(({ end }) => end).includes(char)
   }
 
   handle(char: string): string {
-    this.lexing.forward(1)
+    this.lexer.forward(1)
     return char
   }
 }
@@ -80,11 +80,11 @@ class QuoteHandler extends CharHandler {
   kind = "Quote" as const
 
   canHandle(char: string): boolean {
-    return this.lexing.config.quotes.map(({ mark }) => mark).includes(char)
+    return this.lexer.config.quotes.map(({ mark }) => mark).includes(char)
   }
 
   handle(char: string): string {
-    this.lexing.forward(1)
+    this.lexer.forward(1)
     return char
   }
 }
@@ -93,16 +93,16 @@ class CommentHandler extends CharHandler {
   kind = undefined
 
   canHandle(char: string): boolean {
-    const text = char + this.lexing.rest
-    return this.lexing.config.comments.some((prefix) => text.startsWith(prefix))
+    const text = char + this.lexer.rest
+    return this.lexer.config.comments.some((prefix) => text.startsWith(prefix))
   }
 
   handle(char: string): string {
     let value = char
-    this.lexing.forward(1)
-    while (this.lexing.char !== undefined && this.lexing.char !== "\n") {
-      value += this.lexing.char
-      this.lexing.forward(1)
+    this.lexer.forward(1)
+    while (this.lexer.char !== undefined && this.lexer.char !== "\n") {
+      value += this.lexer.char
+      this.lexer.forward(1)
     }
 
     return value
@@ -117,7 +117,7 @@ class StringHandler extends CharHandler {
   }
 
   handle(char: string): string {
-    const text = this.lexing.rest.split("\n")[0] || ""
+    const text = this.lexer.rest.split("\n")[0] || ""
     let index = 2 // over first `"` and the folloing char.
     while (index <= text.length) {
       const head = text.slice(0, index)
@@ -125,12 +125,12 @@ class StringHandler extends CharHandler {
       if (str === undefined) {
         index++
       } else {
-        this.lexing.forward(index)
+        this.lexer.forward(index)
         return head
       }
     }
 
-    const start = this.lexing.position
+    const start = this.lexer.position
     const end = positionForwardChar(start, '"')
     const span = { start, end }
     throw new ParsingError(`Fail to parse JSON string: ${text}`, span)
@@ -149,18 +149,18 @@ class NumberHandler extends CharHandler {
   kind = "Number" as const
 
   canHandle(char: string): boolean {
-    const text = this.lexing.rest.split("\n")[0] || ""
+    const text = this.lexer.rest.split("\n")[0] || ""
     return this.lastSuccessAt(text) !== undefined
   }
 
   handle(char: string): string {
-    const text = this.lexing.rest.split("\n")[0] || ""
+    const text = this.lexer.rest.split("\n")[0] || ""
     const index = this.lastSuccessAt(text)
     if (index === undefined) {
       throw new InternalError(`Expect to find lastSuccessAt in text: ${text}`)
     }
 
-    this.lexing.forward(index)
+    this.lexer.forward(index)
     return text.slice(0, index)
   }
 
@@ -176,7 +176,7 @@ class NumberHandler extends CharHandler {
         text[index - 1].trim() !== "" &&
         (text[index] === undefined ||
           text[index].trim() === "" ||
-          this.lexing.config.isMark(text[index]))
+          this.lexer.config.isMark(text[index]))
       ) {
         lastSuccessAt = index
       }
@@ -207,14 +207,14 @@ class SymbolHandler extends CharHandler {
 
   handle(char: string): string {
     let value = char
-    this.lexing.forward(1)
+    this.lexer.forward(1)
     while (
-      this.lexing.char !== undefined &&
-      this.lexing.char.trim() !== "" &&
-      !this.lexing.config.marks.includes(this.lexing.char)
+      this.lexer.char !== undefined &&
+      this.lexer.char.trim() !== "" &&
+      !this.lexer.config.marks.includes(this.lexer.char)
     ) {
-      value += this.lexing.char
-      this.lexing.forward(1)
+      value += this.lexer.char
+      this.lexer.forward(1)
     }
 
     return value
