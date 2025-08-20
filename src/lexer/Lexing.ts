@@ -3,7 +3,7 @@ import { Lexer } from "../lexer/index.ts"
 import { initPosition, positionForwardChar } from "../span/index.ts"
 import { type Token, type TokenKind } from "../token/index.ts"
 
-export class Lexing implements Iterator<Token> {
+export class Lexing {
   position = initPosition()
 
   handlers: Array<CharHandler> = [
@@ -27,10 +27,6 @@ export class Lexing implements Iterator<Token> {
     this.text = text
   }
 
-  [Symbol.iterator](): Iterator<Token> {
-    return this
-  }
-
   get char(): string | undefined {
     return this.text[this.position.index]
   }
@@ -47,16 +43,16 @@ export class Lexing implements Iterator<Token> {
     }
   }
 
-  next(): IteratorResult<Token> {
+  next(): Token | undefined {
     while (this.char !== undefined) {
       const result = this.handleChar(this.char)
       if (result !== undefined) return result
     }
 
-    return { done: true, value: undefined }
+    return undefined
   }
 
-  private handleChar(char: string): IteratorResult<Token> | undefined {
+  private handleChar(char: string): Token | undefined {
     for (const handler of this.handlers) {
       if (handler.canHandle(char)) {
         const start = this.position
@@ -65,7 +61,7 @@ export class Lexing implements Iterator<Token> {
         const end = this.position
         const span = { start, end }
         const token = { kind: handler.kind, value, span }
-        return { done: false, value: token }
+        return token
       }
     }
 

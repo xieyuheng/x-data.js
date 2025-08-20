@@ -1,3 +1,4 @@
+[lexer] `Lexing` depends on `LexerConfig` instead of `Lexer`
 [lexer] be able to `lex` with offest
 
 [repl] `Repl` -- has `commitedTokens`

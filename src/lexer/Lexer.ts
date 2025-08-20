@@ -10,6 +10,15 @@ export class Lexer {
   }
 
   lex(text: string): Array<Token> {
-    return Array.from(new Lexing(this, text))
+    const lexing = new Lexing(this, text)
+    const tokens: Array<Token> = []
+    while (true) {
+      const token = lexing.next()
+      if (token) {
+        tokens.push(token)
+      } else {
+        return tokens
+      }
+    }
   }
 }
