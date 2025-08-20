@@ -1,1 +1,5 @@
-[repl] `createRepl` -- take callback functions
+[lexer] be able to `lex` with offest
+
+[repl] `Repl` -- has `commitedTokens`
+[repl] `Repl` -- has `currentTokens`
+[repl] `replStart` -- handle `line` event of readline
