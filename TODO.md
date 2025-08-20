@@ -1,4 +1,5 @@
-`spanReport` no need to take `text`
+`Token` has `meta` instead of just `span`
+`ParsingError` has `TokenMeta` instead of `span`
 `ParsingError.report` no need to take `text`
 `Data`'s `meta` has optional `url` and `text`
 

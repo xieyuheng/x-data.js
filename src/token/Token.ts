@@ -8,10 +8,13 @@ export type TokenKind =
   | "BracketEnd"
   | "Quote"
 
-export type Token = {
-  kind: TokenKind
-  value: string
+export type TokenMeta = {
   span: Span
   text: string
   url?: URL
 }
+
+export type Token = {
+  kind: TokenKind
+  value: string
+} & TokenMeta
