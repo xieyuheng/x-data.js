@@ -132,8 +132,11 @@ class StringHandler extends CharHandler {
 
     const start = this.lexer.position
     const end = positionForwardChar(start, '"')
-    const span = { start, end }
-    throw new ParsingError(`Fail to parse JSON string: ${text}`, span)
+    throw new ParsingError(`Fail to parse JSON string: ${text}`, {
+      span: { start, end },
+      text: this.lexer.text,
+      url: this.lexer.url,
+    })
   }
 
   private tryToParseString(text: string): string | undefined {

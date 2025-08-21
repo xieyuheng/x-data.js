@@ -1,14 +1,18 @@
-import { type Span, spanReport } from "../span/index.ts"
+import { spanReport } from "../span/index.ts"
+import { type TokenMeta } from "../token/index.ts"
 
 export class ParsingError extends Error {
-  span: Span
+  meta: TokenMeta
 
-  constructor(message: string, span: Span) {
+  constructor(message: string, meta: TokenMeta) {
     super(message)
-    this.span = span
+    this.meta = meta
   }
 
-  report(options: { text: string }): string {
-    return [this.message + "\n", spanReport(this.span, options.text)].join("\n")
+  report(): string {
+    return [
+      this.message + "\n",
+      spanReport(this.meta.span, this.meta.text),
+    ].join("\n")
   }
 }

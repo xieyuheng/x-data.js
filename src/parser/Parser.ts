@@ -1,9 +1,9 @@
 import * as X from "../data/index.ts"
-import { dataFromJson, type Data } from "../data/index.ts"
+import { type Data } from "../data/index.ts"
 import { InternalError, ParsingError } from "../errors/index.ts"
 import { Lexer } from "../lexer/index.ts"
-import { initPosition, spanFromData, spanUnion } from "../span/index.ts"
-import { type Token } from "../token/index.ts"
+import { spanUnion } from "../span/index.ts"
+import { tokenMetaToDataMeta, type Token } from "../token/index.ts"
 
 type Result = { data: Data; remain: Array<Token> }
 
@@ -40,10 +40,7 @@ export class Parser {
 
   private handleTokens(tokens: Array<Token>): Result {
     if (tokens[0] === undefined) {
-      throw new ParsingError("I expect a token, but there is no token remain", {
-        start: initPosition(),
-        end: initPosition(),
-      })
+      throw new Error("I expect a token, but there is no token remain\n")
     }
 
     const token = tokens[0]
@@ -52,20 +49,20 @@ export class Parser {
       case "Symbol": {
         if (token.value === "#f") {
           return {
-            data: X.Bool(false, { span: dataFromJson(token.span) }),
+            data: X.Bool(false, tokenMetaToDataMeta(token.meta)),
             remain: tokens.slice(1),
           }
         }
 
         if (token.value === "#t") {
           return {
-            data: X.Bool(true, { span: dataFromJson(token.span) }),
+            data: X.Bool(true, tokenMetaToDataMeta(token.meta)),
             remain: tokens.slice(1),
           }
         }
 
         return {
-          data: X.Symbol(token.value, { span: dataFromJson(token.span) }),
+          data: X.Symbol(token.value, tokenMetaToDataMeta(token.meta)),
           remain: tokens.slice(1),
         }
       }
@@ -80,12 +77,12 @@ export class Parser {
 
         if (token.value.includes(".") || token.value.includes("e")) {
           return {
-            data: X.Float(value, { span: dataFromJson(token.span) }),
+            data: X.Float(value, tokenMetaToDataMeta(token.meta)),
             remain: tokens.slice(1),
           }
         } else {
           return {
-            data: X.Int(value, { span: dataFromJson(token.span) }),
+            data: X.Int(value, tokenMetaToDataMeta(token.meta)),
             remain: tokens.slice(1),
           }
         }
@@ -100,7 +97,7 @@ export class Parser {
         }
 
         return {
-          data: X.String(value, { span: dataFromJson(token.span) }),
+          data: X.String(value, tokenMetaToDataMeta(token.meta)),
           remain: tokens.slice(1),
         }
       }
@@ -118,7 +115,7 @@ export class Parser {
       }
 
       case "BracketEnd": {
-        throw new ParsingError(`I found extra BracketEnd`, token.span)
+        throw new ParsingError(`I found extra BracketEnd`, token.meta)
       }
 
       case "Quote": {
@@ -126,15 +123,11 @@ export class Parser {
 
         const quoteSymbol = X.Symbol(
           this.lexer.config.findQuoteSymbolOrFail(token.value),
-          { span: dataFromJson(token.span) },
+          tokenMetaToDataMeta(token.meta),
         )
 
         return {
-          data: X.List([quoteSymbol, data], {
-            span: dataFromJson(
-              spanUnion(token.span, spanFromData(data.meta["span"])),
-            ),
-          }),
+          data: X.List([quoteSymbol, data], tokenMetaToDataMeta(token.meta)),
           remain,
         }
       }
@@ -147,20 +140,25 @@ export class Parser {
 
     while (true) {
       if (tokens[0] === undefined) {
-        throw new ParsingError(`I found missing BracketEnd`, start.span)
+        throw new ParsingError(`I found missing BracketEnd`, start.meta)
       }
 
       const token = tokens[0]
 
       if (token.kind === "BracketEnd") {
         if (!this.lexer.config.matchBrackets(start.value, token.value)) {
-          throw new ParsingError(`I expect a matching BracketEnd`, token.span)
+          throw new ParsingError(`I expect a matching BracketEnd`, token.meta)
         }
 
         return {
-          data: X.Tael(array, attributes, {
-            span: dataFromJson(spanUnion(start.span, token.span)),
-          }),
+          data: X.Tael(
+            array,
+            attributes,
+            tokenMetaToDataMeta({
+              ...token.meta,
+              span: spanUnion(start.meta.span, token.meta.span),
+            }),
+          ),
           remain: tokens.slice(1),
         }
       }
@@ -170,7 +168,7 @@ export class Parser {
         if (head.data.kind === "Symbol" && head.data.content.startsWith(":")) {
           throw new ParsingError(
             `I found key after key in attributes`,
-            token.span,
+            token.meta,
           )
         }
 

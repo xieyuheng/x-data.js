@@ -17,4 +17,5 @@ export type TokenMeta = {
 export type Token = {
   kind: TokenKind
   value: string
-} & TokenMeta
+  meta: TokenMeta
+}

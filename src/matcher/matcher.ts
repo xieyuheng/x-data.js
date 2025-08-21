@@ -1,13 +1,13 @@
 import * as X from "../data/index.ts"
 import { matchData, type Subst } from "../match/index.ts"
 import { parseData } from "../parser/index.ts"
-import { spanFromData, type Span } from "../span/index.ts"
+import { dataMetaToTokenMeta, type TokenMeta } from "../token/index.ts"
 
 export type Matcher<A> = (data: X.Data) => A | undefined
 
 export type MatcherCallback<A> = (
   subst: Subst,
-  options: { data: X.Data; meta: X.Attributes; span: Span },
+  options: { data: X.Data; meta: TokenMeta },
 ) => A | undefined
 
 export function matcher<A>(
@@ -20,8 +20,7 @@ export function matcher<A>(
     if (!subst) return undefined
     return f(subst, {
       data: data,
-      meta: data.meta,
-      span: spanFromData(data.meta["span"]),
+      meta: dataMetaToTokenMeta(data.meta),
     })
   }
 }

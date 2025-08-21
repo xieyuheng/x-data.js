@@ -3,10 +3,7 @@ import { test } from "node:test"
 import { Lexer } from "../lexer/index.ts"
 import { type Token } from "../token/index.ts"
 
-function assertTokens(
-  text: string,
-  tokens: Array<Omit<Token, "span" | "text">>,
-): void {
+function assertTokens(text: string, tokens: Array<Omit<Token, "meta">>): void {
   const lexer = new Lexer({
     quotes: [
       { mark: "'", symbol: "quote" },

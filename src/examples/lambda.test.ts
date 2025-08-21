@@ -47,11 +47,11 @@ const expMatcher: X.Matcher<Exp> = X.matcherChoice<Exp>([
     Apply(X.match(expMatcher, target), X.match(expMatcher, arg)),
   ),
 
-  X.matcher("name", ({ name }, { span }) => {
+  X.matcher("name", ({ name }, { meta }) => {
     const nameSymbol = X.symbolToString(name)
     if (keywords.includes(nameSymbol)) {
       const message = "keywork should not be used as variable"
-      throw new X.ParsingError(message, span)
+      throw new X.ParsingError(message, meta)
     }
 
     return Var(nameSymbol)
@@ -85,7 +85,7 @@ function assertParsingError(text: string): void {
     matchExp(X.parseData(text))
   } catch (error) {
     if (error instanceof X.ParsingError) {
-      console.log("[assertParsingError]", error.report({ text }))
+      console.log("[assertParsingError]", error.report())
       return
     }
 

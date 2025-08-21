@@ -136,7 +136,7 @@ function assertParsingError(text: string): void {
     matchType(X.parseData(text))
   } catch (error) {
     if (error instanceof X.ParsingError) {
-      console.log("[assertParsingError]", error.report({ text }))
+      console.log("[assertParsingError]", error.report())
       return
     }
 

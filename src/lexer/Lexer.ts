@@ -67,8 +67,11 @@ export class Lexer {
         return {
           kind: handler.kind,
           value,
-          span: { start, end },
-          text: this.text,
+          meta: {
+            span: { start, end },
+            text: this.text,
+            url: this.url,
+          },
         }
       }
     }
