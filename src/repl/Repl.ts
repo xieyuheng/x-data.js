@@ -9,17 +9,14 @@ import { errorReport } from "../utils/error/errorReport.ts"
 
 type ReplOptions = {
   prompt: string
-  onData: (data: Data) => Promise<void>
+  onSexps: (sexps: Array<Data>) => Promise<void>
   onClose?: () => Promise<void>
 }
 
-type Repl = {
-  prompt: string
-  onData: (data: Data) => Promise<void>
-  onClose?: () => Promise<void>
+type Repl = ReplOptions & {
   parser: Parser
   text: string
-  results: Array<Data>
+  sexps: Array<Data>
   count: number
   rl?: Readline.Interface
 }
@@ -27,11 +24,11 @@ type Repl = {
 export function createRepl(options: ReplOptions): Repl {
   return {
     prompt: options.prompt,
-    onData: options.onData,
+    onSexps: options.onSexps,
     onClose: options.onClose,
     parser: new Parser(),
     text: "",
-    results: [],
+    sexps: [],
     count: 0,
   }
 }
@@ -60,11 +57,8 @@ export function replStart(repl: Repl): void {
 
   repl.rl.on("line", async (line) => {
     replHandleLine(repl, line)
-    for (const data of repl.results) {
-      await repl.onData(data)
-    }
-
-    repl.results = []
+    await repl.onSexps(repl.sexps)
+    repl.sexps = []
   })
 }
 
@@ -91,7 +85,7 @@ function replHandleLine(repl: Repl, line: string) {
     case "Perfect": {
       try {
         const url = new URL(`repl:${++repl.count}`)
-        repl.results.push(...repl.parser.parse(repl.text, { url }))
+        repl.sexps.push(...repl.parser.parse(repl.text, { url }))
       } catch (error) {
         let message = `[repl] error\n`
         message += errorReport(error)
