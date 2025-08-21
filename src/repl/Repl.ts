@@ -8,6 +8,7 @@ import { type Token } from "../token/index.ts"
 import { errorReport } from "../utils/error/errorReport.ts"
 
 type ReplOptions = {
+  welcome?: string
   prompt: string
   onSexps: (sexps: Array<Data>) => Promise<void>
   onClose?: () => Promise<void>
@@ -16,19 +17,15 @@ type ReplOptions = {
 type Repl = ReplOptions & {
   parser: Parser
   text: string
-  sexps: Array<Data>
   count: number
   rl?: Readline.Interface
 }
 
 export function createRepl(options: ReplOptions): Repl {
   return {
-    prompt: options.prompt,
-    onSexps: options.onSexps,
-    onClose: options.onClose,
+    ...options,
     parser: new Parser(),
     text: "",
-    sexps: [],
     count: 0,
   }
 }
@@ -47,6 +44,10 @@ export function replStart(repl: Repl): void {
 
   repl.rl.setPrompt(repl.prompt)
 
+  if (repl.welcome) {
+    console.log(repl.welcome)
+  }
+
   replPrompt(repl)
 
   repl.rl.on("close", async () => {
@@ -56,13 +57,11 @@ export function replStart(repl: Repl): void {
   })
 
   repl.rl.on("line", async (line) => {
-    replHandleLine(repl, line)
-    await repl.onSexps(repl.sexps)
-    repl.sexps = []
+    await replHandleLine(repl, line)
   })
 }
 
-function replHandleLine(repl: Repl, line: string) {
+async function replHandleLine(repl: Repl, line: string) {
   assert(repl.rl)
   repl.text += line
   const tokens = repl.parser.lexer.lex(repl.text)
@@ -85,15 +84,16 @@ function replHandleLine(repl: Repl, line: string) {
     case "Perfect": {
       try {
         const url = new URL(`repl:${++repl.count}`)
-        repl.sexps.push(...repl.parser.parse(repl.text, { url }))
+        const sexps = repl.parser.parse(repl.text, { url })
+        await repl.onSexps(sexps)
+        replPrompt(repl)
       } catch (error) {
         let message = `[repl] error\n`
         message += errorReport(error)
         message += `\n`
         process.stdout.write(message)
+        replPrompt(repl)
       }
-
-      replPrompt(repl)
     }
   }
 }
