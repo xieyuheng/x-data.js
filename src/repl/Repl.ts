@@ -1,32 +1,115 @@
 import assert from "node:assert"
-import { stdin, stdout } from "node:process"
+import process from "node:process"
 import * as Readline from "node:readline"
 import { type Data } from "../data/index.ts"
 import { LexerConfig } from "../lexer/index.ts"
+import { Parser } from "../parser/index.ts"
 import { type Token } from "../token/index.ts"
+import { errorReport } from "../utils/error/errorReport.ts"
+
+type ReplOptions = {
+  prompt: string
+  onData: (data: Data) => Promise<void>
+  onClose?: () => Promise<void>
+}
 
 type Repl = {
+  prompt: string
   onData: (data: Data) => Promise<void>
+  onClose?: () => Promise<void>
+  parser: Parser
+  text: string
+  results: Array<Data>
+  count: number
   rl?: Readline.Interface
 }
 
-export function createRepl(options: Repl): Repl {
-  return options
+export function createRepl(options: ReplOptions): Repl {
+  return {
+    prompt: options.prompt,
+    onData: options.onData,
+    onClose: options.onClose,
+    parser: new Parser(),
+    text: "",
+    results: [],
+    count: 0,
+  }
+}
+
+function replPrompt(repl: Repl) {
+  assert(repl.rl)
+  repl.rl.prompt()
+  repl.text = ""
 }
 
 export function replStart(repl: Repl): void {
-  repl.rl = Readline.createInterface({ input: stdin, output: stdout })
-  repl.rl.on("line", (line) => {
-    console.log(`line: ${line}`)
+  repl.rl = Readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  })
+
+  repl.rl.setPrompt(repl.prompt)
+
+  replPrompt(repl)
+
+  repl.rl.on("close", async () => {
+    if (repl.onClose) {
+      await repl.onClose()
+    }
+  })
+
+  repl.rl.on("line", async (line) => {
+    replHandleLine(repl, line)
+    for (const data of repl.results) {
+      await repl.onData(data)
+    }
+
+    repl.results = []
   })
 }
 
-export function replEnd(repl: Repl): void {
+function replHandleLine(repl: Repl, line: string) {
+  assert(repl.rl)
+  repl.text += line
+  const tokens = repl.parser.lexer.lex(repl.text)
+  const balance = bracketBalance(repl.parser.lexer.config, tokens)
+  switch (balance) {
+    case "Ok": {
+      return
+    }
+
+    case "Wrong": {
+      let message = `[repl] Unbalanced brackets\n`
+      message += "```\n"
+      message += repl.text
+      message += "\n"
+      message += "```\n"
+      process.stdout.write(message)
+      replPrompt(repl)
+    }
+
+    case "Perfect": {
+      try {
+        const url = new URL(`repl:${++repl.count}`)
+        repl.results.push(...repl.parser.parse(repl.text, { url }))
+      } catch (error) {
+        let message = `[repl] error\n`
+        message += errorReport(error)
+        message += `\n`
+        process.stdout.write(message)
+      }
+
+      replPrompt(repl)
+    }
+  }
+}
+
+export function replClose(repl: Repl): void {
   assert(repl.rl)
   repl.rl.close()
 }
 
-type Balance = "Wrong" | "Ok" | "Perfect"
+type Balance = "Ok" | "Wrong" | "Perfect"
 
 function bracketBalance(config: LexerConfig, tokens: Array<Token>): Balance {
   const bracketStack: Array<string> = []

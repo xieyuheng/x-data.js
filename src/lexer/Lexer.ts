@@ -17,8 +17,9 @@ export class Lexer {
   }
 
   lex(text: string, meta: ParserMeta = {}): Array<Token> {
-    this.text += text
+    this.text = text
     this.url = meta.url
+    this.position = initPosition()
 
     const tokens: Array<Token> = []
     while (true) {

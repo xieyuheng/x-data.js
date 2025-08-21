@@ -21,6 +21,7 @@ export class Parser {
     brackets: [
       { start: "(", end: ")" },
       { start: "[", end: "]" },
+      { start: "{", end: "}" },
     ],
     comments: [";"],
   })
@@ -32,6 +33,7 @@ export class Parser {
       const { data, remain } = this.handleTokens(tokens)
       array.push(data)
       if (remain.length === 0) return array
+
       tokens = remain
     }
 
