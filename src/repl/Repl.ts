@@ -63,7 +63,7 @@ export function replStart(repl: Repl): void {
 
 async function replHandleLine(repl: Repl, line: string) {
   assert(repl.rl)
-  repl.text += line
+  repl.text += line + "\n"
   const tokens = repl.parser.lexer.lex(repl.text)
   const balance = bracketBalance(repl.parser.lexer.config, tokens)
   switch (balance) {
