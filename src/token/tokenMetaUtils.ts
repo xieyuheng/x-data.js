@@ -6,7 +6,7 @@ export function tokenMetaToDataMeta(meta: TokenMeta): X.Attributes {
   return X.asTael(X.dataFromJson(meta)).attributes
 }
 
-export function dataMetaToTokenMeta(meta: X.Attributes): TokenMeta {
+export function tokenMetaFromDataMeta(meta: X.Attributes): TokenMeta {
   const json: any = recordMap(meta, X.dataToJson)
 
   try {

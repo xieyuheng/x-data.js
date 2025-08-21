@@ -1,7 +1,7 @@
 import * as X from "../data/index.ts"
 import { matchData, type Subst } from "../match/index.ts"
 import { parseData } from "../parser/index.ts"
-import { dataMetaToTokenMeta, type TokenMeta } from "../token/index.ts"
+import { tokenMetaFromDataMeta, type TokenMeta } from "../token/index.ts"
 
 export type Matcher<A> = (data: X.Data) => A | undefined
 
@@ -20,7 +20,7 @@ export function matcher<A>(
     if (!subst) return undefined
     return f(subst, {
       data: data,
-      meta: dataMetaToTokenMeta(data.meta),
+      meta: tokenMetaFromDataMeta(data.meta),
     })
   }
 }
