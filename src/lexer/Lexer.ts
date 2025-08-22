@@ -1,4 +1,3 @@
-import { InternalError } from "../errors/InternalError.ts"
 import { LexerConfig, type LexerOptions } from "../lexer/index.ts"
 import type { ParserMeta } from "../parser/index.ts"
 import { initPosition, positionForwardChar } from "../span/index.ts"
@@ -77,6 +76,7 @@ export class Lexer {
       }
     }
 
-    throw new InternalError(`Can not handle char: ${char}`)
+    let message = `Can not handle char: ${char}\n`
+    throw new Error(message)
   }
 }

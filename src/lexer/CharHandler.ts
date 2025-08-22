@@ -1,4 +1,4 @@
-import { InternalError, ParsingError } from "../errors/index.ts"
+import { ParsingError } from "../errors/index.ts"
 import { positionForwardChar } from "../span/index.ts"
 import { type TokenKind } from "../token/index.ts"
 import { Lexer } from "./Lexer.ts"
@@ -132,7 +132,8 @@ class StringHandler extends CharHandler {
 
     const start = this.lexer.position
     const end = positionForwardChar(start, '"')
-    throw new ParsingError(`Fail to parse JSON string: ${text}`, {
+    let message = `Fail to parse JSON string: ${text}\n`
+    throw new ParsingError(message, {
       span: { start, end },
       text: this.lexer.text,
       url: this.lexer.url,
@@ -160,7 +161,8 @@ class NumberHandler extends CharHandler {
     const text = this.lexer.rest.split("\n")[0] || ""
     const index = this.lastSuccessAt(text)
     if (index === undefined) {
-      throw new InternalError(`Expect to find lastSuccessAt in text: ${text}`)
+      let message = `Expect to find lastSuccessAt in text: ${text}\n`
+      throw new Error(message)
     }
 
     this.lexer.forward(index)

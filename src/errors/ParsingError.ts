@@ -10,9 +10,9 @@ export class ParsingError extends Error {
   }
 
   report(): string {
-    return [
-      this.message + "\n",
-      spanReport(this.meta.span, this.meta.text),
-    ].join("\n")
+    let message = this.message
+    message += "\n"
+    message += spanReport(this.meta.span, this.meta.text)
+    return message
   }
 }

@@ -50,7 +50,7 @@ const expMatcher: X.Matcher<Exp> = X.matcherChoice<Exp>([
   X.matcher("name", ({ name }, { meta }) => {
     const nameSymbol = X.symbolToString(name)
     if (keywords.includes(nameSymbol)) {
-      const message = "keywork should not be used as variable"
+      let message = "keywork should not be used as variable\n"
       throw new X.ParsingError(message, meta)
     }
 

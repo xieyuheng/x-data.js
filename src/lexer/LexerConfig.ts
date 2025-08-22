@@ -1,5 +1,3 @@
-import { InternalError } from "../errors/index.ts"
-
 export type LexerOptions = {
   quotes: Array<{ mark: string; symbol: string }>
   brackets: Array<{ start: string; end: string }>
@@ -38,7 +36,8 @@ export class LexerConfig {
   findQuoteSymbolOrFail(mark: string): string {
     const found = this.quotes.find((entry) => entry.mark === mark)
     if (found === undefined) {
-      throw new InternalError(`Fail to find quote symbol for mark: ${mark}`)
+      let message = `Fail to find quote symbol for mark: ${mark}\n`
+      throw new Error(message)
     }
 
     return found.symbol
