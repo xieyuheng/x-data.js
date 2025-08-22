@@ -10,8 +10,8 @@ import { errorReport } from "../utils/error/errorReport.ts"
 type ReplOptions = {
   welcome?: string
   prompt: string
-  onSexps: (sexps: Array<Data>) => Promise<void>
-  onClose?: () => Promise<void>
+  onSexps: (sexps: Array<Data>) => void
+  onClose?: () => void
 }
 
 type Repl = ReplOptions & {
@@ -56,12 +56,12 @@ export function replStart(repl: Repl): void {
     }
   })
 
-  repl.rl.on("line", async (line) => {
-    await replHandleLine(repl, line)
+  repl.rl.on("line", (line) => {
+    replHandleLine(repl, line)
   })
 }
 
-async function replHandleLine(repl: Repl, line: string) {
+function replHandleLine(repl: Repl, line: string) {
   assert(repl.rl)
   repl.text += line + "\n"
   const tokens = repl.parser.lexer.lex(repl.text)
@@ -85,7 +85,9 @@ async function replHandleLine(repl: Repl, line: string) {
       try {
         const url = new URL(`repl:${++repl.count}`)
         const sexps = repl.parser.parse(repl.text, { url })
-        await repl.onSexps(sexps)
+        console.log({ message: "before", line, text: repl.text })
+        repl.onSexps(sexps)
+        console.log({ message: "after", line, text: repl.text })
         replPrompt(repl)
       } catch (error) {
         let message = `[repl] error\n`
