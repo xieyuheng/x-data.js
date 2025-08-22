@@ -85,9 +85,7 @@ function replHandleLine(repl: Repl, line: string) {
       try {
         const url = new URL(`repl:${++repl.count}`)
         const sexps = repl.parser.parse(repl.text, { url })
-        console.log({ message: "before", line, text: repl.text })
         repl.onSexps(sexps)
-        console.log({ message: "after", line, text: repl.text })
         replPrompt(repl)
       } catch (error) {
         let message = `[repl] error\n`
