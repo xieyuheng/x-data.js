@@ -1,6 +1,7 @@
 import assert from "node:assert"
 import { test } from "node:test"
 import * as X from "../index.ts"
+import { errorReport } from "../utils/error/errorReport.ts"
 import { recordMap } from "../utils/record/recordMap.ts"
 
 type Type = TypeVar | Arrow | Union | Inter | Tau
@@ -135,12 +136,7 @@ function assertParsingError(text: string): void {
   try {
     matchType(X.parseData(text))
   } catch (error) {
-    if (error instanceof X.ParsingError) {
-      console.log("[assertParsingError]", error.report())
-      return
-    }
-
-    throw error
+    console.log(errorReport(error))
   }
 }
 

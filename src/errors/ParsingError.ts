@@ -5,14 +5,13 @@ export class ParsingError extends Error {
   meta: TokenMeta
 
   constructor(message: string, meta: TokenMeta) {
-    super(message)
+    super(report(message, meta))
     this.meta = meta
   }
+}
 
-  report(): string {
-    let message = this.message
-    message += "\n"
-    message += spanReport(this.meta.span, this.meta.text)
-    return message
-  }
+function report(message: string, meta: TokenMeta): string {
+  message += "\n"
+  message += spanReport(meta.span, meta.text)
+  return message
 }

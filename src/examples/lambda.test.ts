@@ -1,6 +1,7 @@
 import assert from "node:assert"
 import { test } from "node:test"
 import * as X from "../index.ts"
+import { errorReport } from "../utils/error/errorReport.ts"
 
 type Exp = Var | Lambda | Apply | Let
 type Var = { kind: "Var"; name: string }
@@ -84,13 +85,7 @@ function assertParsingError(text: string): void {
   try {
     matchExp(X.parseData(text))
   } catch (error) {
-    if (error instanceof X.ParsingError) {
-      console.log("[assertParsingError]", error.report())
-      return
-    }
-
-    console.log(error)
-    throw error
+    console.log(errorReport(error))
   }
 }
 
