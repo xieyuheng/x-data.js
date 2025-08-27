@@ -11,10 +11,10 @@ type Line = {
 export function spanReport(span: Span, context: string): string {
   const lines = context.split("\n").map((text, index) => ({ index, text }))
   linesMarkUnderline(lines, span)
-  const leftMargin = linesLeftMargin(lines)
+  const prefixMargin = linesPrefixMargin(lines)
   return lines
     .filter((line) => lineIsCloseToSpan(line, span))
-    .map((line) => formatLine(line, leftMargin))
+    .map((line) => formatLine(line, prefixMargin))
     .join("")
 }
 
@@ -22,7 +22,7 @@ function lineIsCloseToSpan(line: Line, span: Span): boolean {
   return span.start.row - 3 < line.index && line.index < span.end.row + 3
 }
 
-function linesLeftMargin(lines: Array<Line>): number {
+function linesPrefixMargin(lines: Array<Line>): number {
   return lines.length.toString().length + 1
 }
 
@@ -58,11 +58,11 @@ function lineUnderline(
   }
 }
 
-function formatLine(line: Line, leftMargin: number): string {
+function formatLine(line: Line, prefixMargin: number): string {
   const lineno = line.index + 1
-  const prefix = leftPad(lineno.toString(), leftMargin, " ")
+  const prefix = leftPad(lineno.toString(), prefixMargin, " ")
   if (line.underline) {
-    const emptyPrefix = leftPad("", leftMargin, " ")
+    const emptyPrefix = leftPad("", prefixMargin, " ")
     return `${prefix} | ${line.text}\n` + `${emptyPrefix} | ${line.underline}\n`
   } else {
     return `${prefix} | ${line.text}\n`
