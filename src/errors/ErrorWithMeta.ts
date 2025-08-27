@@ -1,7 +1,7 @@
 import { spanReport } from "../span/index.ts"
 import { type TokenMeta } from "../token/index.ts"
 
-export class ParsingError extends Error {
+export class ErrorWithMeta extends Error {
   meta: TokenMeta
 
   constructor(message: string, meta: TokenMeta) {

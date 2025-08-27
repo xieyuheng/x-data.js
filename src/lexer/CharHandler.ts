@@ -1,4 +1,4 @@
-import { ParsingError } from "../errors/index.ts"
+import { ErrorWithMeta } from "../errors/index.ts"
 import { positionForwardChar } from "../span/index.ts"
 import { type TokenKind } from "../token/index.ts"
 import { Lexer } from "./Lexer.ts"
@@ -133,7 +133,7 @@ class StringHandler extends CharHandler {
     const start = this.lexer.position
     const end = positionForwardChar(start, '"')
     let message = `Fail to parse JSON string: ${text}\n`
-    throw new ParsingError(message, {
+    throw new ErrorWithMeta(message, {
       span: { start, end },
       text: this.lexer.text,
       url: this.lexer.url,

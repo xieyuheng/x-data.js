@@ -132,7 +132,7 @@ test("examples/tau", () => {
   )
 })
 
-function assertParsingError(text: string): void {
+function assertErrorWithMeta(text: string): void {
   try {
     matchType(X.parseData(text))
   } catch (error) {
@@ -141,7 +141,7 @@ function assertParsingError(text: string): void {
 }
 
 test("examples/tau -- parsing errors", () => {
-  assertParsingError("(-> A B")
-  assertParsingError("(tau :x :y)")
-  assertParsingError("(tau A B C :x A :y B :z (tau :x :y))")
+  assertErrorWithMeta("(-> A B")
+  assertErrorWithMeta("(tau :x :y)")
+  assertErrorWithMeta("(tau A B C :x A :y B :z (tau :x :y))")
 })

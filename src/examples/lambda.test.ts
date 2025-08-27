@@ -52,7 +52,7 @@ const expMatcher: X.Matcher<Exp> = X.matcherChoice<Exp>([
     const nameSymbol = X.symbolToString(name)
     if (keywords.includes(nameSymbol)) {
       let message = "keywork should not be used as variable\n"
-      throw new X.ParsingError(message, meta)
+      throw new X.ErrorWithMeta(message, meta)
     }
 
     return Var(nameSymbol)
@@ -81,7 +81,7 @@ test("examples/lambda", () => {
   )
 })
 
-function assertParsingError(text: string): void {
+function assertErrorWithMeta(text: string): void {
   try {
     matchExp(X.parseData(text))
   } catch (error) {
@@ -90,9 +90,9 @@ function assertParsingError(text: string): void {
 }
 
 test("examples/lambda -- parsing errors", () => {
-  assertParsingError("(f x")
-  assertParsingError("(f x\n(g y)")
-  assertParsingError("f x)")
+  assertErrorWithMeta("(f x")
+  assertErrorWithMeta("(f x\n(g y)")
+  assertErrorWithMeta("f x)")
 
-  assertParsingError("(lambda x)")
+  assertErrorWithMeta("(lambda x)")
 })

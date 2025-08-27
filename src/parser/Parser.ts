@@ -1,6 +1,6 @@
 import * as X from "../data/index.ts"
 import { type Data } from "../data/index.ts"
-import { ParsingError } from "../errors/index.ts"
+import { ErrorWithMeta } from "../errors/index.ts"
 import { Lexer } from "../lexer/index.ts"
 import { spanUnion } from "../span/index.ts"
 import { tokenMetaToDataMeta, type Token } from "../token/index.ts"
@@ -117,7 +117,7 @@ export class Parser {
 
       case "BracketEnd": {
         let message = `I found extra BracketEnd\n`
-        throw new ParsingError(message, token.meta)
+        throw new ErrorWithMeta(message, token.meta)
       }
 
       case "Quote": {
@@ -143,7 +143,7 @@ export class Parser {
     while (true) {
       if (tokens[0] === undefined) {
         let message = `I found missing BracketEnd\n`
-        throw new ParsingError(message, start.meta)
+        throw new ErrorWithMeta(message, start.meta)
       }
 
       const token = tokens[0]
@@ -151,7 +151,7 @@ export class Parser {
       if (token.kind === "BracketEnd") {
         if (!this.lexer.config.matchBrackets(start.value, token.value)) {
           let message = `I expect a matching BracketEnd\n`
-          throw new ParsingError(message, token.meta)
+          throw new ErrorWithMeta(message, token.meta)
         }
 
         return {
@@ -171,7 +171,7 @@ export class Parser {
         const head = this.handleTokens(tokens.slice(1))
         if (head.data.kind === "Symbol" && head.data.content.startsWith(":")) {
           let message = `I found key after key in attributes\n`
-          throw new ParsingError(message, token.meta)
+          throw new ErrorWithMeta(message, token.meta)
         }
 
         attributes[token.value.slice(1)] = head.data

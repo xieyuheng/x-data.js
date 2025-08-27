@@ -1,1 +1,1 @@
-export * from "./ParsingError.ts"
+export * from "./ErrorWithMeta.ts"
