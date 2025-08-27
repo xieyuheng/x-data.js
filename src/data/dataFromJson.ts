@@ -9,6 +9,10 @@ export function dataFromJson(json: any): X.Data {
     return X.String(json)
   }
 
+  if (json instanceof URL) {
+    return X.String(json.href)
+  }
+
   if (typeof json === "number") {
     if (Number.isInteger(json)) {
       return X.Int(json)

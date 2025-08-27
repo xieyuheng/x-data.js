@@ -1,3 +1,4 @@
+import assert from "node:assert"
 import * as X from "../data/index.ts"
 import { recordMap } from "../utils/record/recordMap.ts"
 import { type TokenMeta } from "./Token.ts"
@@ -10,14 +11,16 @@ export function tokenMetaFromDataMeta(meta: X.Attributes): TokenMeta {
   const json: any = recordMap(meta, X.dataToJson)
 
   try {
-    return {
-      span: {
-        start: json.span.start,
-        end: json.span.end,
-      },
-      text: json.text,
-      url: json.url,
+    assert(json)
+    assert(json.span)
+    assert(json.span.start)
+    assert(json.span.end)
+    assert(json.text)
+    if (json.url) {
+      json.url = new URL(json.url)
     }
+
+    return json
   } catch (error) {
     console.dir(
       {
@@ -28,6 +31,7 @@ export function tokenMetaFromDataMeta(meta: X.Attributes): TokenMeta {
       },
       { depth: null },
     )
+
     throw error
   }
 }
