@@ -75,7 +75,8 @@ const typeMatcher: X.Matcher<Type> = X.matcherChoice<Type>([
 ])
 
 function assertParse(text: string, type: Type): void {
-  assert.deepStrictEqual(matchType(X.parseData(text)), type)
+  const url = new URL("test:tau")
+  assert.deepStrictEqual(matchType(X.parseData(text, { url })), type)
 }
 
 test("examples/tau", () => {
@@ -134,7 +135,8 @@ test("examples/tau", () => {
 
 function assertErrorWithMeta(text: string): void {
   try {
-    matchType(X.parseData(text))
+    const url = new URL("test:tau")
+    matchType(X.parseData(text, { url }))
   } catch (error) {
     console.log(errorReport(error))
   }

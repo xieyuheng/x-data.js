@@ -60,7 +60,8 @@ const expMatcher: X.Matcher<Exp> = X.matcherChoice<Exp>([
 ])
 
 function assertParse(text: string, exp: Exp): void {
-  assert.deepStrictEqual(matchExp(X.parseData(text)), exp)
+  const url = new URL("test:lambda")
+  assert.deepStrictEqual(matchExp(X.parseData(text, { url })), exp)
 }
 
 test("examples/lambda", () => {
@@ -83,7 +84,8 @@ test("examples/lambda", () => {
 
 function assertErrorWithMeta(text: string): void {
   try {
-    matchExp(X.parseData(text))
+    const url = new URL("test:lambda")
+    matchExp(X.parseData(text, { url }))
   } catch (error) {
     console.log(errorReport(error))
   }
