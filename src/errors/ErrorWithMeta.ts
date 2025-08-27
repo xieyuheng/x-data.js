@@ -4,12 +4,12 @@ export class ErrorWithMeta extends Error {
   meta: TokenMeta
 
   constructor(message: string, meta: TokenMeta) {
-    super(report(message, meta))
+    super(reportWithMeta(message, meta))
     this.meta = meta
   }
 }
 
-function report(message: string, meta: TokenMeta): string {
+function reportWithMeta(message: string, meta: TokenMeta): string {
   message += "\n"
   message += tokenMetaReport(meta)
   return message
