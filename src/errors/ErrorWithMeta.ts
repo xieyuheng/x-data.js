@@ -1,5 +1,4 @@
-import { spanReport } from "../span/index.ts"
-import { type TokenMeta } from "../token/index.ts"
+import { tokenMetaReport, type TokenMeta } from "../token/index.ts"
 
 export class ErrorWithMeta extends Error {
   meta: TokenMeta
@@ -12,6 +11,6 @@ export class ErrorWithMeta extends Error {
 
 function report(message: string, meta: TokenMeta): string {
   message += "\n"
-  message += spanReport(meta.span, meta.text)
+  message += tokenMetaReport(meta)
   return message
 }

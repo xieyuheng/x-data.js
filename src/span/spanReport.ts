@@ -63,8 +63,8 @@ function formatLine(line: Line, leftMargin: number): string {
   const prefix = leftPad(lineno.toString(), leftMargin, " ")
   if (line.underline) {
     const emptyPrefix = leftPad("", leftMargin, " ")
-    return `${prefix}|${line.text}\n${emptyPrefix} ${line.underline}\n`
+    return `${prefix} | ${line.text}\n` + `${emptyPrefix}   ${line.underline}\n`
   } else {
-    return `${prefix}|${line.text}\n`
+    return `${prefix} | ${line.text}\n`
   }
 }
