@@ -171,7 +171,7 @@ function matchTael(mode: Mode, pattern: X.Data, data: X.Data): Effect {
       data.kind === "Tael" &&
       pattern.elements.length >= 1 &&
       pattern.elements[0].kind === "Symbol" &&
-      pattern.elements[0].content === "tael",
+      pattern.elements[0].content === "@tael",
     () => {
       const patternBody = X.asTael(pattern).elements.slice(1)
       const dataBody = X.asTael(data).elements

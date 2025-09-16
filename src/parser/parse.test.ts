@@ -41,10 +41,10 @@ test("parse -- list in round brackets", () => {
 })
 
 test("parse -- list in square brackets", () => {
-  assertParse("[]", X.List([X.Symbol("tael")]))
+  assertParse("[]", X.List([X.Symbol("@tael")]))
   assertParse(
     "[a b c]",
-    X.List([X.Symbol("tael"), X.Symbol("a"), X.Symbol("b"), X.Symbol("c")]),
+    X.List([X.Symbol("@tael"), X.Symbol("a"), X.Symbol("b"), X.Symbol("c")]),
   )
 })
 

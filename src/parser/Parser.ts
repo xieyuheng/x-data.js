@@ -109,7 +109,7 @@ export class Parser {
             token,
             tokens.slice(1),
           )
-          return { data: X.Cons(X.Symbol("tael"), data), remain }
+          return { data: X.Cons(X.Symbol("@tael"), data), remain }
         } else {
           return this.handleTokensInBracket(token, tokens.slice(1))
         }
