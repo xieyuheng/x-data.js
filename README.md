@@ -3,28 +3,56 @@
 An extension to [S-expression](https://en.wikipedia.org/wiki/S-expression)
 to support list with attributes.
 
-For example, we can represent the following JSON:
+For example, we can represent the following XML:
 
-```json
-{ "oranges": 2, "apples": 6, "pears": 5 }
+```xml
+<bookstore>
+  <book id="b101" category="fiction" lang="en">
+    <title>The Great Novel</title>
+    <author>Bill Authorette</author>
+    <year>2021</year>
+    <price currency="USD">24.99</price>
+  </book>
+  <book id="b102" category="non-fiction" lang="fr">
+    <title>Learning XML</title>
+    <author>Pierre Document</author>
+    <year>2019</year>
+    <price currency="EUR">19.50</price>
+  </book>
+</bookstore>
 ```
 
 as:
 
 ```scheme
-[:oranges 2 :apples 6 :pears 5]
+(bookstore
+ (book :id "b101" :category "fiction" :lang "en"
+  (title "The Great Novel")
+  (author "Bill Authorette")
+  (year 2021)
+  (price :currency "USD" 24.99))
+ (book :id "b102" :category "non-fiction" :lang "fr"
+  (title "Learning XML")
+  (author "Pierre Document")
+  (year 2019)
+  (price :currency "EUR" 19.50)))
 ```
 
-Quoted list:
+which evaluates to:
 
 ```scheme
-'(lambda (x) x)
-```
-
-evaluates to:
-
-```scheme
-['lambda ['x] 'x]
+['bookstore
+ ['book :id "b101" :category "fiction" :lang "en"
+  ['title "The Great Novel"]
+  ['author "Bill Authorette"]
+  ['year 2021]
+  ['price 24.99 :currency "USD"]]
+ ['book
+  :id "b102" :category "non-fiction" :lang "fr"
+  ['title "Learning XML"]
+  ['author "Pierre Document"]
+  ['year 2019]
+  ['price 19.5 :currency "EUR"]]]
 ```
 
 ## Install
