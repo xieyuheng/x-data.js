@@ -1,8 +1,3 @@
-use `@` prefix for generated keywords
-
-- @quote
-- @unquote
-- @quasiquote
-- @tael
-
+use `@` prefix to quotes -- @quote @unquote @quasiquote
+use `@` prefix to tael -- @tael
 generate `(@set)` from `{}`
