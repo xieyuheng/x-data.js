@@ -24,7 +24,7 @@ For example, we can represent the following XML:
 
 as:
 
-```clojure
+```lisp
 (bookstore
  (book :id "b101" :category "fiction" :lang "en"
   (title "The Great Novel")
@@ -40,7 +40,7 @@ as:
 
 which evaluates to:
 
-```clojure
+```lisp
 ['bookstore
  ['book :id "b101" :category "fiction" :lang "en"
   ['title "The Great Novel"]
