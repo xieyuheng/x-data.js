@@ -31,7 +31,7 @@ test("parse -- number", () => {
   assertParse("3.14", X.Float(3.14))
 })
 
-test("parse -- list in round brackets", () => {
+test("parse -- round brackets", () => {
   assertParse("()", X.List([]))
   assertParse("(a b c)", X.List([X.Symbol("a"), X.Symbol("b"), X.Symbol("c")]))
   assertParse(
@@ -40,7 +40,7 @@ test("parse -- list in round brackets", () => {
   )
 })
 
-test("parse -- list in square brackets", () => {
+test("parse -- square brackets", () => {
   assertParse("[]", X.List([X.Symbol("@tael")]))
   assertParse(
     "[a b c]",
@@ -48,7 +48,7 @@ test("parse -- list in square brackets", () => {
   )
 })
 
-test("parse -- list in flower brackets", () => {
+test("parse -- flower brackets", () => {
   assertParse("{}", X.List([X.Symbol("@set")]))
   assertParse(
     "{a b c}",
