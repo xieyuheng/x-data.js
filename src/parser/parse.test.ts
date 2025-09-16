@@ -48,6 +48,14 @@ test("parse -- list in square brackets", () => {
   )
 })
 
+test("parse -- list in flower brackets", () => {
+  assertParse("{}", X.List([X.Symbol("@set")]))
+  assertParse(
+    "{a b c}",
+    X.List([X.Symbol("@set"), X.Symbol("a"), X.Symbol("b"), X.Symbol("c")]),
+  )
+})
+
 test("parse -- list with attributes", () => {
   assertParse("(:x 1 :y 2)", X.Record({ x: X.Int(1), y: X.Int(2) }))
   assertParse(

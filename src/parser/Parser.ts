@@ -110,9 +110,17 @@ export class Parser {
             tokens.slice(1),
           )
           return { data: X.Cons(X.Symbol("@tael"), data), remain }
-        } else {
-          return this.handleTokensInBracket(token, tokens.slice(1))
         }
+
+        if (token.value === "{") {
+          const { data, remain } = this.handleTokensInBracket(
+            token,
+            tokens.slice(1),
+          )
+          return { data: X.Cons(X.Symbol("@set"), data), remain }
+        }
+
+        return this.handleTokensInBracket(token, tokens.slice(1))
       }
 
       case "BracketEnd": {
