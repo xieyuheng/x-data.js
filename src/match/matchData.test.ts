@@ -55,8 +55,8 @@ test("matchData -- list", () => {
 
 test("matchData -- quote", () => {
   assertMatch("'x", "x", "[]")
-  assertMatch("(quote x)", "x", "[]")
-  assertMatch("(quote 3)", "3", "[]")
+  assertMatch("(@quote x)", "x", "[]")
+  assertMatch("(@quote 3)", "3", "[]")
 
   assertMatch("['lambda [x] x]", "(lambda (x) x)", "[:x x]")
   assertMatch("'(lambda (x) x)", "(lambda (x) x)", "[]")

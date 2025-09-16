@@ -6,13 +6,14 @@ import { type Token } from "../token/index.ts"
 function assertTokens(text: string, tokens: Array<Omit<Token, "meta">>): void {
   const lexer = new Lexer({
     quotes: [
-      { mark: "'", symbol: "quote" },
-      { mark: ",", symbol: "unquote" },
-      { mark: "`", symbol: "quasiquote" },
+      { mark: "'", symbol: "@quote" },
+      { mark: ",", symbol: "@unquote" },
+      { mark: "`", symbol: "@quasiquote" },
     ],
     brackets: [
       { start: "(", end: ")" },
       { start: "[", end: "]" },
+      { start: "{", end: "}" },
     ],
     comments: [";"],
   })

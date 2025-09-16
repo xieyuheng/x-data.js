@@ -157,7 +157,7 @@ function matchUnquote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
     pattern.kind === "Tael" &&
       pattern.elements.length >= 2 &&
       pattern.elements[0].kind === "Symbol" &&
-      pattern.elements[0].content === "unquote",
+      pattern.elements[0].content === "@unquote",
     () => {
       const firstData = X.asTael(pattern).elements[1]
       return sequenceEffect([matchData("NormalMode", firstData, data)])
@@ -195,7 +195,7 @@ function matchQuote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
     pattern.kind === "Tael" &&
       pattern.elements.length >= 2 &&
       pattern.elements[0].kind === "Symbol" &&
-      pattern.elements[0].content === "quote",
+      pattern.elements[0].content === "@quote",
     () => {
       const firstData = X.asTael(pattern).elements[1]
       return sequenceEffect([matchData("QuoteMode", firstData, data)])
@@ -208,7 +208,7 @@ function matchQuasiquote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
     pattern.kind === "Tael" &&
       pattern.elements.length >= 2 &&
       pattern.elements[0].kind === "Symbol" &&
-      pattern.elements[0].content === "quasiquote",
+      pattern.elements[0].content === "@quasiquote",
     () => {
       const firstData = X.asTael(pattern).elements[1]
       return sequenceEffect([matchData("QuasiquoteMode", firstData, data)])

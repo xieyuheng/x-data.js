@@ -14,9 +14,9 @@ export type ParserMeta = {
 export class Parser {
   lexer = new Lexer({
     quotes: [
-      { mark: "'", symbol: "quote" },
-      { mark: ",", symbol: "unquote" },
-      { mark: "`", symbol: "quasiquote" },
+      { mark: "'", symbol: "@quote" },
+      { mark: ",", symbol: "@unquote" },
+      { mark: "`", symbol: "@quasiquote" },
     ],
     brackets: [
       { start: "(", end: ")" },

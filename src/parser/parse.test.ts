@@ -60,29 +60,29 @@ test("parse -- list with attributes", () => {
 })
 
 test("parse -- quotes", () => {
-  assertParse("'a", X.List([X.Symbol("quote"), X.Symbol("a")]))
-  assertParse("'(a)", X.List([X.Symbol("quote"), X.List([X.Symbol("a")])]))
+  assertParse("'a", X.List([X.Symbol("@quote"), X.Symbol("a")]))
+  assertParse("'(a)", X.List([X.Symbol("@quote"), X.List([X.Symbol("a")])]))
   assertParse(
     "'(a b c)",
     X.List([
-      X.Symbol("quote"),
+      X.Symbol("@quote"),
       X.List([X.Symbol("a"), X.Symbol("b"), X.Symbol("c")]),
     ]),
   )
   assertParse(
     ",(a b c)",
     X.List([
-      X.Symbol("unquote"),
+      X.Symbol("@unquote"),
       X.List([X.Symbol("a"), X.Symbol("b"), X.Symbol("c")]),
     ]),
   )
   assertParse(
     "`(a ,b c)",
     X.List([
-      X.Symbol("quasiquote"),
+      X.Symbol("@quasiquote"),
       X.List([
         X.Symbol("a"),
-        X.List([X.Symbol("unquote"), X.Symbol("b")]),
+        X.List([X.Symbol("@unquote"), X.Symbol("b")]),
         X.Symbol("c"),
       ]),
     ]),
