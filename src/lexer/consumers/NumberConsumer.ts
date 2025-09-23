@@ -1,7 +1,7 @@
 import { jsonParseNumber } from "../../utils/json/jsonParse.ts"
 import { stringIsBlank } from "../../utils/string/stringIsBlank.ts"
 import type { Consumer } from "../Consumer.ts"
-import type { Lexer } from "../Lexer.ts"
+import { lexerMarks, type Lexer } from "../Lexer.ts"
 
 export class NumberConsumer implements Consumer {
   kind = "Number" as const
@@ -37,7 +37,7 @@ function lastSuccessAt(lexer: Lexer, text: string): number | undefined {
       !stringIsBlank(lastChar) &&
       (nextChar === undefined ||
         stringIsBlank(nextChar) ||
-        lexer.config.isMark(nextChar))
+        lexerMarks().includes(nextChar))
     ) {
       lastSuccessAt = index
     }

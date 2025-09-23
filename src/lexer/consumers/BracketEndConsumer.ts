@@ -1,12 +1,14 @@
 import type { Consumer } from "../Consumer.ts"
-import type { Lexer } from "../Lexer.ts"
+import { lexerBrackets, type Lexer } from "../Lexer.ts"
 
 export class BracketEndConsumer implements Consumer {
   kind = "BracketEnd" as const
 
   canConsume(lexer: Lexer): boolean {
     const char = lexer.char()
-    return lexer.config.brackets.map(({ end }) => end).includes(char)
+    return lexerBrackets()
+      .map(({ end }) => end)
+      .includes(char)
   }
 
   consume(lexer: Lexer): string {

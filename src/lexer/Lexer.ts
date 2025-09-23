@@ -1,21 +1,38 @@
 import assert from "node:assert"
-import { LexerConfig } from "../lexer/index.ts"
 import type { ParserMeta } from "../parser/index.ts"
 import { initPosition, positionForwardChar } from "../span/index.ts"
 import { type Token } from "../token/index.ts"
 import { consume } from "./consume.ts"
 
-export class Lexer {
-  config = new LexerConfig({
-    quotes: ["'", ",", "`"],
-    brackets: [
-      { start: "(", end: ")" },
-      { start: "[", end: "]" },
-      { start: "{", end: "}" },
-    ],
-    comments: [";"],
-  })
+export function lexerBrackets() {
+  return [
+    { start: "(", end: ")" },
+    { start: "[", end: "]" },
+    { start: "{", end: "}" },
+  ]
+}
 
+export function lexerQuotes() {
+  return ["'", ",", "`"]
+}
+
+export function lexerMarks() {
+  return [
+    ...lexerQuotes(),
+    ...lexerBrackets().flatMap(({ start, end }) => [start, end]),
+  ]
+}
+
+export function lexerMatchBrackets(start: string, end: string): boolean {
+  const found = lexerBrackets().find((entry) => entry.start === start)
+  if (found === undefined) {
+    return false
+  }
+
+  return found.end === end
+}
+
+export class Lexer {
   position = initPosition()
   text: string = ""
   url?: URL

@@ -1,5 +1,3 @@
-quit using `LexerConfig` -- `Lexer` will not be reused
-
 `stringIsSymbol` handle bracket
 
 [lexer] `Lexer` -- use `KeywordConsumer`

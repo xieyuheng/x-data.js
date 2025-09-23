@@ -1,7 +1,7 @@
 import * as X from "../data/index.ts"
 import { type Data } from "../data/index.ts"
 import { ErrorWithMeta } from "../errors/index.ts"
-import { Lexer } from "../lexer/index.ts"
+import { Lexer, lexerMatchBrackets } from "../lexer/index.ts"
 import { spanUnion } from "../span/index.ts"
 import { tokenMetaToDataMeta, type Token } from "../token/index.ts"
 
@@ -148,7 +148,7 @@ export class Parser {
       const token = tokens[0]
 
       if (token.kind === "BracketEnd") {
-        if (!this.lexer.config.matchBrackets(start.value, token.value)) {
+        if (!lexerMatchBrackets(start.value, token.value)) {
           let message = `I expect a matching BracketEnd\n`
           throw new ErrorWithMeta(message, token.meta)
         }
