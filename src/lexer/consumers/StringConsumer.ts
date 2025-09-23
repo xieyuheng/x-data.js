@@ -16,12 +16,12 @@ export class StringConsumer implements Consumer {
     let index = 2 // over first `"` and the folloing char.
     while (index <= line.length) {
       const head = line.slice(0, index)
-      const str = jsonParseString(head)
-      if (str === undefined) {
+      const value = jsonParseString(head)
+      if (value === undefined) {
         index++
       } else {
         lexer.forward(index)
-        return head
+        return value
       }
     }
 

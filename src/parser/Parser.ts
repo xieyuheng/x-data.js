@@ -65,17 +65,11 @@ export class Parser {
       }
 
       case "DoubleQoutedString": {
-        const value = JSON.parse(token.value)
-        if (typeof value !== "string") {
-          let message = `I expect value to be a JSON string: ${value}\n`
-          throw new Error(message)
-        }
-
         return {
           data: X.List(
             [
               X.String("@quote", tokenMetaToDataMeta(token.meta)),
-              X.String(value, tokenMetaToDataMeta(token.meta)),
+              X.String(token.value, tokenMetaToDataMeta(token.meta)),
             ],
             tokenMetaToDataMeta(token.meta),
           ),
