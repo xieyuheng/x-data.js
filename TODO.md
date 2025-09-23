@@ -1,3 +1,4 @@
+rename CharHandler to Consumer
 `Lexer` -- `KeywordHandler`
 `Lexer` -- `KeywordHandler` -- support `:"hello world"`
 

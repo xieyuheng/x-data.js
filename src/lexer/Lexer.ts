@@ -3,7 +3,7 @@ import { LexerConfig, type LexerOptions } from "../lexer/index.ts"
 import type { ParserMeta } from "../parser/index.ts"
 import { initPosition, positionForwardChar } from "../span/index.ts"
 import { type Token } from "../token/index.ts"
-import { useCharHandlers } from "./CharHandler.ts"
+import { consume } from "./consume.ts"
 
 export class Lexer {
   config: LexerConfig
@@ -22,7 +22,7 @@ export class Lexer {
 
     const tokens: Array<Token> = []
     while (!this.isEnd()) {
-      const token = tryHandlers(this)
+      const token = consume(this)
       if (token === undefined) continue
       tokens.push(token)
     }
@@ -51,28 +51,4 @@ export class Lexer {
       this.position = positionForwardChar(this.position, this.char())
     }
   }
-}
-
-function tryHandlers(lexer: Lexer): Token | undefined {
-  for (const handler of useCharHandlers()) {
-    if (handler.canHandle(lexer)) {
-      const start = lexer.position
-      const value = handler.handle(lexer)
-      if (handler.kind === undefined) return undefined
-
-      const end = lexer.position
-      return {
-        kind: handler.kind,
-        value,
-        meta: {
-          span: { start, end },
-          text: lexer.text,
-          url: lexer.url,
-        },
-      }
-    }
-  }
-
-  let message = `Can not handle char: ${lexer.char()}\n`
-  throw new Error(message)
 }
