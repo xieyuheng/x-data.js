@@ -45,6 +45,11 @@ export class Lexer {
     return lines[0]
   }
 
+  word(): string {
+    const words = this.line().split(" ")
+    return words[0]
+  }
+
   remain(): string {
     return this.text.slice(this.position.index)
   }
