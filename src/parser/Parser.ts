@@ -4,7 +4,6 @@ import { ErrorWithMeta } from "../errors/index.ts"
 import { Lexer } from "../lexer/index.ts"
 import { spanUnion } from "../span/index.ts"
 import { tokenMetaToDataMeta, type Token } from "../token/index.ts"
-import { stringHasBlank } from "../utils/string/stringHasBlank.ts"
 
 type Result = { data: Data; remain: Array<Token> }
 
@@ -142,6 +141,11 @@ export class Parser {
           remain,
         }
       }
+
+      case "Keyword": {
+        let message = `I found keyword out side of bracket\n`
+        throw new ErrorWithMeta(message, token.meta)
+      }
     }
   }
 
@@ -178,11 +182,7 @@ export class Parser {
 
       if (token.kind === "Symbol" && token.value.startsWith(":")) {
         const head = this.handleTokens(tokens.slice(1))
-        if (
-          head.data.kind === "String" &&
-          !stringHasBlank(head.data.content) &&
-          head.data.content.startsWith(":")
-        ) {
+        if (head.data.kind === "String" && head.data.content.startsWith(":")) {
           let message = `I found key after key in attributes\n`
           throw new ErrorWithMeta(message, token.meta)
         }
