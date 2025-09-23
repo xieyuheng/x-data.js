@@ -2,7 +2,7 @@ import type { Consumer } from "../Consumer.ts"
 import { lexerQuotes, type Lexer } from "../index.ts"
 
 export class QuoteConsumer implements Consumer {
-  kind = "Quote" as const
+  kind = "QuotationMark" as const
 
   canConsume(lexer: Lexer): boolean {
     return lexerQuotes().includes(lexer.char())

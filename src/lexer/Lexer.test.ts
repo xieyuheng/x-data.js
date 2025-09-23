@@ -31,12 +31,12 @@ test("lexer -- symbol", () => {
 
 test("lexer -- quotes", () => {
   assertTokens("'a", [
-    { kind: "Quote", value: "'" },
+    { kind: "QuotationMark", value: "'" },
     { kind: "Symbol", value: "a" },
   ])
 
   assertTokens("'  a", [
-    { kind: "Quote", value: "'" },
+    { kind: "QuotationMark", value: "'" },
     { kind: "Symbol", value: "a" },
   ])
 })

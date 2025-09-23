@@ -108,7 +108,7 @@ export class Parser {
         throw new ErrorWithMeta(message, token.meta)
       }
 
-      case "Quote": {
+      case "QuotationMark": {
         const { data, remain } = this.handleTokens(tokens.slice(1))
 
         const quoteTable: Record<string, string> = {

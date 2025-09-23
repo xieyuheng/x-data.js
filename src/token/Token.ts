@@ -6,7 +6,7 @@ export type TokenKind =
   | "Number"
   | "BracketStart"
   | "BracketEnd"
-  | "Quote"
+  | "QuotationMark"
   | "Keyword"
 
 export type TokenMeta = {
