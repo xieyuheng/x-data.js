@@ -1,7 +1,7 @@
 import { jsonParseNumber } from "../../utils/json/jsonParse.ts"
 import { stringIsBlank } from "../../utils/string/stringIsBlank.ts"
 import type { Consumer } from "../Consumer.ts"
-import { lexerMarks, type Lexer } from "../Lexer.ts"
+import { lexerMarks, type Lexer } from "../index.ts"
 
 export class NumberConsumer implements Consumer {
   kind = "Number" as const

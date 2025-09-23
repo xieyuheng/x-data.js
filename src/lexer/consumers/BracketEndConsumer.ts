@@ -1,5 +1,5 @@
 import type { Consumer } from "../Consumer.ts"
-import { lexerBrackets, type Lexer } from "../Lexer.ts"
+import { lexerBrackets, type Lexer } from "../index.ts"
 
 export class BracketEndConsumer implements Consumer {
   kind = "BracketEnd" as const

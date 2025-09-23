@@ -1,5 +1,5 @@
 import type { Consumer } from "../Consumer.ts"
-import { lexerMarks, type Lexer } from "../Lexer.ts"
+import { lexerMarks, type Lexer } from "../index.ts"
 
 export class SymbolConsumer implements Consumer {
   kind = "Symbol" as const
