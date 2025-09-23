@@ -16,7 +16,7 @@ export class StringConsumer implements Consumer {
     let index = 2 // over first `"` and the folloing char.
     while (index <= text.length) {
       const head = text.slice(0, index)
-      const str = this.tryToParseString(head)
+      const str = tryToParseString(head)
       if (str === undefined) {
         index++
       } else {
@@ -34,12 +34,12 @@ export class StringConsumer implements Consumer {
       url: lexer.url,
     })
   }
+}
 
-  private tryToParseString(text: string): string | undefined {
-    try {
-      return JSON.parse(text)
-    } catch (error) {
-      return undefined
-    }
+function tryToParseString(text: string): string | undefined {
+  try {
+    return JSON.parse(text)
+  } catch (error) {
+    return undefined
   }
 }

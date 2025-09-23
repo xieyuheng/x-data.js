@@ -1,3 +1,5 @@
+`NumberConsumer` -- use helper function instead of private method
+
 `Lexer` -- `KeywordConsumer`
 `Lexer` -- `KeywordConsumer` -- support `:"hello world"`
 
