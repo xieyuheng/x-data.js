@@ -5,20 +5,20 @@ export class NumberConsumer implements Consumer {
   kind = "Number" as const
 
   canConsume(lexer: Lexer): boolean {
-    const text = lexer.remain().split("\n")[0] || ""
-    return lastSuccessAt(lexer, text) !== undefined
+    const line = lexer.line()
+    return lastSuccessAt(lexer, line) !== undefined
   }
 
   consume(lexer: Lexer): string {
-    const text = lexer.remain().split("\n")[0] || ""
-    const index = lastSuccessAt(lexer, text)
+    const line = lexer.line()
+    const index = lastSuccessAt(lexer, line)
     if (index === undefined) {
-      let message = `Expect to find lastSuccessAt in text: ${text}\n`
+      let message = `Expect to find lastSuccessAt in line: ${line}\n`
       throw new Error(message)
     }
 
     lexer.forward(index)
-    return text.slice(0, index)
+    return line.slice(0, index)
   }
 }
 

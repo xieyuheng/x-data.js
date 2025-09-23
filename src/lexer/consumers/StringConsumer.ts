@@ -11,10 +11,10 @@ export class StringConsumer implements Consumer {
   }
 
   consume(lexer: Lexer): string {
-    const text = lexer.remain().split("\n")[0] || ""
+    const line = lexer.line()
     let index = 2 // over first `"` and the folloing char.
-    while (index <= text.length) {
-      const head = text.slice(0, index)
+    while (index <= line.length) {
+      const head = line.slice(0, index)
       const str = tryToParseString(head)
       if (str === undefined) {
         index++
@@ -26,7 +26,7 @@ export class StringConsumer implements Consumer {
 
     const start = lexer.position
     const end = positionForwardChar(start, '"')
-    let message = `Fail to parse JSON string: ${text}\n`
+    let message = `Fail to parse JSON string: ${line}\n`
     throw new ErrorWithMeta(message, {
       span: { start, end },
       text: lexer.text,

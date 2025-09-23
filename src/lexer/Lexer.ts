@@ -40,6 +40,11 @@ export class Lexer {
     return char
   }
 
+  line(): string {
+    const lines = this.remain().split("\n")
+    return lines[0]
+  }
+
   remain(): string {
     return this.text.slice(this.position.index)
   }
