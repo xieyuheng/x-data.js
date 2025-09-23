@@ -8,7 +8,7 @@ import { useCharHandlers } from "./CharHandler.ts"
 export class Lexer {
   config: LexerConfig
   position = initPosition()
-  handlers = useCharHandlers(this)
+  handlers = useCharHandlers()
   text: string = ""
   url?: URL
 

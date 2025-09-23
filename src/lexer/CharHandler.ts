@@ -3,7 +3,7 @@ import { positionForwardChar } from "../span/index.ts"
 import { type TokenKind } from "../token/index.ts"
 import { Lexer } from "./Lexer.ts"
 
-export function useCharHandlers(lexer: Lexer): Array<CharHandler> {
+export function useCharHandlers(): Array<CharHandler> {
   return [
     // The order matters,
     // we must try `NumberHandler`

@@ -1,4 +1,4 @@
-`useCharHandlers` should not take `lexer` as argument
+`Lexer` -- extract `tryHandlers`
 
 `Lexer` -- `KeywordHandler`
 `Lexer` -- `KeywordHandler` -- support `:"hello world"`
