@@ -12,6 +12,7 @@ export class KeywordConsumer implements Consumer {
   }
 
   consume(lexer: Lexer): string {
+    lexer.forward(1)
     return consumeSymbol(lexer)
   }
 }

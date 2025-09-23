@@ -162,7 +162,7 @@ export class Parser {
 
       if (token.kind === "Keyword") {
         const head = this.handleTokens(tokens.slice(1))
-        attributes[token.value.slice(1)] = head.data
+        attributes[token.value] = head.data
         tokens = head.remain
         continue
       }
