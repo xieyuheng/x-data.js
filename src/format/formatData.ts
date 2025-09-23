@@ -3,14 +3,6 @@ import { stringIsSymbol } from "../data/symbolUtils.ts"
 
 export function formatData(data: Data): string {
   switch (data.kind) {
-    case "Bool": {
-      if (data.content) {
-        return "#t"
-      } else {
-        return "#f"
-      }
-    }
-
     case "String": {
       if (stringIsSymbol(data.content)) {
         return `'${data.content}`

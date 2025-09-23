@@ -21,10 +21,6 @@ export function dataFromJson(json: any): X.Data {
     }
   }
 
-  if (typeof json === "boolean") {
-    return X.Bool(json)
-  }
-
   if (isJsonArray(json)) {
     return X.Tael(json.map(dataFromJson), {})
   }

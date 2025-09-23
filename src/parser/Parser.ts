@@ -46,20 +46,6 @@ export class Parser {
 
     switch (token.kind) {
       case "Symbol": {
-        if (token.value === "#f") {
-          return {
-            data: X.Bool(false, tokenMetaToDataMeta(token.meta)),
-            remain: tokens.slice(1),
-          }
-        }
-
-        if (token.value === "#t") {
-          return {
-            data: X.Bool(true, tokenMetaToDataMeta(token.meta)),
-            remain: tokens.slice(1),
-          }
-        }
-
         return {
           data: X.String(token.value, tokenMetaToDataMeta(token.meta)),
           remain: tokens.slice(1),

@@ -7,7 +7,6 @@ export type Effect = (subst: Subst) => Subst | void
 export function matchData(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return choiceEffect([
     matchString(mode, pattern, data),
-    matchBool(mode, pattern, data),
     matchInt(mode, pattern, data),
     matchFloat(mode, pattern, data),
     matchList(mode, pattern, data),
@@ -40,15 +39,6 @@ function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
       )
     }
   }
-}
-
-function matchBool(mode: Mode, pattern: X.Data, data: X.Data): Effect {
-  return guardEffect(
-    () =>
-      pattern.kind === "Bool" &&
-      data.kind === "Bool" &&
-      pattern.content === data.content,
-  )
 }
 
 function matchInt(mode: Mode, pattern: X.Data, data: X.Data): Effect {

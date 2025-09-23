@@ -25,9 +25,9 @@ test("parse -- literal string", () => {
   assertParse('"abc"', X.List([X.String("@quote"), X.String("abc")]))
 })
 
-test("parse -- bool", () => {
-  assertParse("#t", X.Bool(true))
-  assertParse("#f", X.Bool(false))
+test("parse -- no bool", () => {
+  assertParse("#t", X.String("#t"))
+  assertParse("#f", X.String("#f"))
 })
 
 test("parse -- number", () => {

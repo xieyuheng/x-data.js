@@ -28,14 +28,6 @@ export function dataToString(data: X.Data): string {
   return data.content
 }
 
-export function dataToBoolean(data: X.Data): boolean {
-  if (data.kind !== "Bool") {
-    throw new Error(`[dataToBoolean] wrong data kind: ${data.kind}`)
-  }
-
-  return data.content
-}
-
 export function dataToNumber(data: X.Data): number {
   if (data.kind !== "Int" && data.kind !== "Float") {
     throw new Error(`[dataToNumber] wrong data kind: ${data.kind}`)
