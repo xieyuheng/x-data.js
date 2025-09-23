@@ -1,9 +1,9 @@
 import { type Token } from "../token/index.ts"
-import { useCharHandlers } from "./CharHandler.ts"
+import { useConsumers } from "./Consumer.ts"
 import { Lexer } from "./Lexer.ts"
 
 export function consume(lexer: Lexer): Token | undefined {
-  for (const handler of useCharHandlers()) {
+  for (const handler of useConsumers()) {
     if (handler.canHandle(lexer)) {
       const start = lexer.position
       const value = handler.handle(lexer)

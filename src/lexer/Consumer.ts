@@ -3,30 +3,30 @@ import { positionForwardChar } from "../span/index.ts"
 import { type TokenKind } from "../token/index.ts"
 import { Lexer } from "./Lexer.ts"
 
-export function useCharHandlers(): Array<CharHandler> {
+export function useConsumers(): Array<Consumer> {
   return [
     // The order matters,
-    // we must try `NumberHandler`
-    // before `SymbolHandler`.
-    new SpaceHandler(),
-    new QuoteHandler(),
-    new BracketStartHandler(),
-    new BracketEndHandler(),
-    new CommentHandler(),
-    new StringHandler(),
-    new NumberHandler(),
-    new SymbolHandler(),
+    // we must try `NumberConsumer`
+    // before `SymbolConsumer`.
+    new SpaceConsumer(),
+    new QuoteConsumer(),
+    new BracketStartConsumer(),
+    new BracketEndConsumer(),
+    new CommentConsumer(),
+    new StringConsumer(),
+    new NumberConsumer(),
+    new SymbolConsumer(),
   ]
 }
 
-export abstract class CharHandler {
+export abstract class Consumer {
   abstract kind: TokenKind | undefined
 
   abstract canHandle(lexer: Lexer): boolean
   abstract handle(lexer: Lexer): string
 }
 
-class SpaceHandler extends CharHandler {
+class SpaceConsumer extends Consumer {
   kind = undefined
 
   canHandle(lexer: Lexer): boolean {
@@ -47,7 +47,7 @@ class SpaceHandler extends CharHandler {
   }
 }
 
-class BracketStartHandler extends CharHandler {
+class BracketStartConsumer extends Consumer {
   kind = "BracketStart" as const
 
   canHandle(lexer: Lexer): boolean {
@@ -62,7 +62,7 @@ class BracketStartHandler extends CharHandler {
   }
 }
 
-class BracketEndHandler extends CharHandler {
+class BracketEndConsumer extends Consumer {
   kind = "BracketEnd" as const
 
   canHandle(lexer: Lexer): boolean {
@@ -77,7 +77,7 @@ class BracketEndHandler extends CharHandler {
   }
 }
 
-class QuoteHandler extends CharHandler {
+class QuoteConsumer extends Consumer {
   kind = "Quote" as const
 
   canHandle(lexer: Lexer): boolean {
@@ -92,7 +92,7 @@ class QuoteHandler extends CharHandler {
   }
 }
 
-class CommentHandler extends CharHandler {
+class CommentConsumer extends Consumer {
   kind = undefined
 
   canHandle(lexer: Lexer): boolean {
@@ -114,7 +114,7 @@ class CommentHandler extends CharHandler {
   }
 }
 
-class StringHandler extends CharHandler {
+class StringConsumer extends Consumer {
   kind = "String" as const
 
   canHandle(lexer: Lexer): boolean {
@@ -156,7 +156,7 @@ class StringHandler extends CharHandler {
   }
 }
 
-class NumberHandler extends CharHandler {
+class NumberConsumer extends Consumer {
   kind = "Number" as const
 
   canHandle(lexer: Lexer): boolean {
@@ -212,7 +212,7 @@ class NumberHandler extends CharHandler {
   }
 }
 
-class SymbolHandler extends CharHandler {
+class SymbolConsumer extends Consumer {
   kind = "Symbol" as const
 
   canHandle(lexer: Lexer): boolean {

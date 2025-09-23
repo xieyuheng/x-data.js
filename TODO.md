@@ -1,6 +1,5 @@
-rename CharHandler to Consumer
-`Lexer` -- `KeywordHandler`
-`Lexer` -- `KeywordHandler` -- support `:"hello world"`
+`Lexer` -- `KeywordConsumer`
+`Lexer` -- `KeywordConsumer` -- support `:"hello world"`
 
 `matchData` -- `var` -- test var with whitespace
 `matchData` -- `quote` -- test quoted literal string
