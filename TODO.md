@@ -1,3 +1,7 @@
+quit using `LexerOptions` -- `Lexer` will not be reused
+
+`stringIsSymbol` handle bracket
+
 [lexer] `Lexer` -- use `KeywordConsumer`
 [lexer] `Lexer` -- `StringKeywordConsumer` -- support `:"hello world"`
 
