@@ -8,7 +8,6 @@ import { useCharHandlers } from "./CharHandler.ts"
 export class Lexer {
   config: LexerConfig
   position = initPosition()
-  handlers = useCharHandlers()
   text: string = ""
   url?: URL
 
@@ -23,7 +22,7 @@ export class Lexer {
 
     const tokens: Array<Token> = []
     while (!this.isEnd()) {
-      const token = this.handleChar()
+      const token = tryHandlers(this)
       if (token === undefined) continue
       tokens.push(token)
     }
@@ -52,28 +51,28 @@ export class Lexer {
       this.position = positionForwardChar(this.position, this.char())
     }
   }
+}
 
-  private handleChar(): Token | undefined {
-    for (const handler of this.handlers) {
-      if (handler.canHandle(this)) {
-        const start = this.position
-        const value = handler.handle(this)
-        if (handler.kind === undefined) return undefined
+function tryHandlers(lexer: Lexer): Token | undefined {
+  for (const handler of useCharHandlers()) {
+    if (handler.canHandle(lexer)) {
+      const start = lexer.position
+      const value = handler.handle(lexer)
+      if (handler.kind === undefined) return undefined
 
-        const end = this.position
-        return {
-          kind: handler.kind,
-          value,
-          meta: {
-            span: { start, end },
-            text: this.text,
-            url: this.url,
-          },
-        }
+      const end = lexer.position
+      return {
+        kind: handler.kind,
+        value,
+        meta: {
+          span: { start, end },
+          text: lexer.text,
+          url: lexer.url,
+        },
       }
     }
-
-    let message = `Can not handle char: ${this.char()}\n`
-    throw new Error(message)
   }
+
+  let message = `Can not handle char: ${lexer.char()}\n`
+  throw new Error(message)
 }

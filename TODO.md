@@ -1,5 +1,3 @@
-`Lexer` -- extract `tryHandlers`
-
 `Lexer` -- `KeywordHandler`
 `Lexer` -- `KeywordHandler` -- support `:"hello world"`
 
