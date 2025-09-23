@@ -1,5 +1,5 @@
 import { type Data } from "../data/index.ts"
-import { stringHasBlank } from "../utils/string/stringHasBlank.ts"
+import { stringIsSymbol } from "../data/symbolUtils.ts"
 
 export function formatData(data: Data): string {
   switch (data.kind) {
@@ -12,7 +12,7 @@ export function formatData(data: Data): string {
     }
 
     case "String": {
-      if (stringHasBlank(data.content)) {
+      if (stringIsSymbol(data.content)) {
         return `'${data.content}`
       } else {
         return JSON.stringify(data.content)

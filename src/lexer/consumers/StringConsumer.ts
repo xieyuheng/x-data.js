@@ -15,7 +15,7 @@ export class StringConsumer implements Consumer {
     let index = 2 // over first `"` and the folloing char.
     while (index <= line.length) {
       const head = line.slice(0, index)
-      const str = tryToParseString(head)
+      const str = tryParseString(head)
       if (str === undefined) {
         index++
       } else {
@@ -35,9 +35,11 @@ export class StringConsumer implements Consumer {
   }
 }
 
-function tryToParseString(text: string): string | undefined {
+function tryParseString(text: string): string | undefined {
   try {
-    return JSON.parse(text)
+    const value = JSON.parse(text)
+    if (typeof value === "string") return value
+    else return undefined
   } catch (error) {
     return undefined
   }

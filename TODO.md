@@ -1,4 +1,6 @@
-[lexer] extract `isValidSymbol`
+[json] extract `jsonParseNumber` and `jsonParseString`
+
+remove `Bool` from `Data`
 
 [lexer] `Lexer` -- use `KeywordConsumer`
 [lexer] `Lexer` -- `StringKeywordConsumer` -- support `:"hello world"`

@@ -1,3 +1,4 @@
+import { stringIsBlank } from "../../utils/string/stringIsBlank.ts"
 import type { Consumer } from "../Consumer.ts"
 import type { Lexer } from "../Lexer.ts"
 
@@ -27,14 +28,15 @@ function lastSuccessAt(lexer: Lexer, text: string): number | undefined {
   let lastSuccessAt: number | undefined = undefined
   while (index <= text.length) {
     const head = text.slice(0, index)
-    const result = tryToParseNumber(head)
+    const value = tryParseNumber(head)
+    const lastChar = text[index - 1]
+    const nextChar = text[index]
     if (
-      result !== undefined &&
-      text[index - 1] !== undefined &&
-      text[index - 1].trim() !== "" &&
-      (text[index] === undefined ||
-        text[index].trim() === "" ||
-        lexer.config.isMark(text[index]))
+      value !== undefined &&
+      !stringIsBlank(lastChar) &&
+      (nextChar === undefined ||
+        stringIsBlank(nextChar) ||
+        lexer.config.isMark(nextChar))
     ) {
       lastSuccessAt = index
     }
@@ -45,7 +47,7 @@ function lastSuccessAt(lexer: Lexer, text: string): number | undefined {
   return lastSuccessAt
 }
 
-function tryToParseNumber(text: string): number | undefined {
+function tryParseNumber(text: string): number | undefined {
   try {
     const value = JSON.parse(text)
     if (typeof value === "number") return value
