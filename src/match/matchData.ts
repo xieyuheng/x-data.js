@@ -8,7 +8,7 @@ export function matchData(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return choiceEffect([
     matchSymbol(mode, pattern, data),
     matchString(mode, pattern, data),
-    matchBool(mode, pattern, data),
+    matchHashtag(mode, pattern, data),
     matchInt(mode, pattern, data),
     matchFloat(mode, pattern, data),
     matchList(mode, pattern, data),
@@ -52,11 +52,11 @@ function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   )
 }
 
-function matchBool(mode: Mode, pattern: X.Data, data: X.Data): Effect {
+function matchHashtag(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return guardEffect(
     () =>
-      pattern.kind === "Bool" &&
-      data.kind === "Bool" &&
+      pattern.kind === "Hashtag" &&
+      data.kind === "Hashtag" &&
       pattern.content === data.content,
   )
 }

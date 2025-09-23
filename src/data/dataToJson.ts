@@ -28,17 +28,17 @@ export function symbolToString(data: X.Data): string {
   return data.content
 }
 
-export function dataToString(data: X.Data): string {
-  if (data.kind !== "String") {
-    throw new Error(`[dataToString] wrong data kind: ${data.kind}`)
+export function hashtagToString(data: X.Data): string {
+  if (data.kind !== "Hashtag") {
+    throw new Error(`[hashtagToString] wrong data kind: ${data.kind}`)
   }
 
   return data.content
 }
 
-export function dataToBoolean(data: X.Data): boolean {
-  if (data.kind !== "Bool") {
-    throw new Error(`[dataToBoolean] wrong data kind: ${data.kind}`)
+export function dataToString(data: X.Data): string {
+  if (data.kind !== "String") {
+    throw new Error(`[dataToString] wrong data kind: ${data.kind}`)
   }
 
   return data.content

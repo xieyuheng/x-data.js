@@ -17,17 +17,17 @@ function assertParse(text: string, expected: X.Data): void {
 test("parse -- symbol", () => {
   assertParse("abc", X.Symbol("abc"))
   assertParse("3-sphere", X.Symbol("3-sphere"))
-  assertParse("#abc", X.Symbol("#abc"))
-  assertParse("#3-sphere", X.Symbol("#3-sphere"))
 })
 
 test("parse -- string", () => {
   assertParse('"abc"', X.String("abc"))
 })
 
-test("parse -- bool", () => {
-  assertParse("#t", X.Bool(true))
-  assertParse("#f", X.Bool(false))
+test("parse -- hashtag", () => {
+  assertParse("#t", X.Hashtag("t"))
+  assertParse("#f", X.Hashtag("f"))
+  assertParse("#null", X.Hashtag("null"))
+  assertParse("#void", X.Hashtag("void"))
 })
 
 test("parse -- number", () => {

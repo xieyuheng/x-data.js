@@ -38,20 +38,6 @@ export class Parser {
 
     switch (token.kind) {
       case "Symbol": {
-        if (token.value === "#f") {
-          return {
-            data: X.Bool(false, tokenMetaToDataMeta(token.meta)),
-            remain: tokens.slice(1),
-          }
-        }
-
-        if (token.value === "#t") {
-          return {
-            data: X.Bool(true, tokenMetaToDataMeta(token.meta)),
-            remain: tokens.slice(1),
-          }
-        }
-
         return {
           data: X.Symbol(token.value, tokenMetaToDataMeta(token.meta)),
           remain: tokens.slice(1),
@@ -127,6 +113,13 @@ export class Parser {
         return {
           data: X.List([quoteSymbol, data], tokenMetaToDataMeta(token.meta)),
           remain,
+        }
+      }
+
+      case "Hashtag": {
+        return {
+          data: X.Hashtag(token.value, tokenMetaToDataMeta(token.meta)),
+          remain: tokens.slice(1),
         }
       }
 

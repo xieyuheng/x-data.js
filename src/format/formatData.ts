@@ -2,16 +2,12 @@ import { type Data } from "../data/index.ts"
 
 export function formatData(data: Data): string {
   switch (data.kind) {
-    case "Bool": {
-      if (data.content) {
-        return "#t"
-      } else {
-        return "#f"
-      }
-    }
-
     case "Symbol": {
       return `'${data.content}`
+    }
+
+    case "Hashtag": {
+      return `#${data.content}`
     }
 
     case "String": {

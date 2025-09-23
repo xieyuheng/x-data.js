@@ -3,11 +3,11 @@ import type { Attributes, Data } from "./Data.ts"
 
 export function dataEqual(x: Data, y: Data): boolean {
   if (
-    (x.kind === "Bool" && y.kind === "Bool") ||
     (x.kind === "Symbol" && y.kind === "Symbol") ||
     (x.kind === "String" && y.kind === "String") ||
     (x.kind === "Int" && y.kind === "Int") ||
-    (x.kind === "Float" && y.kind === "Float")
+    (x.kind === "Float" && y.kind === "Float") ||
+    (x.kind === "Hashtag" && y.kind === "Hashtag")
   ) {
     return x.content === y.content
   }

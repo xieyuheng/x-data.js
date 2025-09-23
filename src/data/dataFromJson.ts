@@ -22,7 +22,11 @@ export function dataFromJson(json: any): X.Data {
   }
 
   if (typeof json === "boolean") {
-    return X.Bool(json)
+    if (json === true) {
+      return X.Hashtag("#t")
+    } else {
+      return X.Hashtag("#f")
+    }
   }
 
   if (isJsonArray(json)) {

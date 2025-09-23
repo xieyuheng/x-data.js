@@ -8,6 +8,7 @@ export type TokenKind =
   | "BracketEnd"
   | "QuotationMark"
   | "Keyword"
+  | "Hashtag"
 
 export type TokenMeta = {
   span: Span
