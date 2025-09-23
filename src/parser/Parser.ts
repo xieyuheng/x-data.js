@@ -4,6 +4,7 @@ import { ErrorWithMeta } from "../errors/index.ts"
 import { Lexer } from "../lexer/index.ts"
 import { spanUnion } from "../span/index.ts"
 import { tokenMetaToDataMeta, type Token } from "../token/index.ts"
+import { stringHasBlank } from "../utils/string/stringHasBlank.ts"
 
 type Result = { data: Data; remain: Array<Token> }
 
@@ -65,7 +66,7 @@ export class Parser {
         }
 
         return {
-          data: X.Symbol(token.value, tokenMetaToDataMeta(token.meta)),
+          data: X.String(token.value, tokenMetaToDataMeta(token.meta)),
           remain: tokens.slice(1),
         }
       }
@@ -109,7 +110,7 @@ export class Parser {
             token,
             tokens.slice(1),
           )
-          return { data: X.Cons(X.Symbol("@tael"), data), remain }
+          return { data: X.Cons(X.String("@tael"), data), remain }
         }
 
         if (token.value === "{") {
@@ -117,7 +118,7 @@ export class Parser {
             token,
             tokens.slice(1),
           )
-          return { data: X.Cons(X.Symbol("@set"), data), remain }
+          return { data: X.Cons(X.String("@set"), data), remain }
         }
 
         return this.handleTokensInBracket(token, tokens.slice(1))
@@ -131,7 +132,7 @@ export class Parser {
       case "Quote": {
         const { data, remain } = this.handleTokens(tokens.slice(1))
 
-        const quoteSymbol = X.Symbol(
+        const quoteSymbol = X.String(
           this.lexer.config.findQuoteSymbolOrFail(token.value),
           tokenMetaToDataMeta(token.meta),
         )
@@ -177,7 +178,11 @@ export class Parser {
 
       if (token.kind === "Symbol" && token.value.startsWith(":")) {
         const head = this.handleTokens(tokens.slice(1))
-        if (head.data.kind === "Symbol" && head.data.content.startsWith(":")) {
+        if (
+          head.data.kind === "String" &&
+          !stringHasBlank(head.data.content) &&
+          head.data.content.startsWith(":")
+        ) {
           let message = `I found key after key in attributes\n`
           throw new ErrorWithMeta(message, token.meta)
         }

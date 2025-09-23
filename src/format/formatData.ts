@@ -1,4 +1,5 @@
 import { type Data } from "../data/index.ts"
+import { stringHasBlank } from "../utils/string/stringHasBlank.ts"
 
 export function formatData(data: Data): string {
   switch (data.kind) {
@@ -10,12 +11,12 @@ export function formatData(data: Data): string {
       }
     }
 
-    case "Symbol": {
-      return `'${data.content}`
-    }
-
     case "String": {
-      return JSON.stringify(data.content)
+      if (stringHasBlank(data.content)) {
+        return `'${data.content}`
+      } else {
+        return JSON.stringify(data.content)
+      }
     }
 
     case "Int": {

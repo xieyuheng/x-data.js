@@ -71,7 +71,7 @@ const typeMatcher: X.Matcher<Type> = X.matcherChoice<Type>([
     ),
   ),
 
-  X.matcher("name", ({ name }) => TypeVar(X.symbolToString(name))),
+  X.matcher("name", ({ name }) => TypeVar(X.dataToString(name))),
 ])
 
 function assertParse(text: string, type: Type): void {

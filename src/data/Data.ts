@@ -1,6 +1,6 @@
 export type Data = Atom | Tael
 
-export type Atom = Bool | Symbol | String | Int | Float
+export type Atom = Bool | String | Int | Float
 
 export type Attributes = Record<string, Data>
 
@@ -13,20 +13,6 @@ export type Bool = {
 export function Bool(content: boolean, meta: Attributes = {}): Bool {
   return {
     kind: "Bool",
-    content,
-    meta,
-  }
-}
-
-export type Symbol = {
-  kind: "Symbol"
-  content: string
-  meta: Attributes
-}
-
-export function Symbol(content: string, meta: Attributes = {}): Symbol {
-  return {
-    kind: "Symbol",
     content,
     meta,
   }

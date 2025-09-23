@@ -3,7 +3,6 @@ import * as X from "./Data.ts"
 export function isAtom(data: X.Data): data is X.Atom {
   return (
     data.kind === "Bool" ||
-    data.kind === "Symbol" ||
     data.kind === "String" ||
     data.kind === "Int" ||
     data.kind === "Float"
@@ -12,10 +11,6 @@ export function isAtom(data: X.Data): data is X.Atom {
 
 export function isBool(data: X.Data): data is X.Bool {
   return data.kind === "Bool"
-}
-
-export function isSymbol(data: X.Data): data is X.Symbol {
-  return data.kind === "Symbol"
 }
 
 export function isString(data: X.Data): data is X.String {
@@ -33,11 +28,6 @@ export function isFloat(data: X.Data): data is X.Float {
 export function asBool(data: X.Data): X.Bool {
   if (data.kind === "Bool") return data
   throw new Error(`[asBool] fail on: ${data.kind}`)
-}
-
-export function asSymbol(data: X.Data): X.Symbol {
-  if (data.kind === "Symbol") return data
-  throw new Error(`[asSymbol] fail on: ${data.kind}`)
 }
 
 export function asString(data: X.Data): X.String {

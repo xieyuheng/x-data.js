@@ -1,1 +1,1 @@
-merge symbol to string
+test about string as symbol
