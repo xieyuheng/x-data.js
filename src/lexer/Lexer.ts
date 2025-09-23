@@ -22,27 +22,17 @@ export class Lexer {
     this.position = initPosition()
 
     const tokens: Array<Token> = []
-    while (true) {
-      const token = this.next()
-      if (token) {
-        tokens.push(token)
-      } else {
-        return tokens
-      }
+    while (!this.isEnd()) {
+      const token = this.handleChar()
+      if (token === undefined) continue
+      tokens.push(token)
     }
+
+    return tokens
   }
 
   isEnd(): boolean {
     return this.text.length === this.position.index
-  }
-
-  private next(): Token | undefined {
-    while (!this.isEnd()) {
-      const token = this.handleChar()
-      if (token !== undefined) return token
-    }
-
-    return undefined
   }
 
   char(): string {
