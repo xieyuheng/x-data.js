@@ -12,15 +12,7 @@ export type ParserMeta = {
 }
 
 export class Parser {
-  lexer = new Lexer({
-    quotes: ["'", ",", "`"],
-    brackets: [
-      { start: "(", end: ")" },
-      { start: "[", end: "]" },
-      { start: "{", end: "}" },
-    ],
-    comments: [";"],
-  })
+  lexer = new Lexer()
 
   parse(text: string, meta: ParserMeta = {}): Array<Data> {
     let tokens = this.lexer.lex(text, meta)

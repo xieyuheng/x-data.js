@@ -1,4 +1,4 @@
-quit using `LexerOptions` -- `Lexer` will not be reused
+quit using `LexerConfig` -- `Lexer` will not be reused
 
 `stringIsSymbol` handle bracket
 

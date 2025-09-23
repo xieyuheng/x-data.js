@@ -1,19 +1,24 @@
 import assert from "node:assert"
-import { LexerConfig, type LexerOptions } from "../lexer/index.ts"
+import { LexerConfig } from "../lexer/index.ts"
 import type { ParserMeta } from "../parser/index.ts"
 import { initPosition, positionForwardChar } from "../span/index.ts"
 import { type Token } from "../token/index.ts"
 import { consume } from "./consume.ts"
 
 export class Lexer {
-  config: LexerConfig
+  config = new LexerConfig({
+    quotes: ["'", ",", "`"],
+    brackets: [
+      { start: "(", end: ")" },
+      { start: "[", end: "]" },
+      { start: "{", end: "}" },
+    ],
+    comments: [";"],
+  })
+
   position = initPosition()
   text: string = ""
   url?: URL
-
-  constructor(options: LexerOptions) {
-    this.config = new LexerConfig(options)
-  }
 
   lex(text: string, meta: ParserMeta = {}): Array<Token> {
     this.text = text
