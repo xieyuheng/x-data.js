@@ -5,8 +5,9 @@ import { Lexer } from "./Lexer.ts"
 
 export function useCharHandlers(lexer: Lexer): Array<CharHandler> {
   return [
-    // The order matters, we must
-    //   try `NumberHandler` before `SymbolHandler`.
+    // The order matters,
+    // we must try `NumberHandler`
+    // before `SymbolHandler`.
     new SpaceHandler(lexer),
     new QuoteHandler(lexer),
     new BracketStartHandler(lexer),

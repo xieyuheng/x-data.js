@@ -94,7 +94,13 @@ export class Parser {
         }
 
         return {
-          data: X.String(value, tokenMetaToDataMeta(token.meta)),
+          data: X.List(
+            [
+              X.String("@quote", tokenMetaToDataMeta(token.meta)),
+              X.String(value, tokenMetaToDataMeta(token.meta)),
+            ],
+            tokenMetaToDataMeta(token.meta),
+          ),
           remain: tokens.slice(1),
         }
       }

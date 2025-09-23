@@ -14,8 +14,8 @@ test("parse -- symbol", () => {
   assertParse("#3-sphere", X.String("#3-sphere"))
 })
 
-test("parse -- string", () => {
-  assertParse('"abc"', X.String("abc"))
+test("parse -- literal string", () => {
+  assertParse('"abc"', X.List([X.String("@quote"), X.String("abc")]))
 })
 
 test("parse -- bool", () => {
