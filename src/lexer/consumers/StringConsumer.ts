@@ -5,7 +5,7 @@ import type { Consumer } from "../Consumer.ts"
 import type { Lexer } from "../Lexer.ts"
 
 export class StringConsumer implements Consumer {
-  kind = "String" as const
+  kind = "DoubleQoutedString" as const
 
   canConsume(lexer: Lexer): boolean {
     return lexer.char() === '"'

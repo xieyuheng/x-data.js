@@ -64,7 +64,7 @@ export class Parser {
         }
       }
 
-      case "String": {
+      case "DoubleQoutedString": {
         const value = JSON.parse(token.value)
         if (typeof value !== "string") {
           let message = `I expect value to be a JSON string: ${value}\n`
