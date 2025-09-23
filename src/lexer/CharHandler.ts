@@ -8,43 +8,39 @@ export function useCharHandlers(lexer: Lexer): Array<CharHandler> {
     // The order matters,
     // we must try `NumberHandler`
     // before `SymbolHandler`.
-    new SpaceHandler(lexer),
-    new QuoteHandler(lexer),
-    new BracketStartHandler(lexer),
-    new BracketEndHandler(lexer),
-    new CommentHandler(lexer),
-    new StringHandler(lexer),
-    new NumberHandler(lexer),
-    new SymbolHandler(lexer),
+    new SpaceHandler(),
+    new QuoteHandler(),
+    new BracketStartHandler(),
+    new BracketEndHandler(),
+    new CommentHandler(),
+    new StringHandler(),
+    new NumberHandler(),
+    new SymbolHandler(),
   ]
 }
 
 export abstract class CharHandler {
-  lexer: Lexer
-
-  constructor(lexer: Lexer) {
-    this.lexer = lexer
-  }
-
   abstract kind: TokenKind | undefined
 
-  abstract canHandle(char: string): boolean
-  abstract handle(char: string): string
+  abstract canHandle(lexer: Lexer): boolean
+  abstract handle(lexer: Lexer): string
 }
 
 class SpaceHandler extends CharHandler {
   kind = undefined
 
-  canHandle(char: string): boolean {
+  canHandle(lexer: Lexer): boolean {
+    const char = lexer.char
     return char.trim() === ""
   }
 
-  handle(char: string): string {
+  handle(lexer: Lexer): string {
+    const char = lexer.char
     let value = char
-    this.lexer.forward(1)
-    while (this.lexer.char !== undefined && this.lexer.char.trim() === "") {
-      value += this.lexer.char
-      this.lexer.forward(1)
+    lexer.forward(1)
+    while (!lexer.isEnd() && lexer.char.trim() === "") {
+      value += lexer.char
+      lexer.forward(1)
     }
 
     return value
@@ -54,12 +50,14 @@ class SpaceHandler extends CharHandler {
 class BracketStartHandler extends CharHandler {
   kind = "BracketStart" as const
 
-  canHandle(char: string): boolean {
-    return this.lexer.config.brackets.map(({ start }) => start).includes(char)
+  canHandle(lexer: Lexer): boolean {
+    const char = lexer.char
+    return lexer.config.brackets.map(({ start }) => start).includes(char)
   }
 
-  handle(char: string): string {
-    this.lexer.forward(1)
+  handle(lexer: Lexer): string {
+    const char = lexer.char
+    lexer.forward(1)
     return char
   }
 }
@@ -67,12 +65,14 @@ class BracketStartHandler extends CharHandler {
 class BracketEndHandler extends CharHandler {
   kind = "BracketEnd" as const
 
-  canHandle(char: string): boolean {
-    return this.lexer.config.brackets.map(({ end }) => end).includes(char)
+  canHandle(lexer: Lexer): boolean {
+    const char = lexer.char
+    return lexer.config.brackets.map(({ end }) => end).includes(char)
   }
 
-  handle(char: string): string {
-    this.lexer.forward(1)
+  handle(lexer: Lexer): string {
+    const char = lexer.char
+    lexer.forward(1)
     return char
   }
 }
@@ -80,12 +80,14 @@ class BracketEndHandler extends CharHandler {
 class QuoteHandler extends CharHandler {
   kind = "Quote" as const
 
-  canHandle(char: string): boolean {
-    return this.lexer.config.quotes.includes(char)
+  canHandle(lexer: Lexer): boolean {
+    const char = lexer.char
+    return lexer.config.quotes.includes(char)
   }
 
-  handle(char: string): string {
-    this.lexer.forward(1)
+  handle(lexer: Lexer): string {
+    const char = lexer.char
+    lexer.forward(1)
     return char
   }
 }
@@ -93,17 +95,19 @@ class QuoteHandler extends CharHandler {
 class CommentHandler extends CharHandler {
   kind = undefined
 
-  canHandle(char: string): boolean {
-    const text = char + this.lexer.rest
-    return this.lexer.config.comments.some((prefix) => text.startsWith(prefix))
+  canHandle(lexer: Lexer): boolean {
+    const char = lexer.char
+    const text = char + lexer.rest
+    return lexer.config.comments.some((prefix) => text.startsWith(prefix))
   }
 
-  handle(char: string): string {
+  handle(lexer: Lexer): string {
+    const char = lexer.char
     let value = char
-    this.lexer.forward(1)
-    while (this.lexer.char !== undefined && this.lexer.char !== "\n") {
-      value += this.lexer.char
-      this.lexer.forward(1)
+    lexer.forward(1)
+    while (!lexer.isEnd() && lexer.char !== "\n") {
+      value += lexer.char
+      lexer.forward(1)
     }
 
     return value
@@ -113,12 +117,14 @@ class CommentHandler extends CharHandler {
 class StringHandler extends CharHandler {
   kind = "String" as const
 
-  canHandle(char: string): boolean {
+  canHandle(lexer: Lexer): boolean {
+    const char = lexer.char
     return char === '"'
   }
 
-  handle(char: string): string {
-    const text = this.lexer.rest.split("\n")[0] || ""
+  handle(lexer: Lexer): string {
+    const char = lexer.char
+    const text = lexer.rest.split("\n")[0] || ""
     let index = 2 // over first `"` and the folloing char.
     while (index <= text.length) {
       const head = text.slice(0, index)
@@ -126,18 +132,18 @@ class StringHandler extends CharHandler {
       if (str === undefined) {
         index++
       } else {
-        this.lexer.forward(index)
+        lexer.forward(index)
         return head
       }
     }
 
-    const start = this.lexer.position
+    const start = lexer.position
     const end = positionForwardChar(start, '"')
     let message = `Fail to parse JSON string: ${text}\n`
     throw new ErrorWithMeta(message, {
       span: { start, end },
-      text: this.lexer.text,
-      url: this.lexer.url,
+      text: lexer.text,
+      url: lexer.url,
     })
   }
 
@@ -153,24 +159,26 @@ class StringHandler extends CharHandler {
 class NumberHandler extends CharHandler {
   kind = "Number" as const
 
-  canHandle(char: string): boolean {
-    const text = this.lexer.rest.split("\n")[0] || ""
-    return this.lastSuccessAt(text) !== undefined
+  canHandle(lexer: Lexer): boolean {
+    const char = lexer.char
+    const text = lexer.rest.split("\n")[0] || ""
+    return this.lastSuccessAt(lexer, text) !== undefined
   }
 
-  handle(char: string): string {
-    const text = this.lexer.rest.split("\n")[0] || ""
-    const index = this.lastSuccessAt(text)
+  handle(lexer: Lexer): string {
+    const char = lexer.char
+    const text = lexer.rest.split("\n")[0] || ""
+    const index = this.lastSuccessAt(lexer, text)
     if (index === undefined) {
       let message = `Expect to find lastSuccessAt in text: ${text}\n`
       throw new Error(message)
     }
 
-    this.lexer.forward(index)
+    lexer.forward(index)
     return text.slice(0, index)
   }
 
-  private lastSuccessAt(text: string): number | undefined {
+  private lastSuccessAt(lexer: Lexer, text: string): number | undefined {
     let index = 0
     let lastSuccessAt: number | undefined = undefined
     while (index <= text.length) {
@@ -182,7 +190,7 @@ class NumberHandler extends CharHandler {
         text[index - 1].trim() !== "" &&
         (text[index] === undefined ||
           text[index].trim() === "" ||
-          this.lexer.config.isMark(text[index]))
+          lexer.config.isMark(text[index]))
       ) {
         lastSuccessAt = index
       }
@@ -207,20 +215,22 @@ class NumberHandler extends CharHandler {
 class SymbolHandler extends CharHandler {
   kind = "Symbol" as const
 
-  canHandle(char: string): boolean {
+  canHandle(lexer: Lexer): boolean {
+    const char = lexer.char
     return true
   }
 
-  handle(char: string): string {
+  handle(lexer: Lexer): string {
+    const char = lexer.char
     let value = char
-    this.lexer.forward(1)
+    lexer.forward(1)
     while (
-      this.lexer.char !== undefined &&
-      this.lexer.char.trim() !== "" &&
-      !this.lexer.config.marks.includes(this.lexer.char)
+      !lexer.isEnd() &&
+      lexer.char.trim() !== "" &&
+      !lexer.config.marks.includes(lexer.char)
     ) {
-      value += this.lexer.char
-      this.lexer.forward(1)
+      value += lexer.char
+      lexer.forward(1)
     }
 
     return value

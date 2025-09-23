@@ -1,3 +1,4 @@
+import assert from "node:assert"
 import { LexerConfig, type LexerOptions } from "../lexer/index.ts"
 import type { ParserMeta } from "../parser/index.ts"
 import { initPosition, positionForwardChar } from "../span/index.ts"
@@ -31,17 +32,23 @@ export class Lexer {
     }
   }
 
+  isEnd(): boolean {
+    return this.text.length === this.position.index
+  }
+
   private next(): Token | undefined {
-    while (this.char !== undefined) {
-      const token = this.handleChar(this.char)
+    while (!this.isEnd()) {
+      const token = this.handleChar()
       if (token !== undefined) return token
     }
 
     return undefined
   }
 
-  get char(): string | undefined {
-    return this.text[this.position.index]
+  get char(): string {
+    const char = this.text[this.position.index]
+    assert(char !== undefined)
+    return char
   }
 
   get rest(): string {
@@ -49,18 +56,18 @@ export class Lexer {
   }
 
   forward(count: number): void {
-    if (this.char === undefined) return
+    if (this.isEnd()) return
 
     while (count-- > 0) {
       this.position = positionForwardChar(this.position, this.char)
     }
   }
 
-  private handleChar(char: string): Token | undefined {
+  private handleChar(): Token | undefined {
     for (const handler of this.handlers) {
-      if (handler.canHandle(char)) {
+      if (handler.canHandle(this)) {
         const start = this.position
-        const value = handler.handle(char)
+        const value = handler.handle(this)
         if (handler.kind === undefined) return undefined
 
         const end = this.position
@@ -76,7 +83,7 @@ export class Lexer {
       }
     }
 
-    let message = `Can not handle char: ${char}\n`
+    let message = `Can not handle char: ${this.char}\n`
     throw new Error(message)
   }
 }
