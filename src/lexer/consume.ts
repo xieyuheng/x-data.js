@@ -1,19 +1,19 @@
 import { type Token } from "../token/index.ts"
-import { useConsumers } from "./Consumer.ts"
+import { useConsumers } from "./consumers/useConsumers.ts"
 import { Lexer } from "./Lexer.ts"
 
 export function consume(lexer: Lexer): Token | undefined {
-  for (const handler of useConsumers()) {
-    if (handler.canHandle(lexer)) {
+  for (const consumer of useConsumers()) {
+    if (consumer.canConsume(lexer)) {
       const start = lexer.position
-      const value = handler.handle(lexer)
-      if (handler.kind === undefined) {
+      const value = consumer.consume(lexer)
+      if (consumer.kind === undefined) {
         return undefined
       }
 
       const end = lexer.position
       return {
-        kind: handler.kind,
+        kind: consumer.kind,
         value,
         meta: {
           span: { start, end },
@@ -24,6 +24,6 @@ export function consume(lexer: Lexer): Token | undefined {
     }
   }
 
-  let message = `Can not handle char: ${lexer.char()}\n`
+  let message = `Can not consume char: ${lexer.char()}\n`
   throw new Error(message)
 }
