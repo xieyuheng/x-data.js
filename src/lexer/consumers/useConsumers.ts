@@ -2,12 +2,12 @@ import { type Consumer } from "../Consumer.ts"
 import { BracketEndConsumer } from "./BracketEndConsumer.ts"
 import { BracketStartConsumer } from "./BracketStartConsumer.ts"
 import { CommentConsumer } from "./CommentConsumer.ts"
+import { KeywordConsumer } from "./KeywordConsumer.ts"
 import { NumberConsumer } from "./NumberConsumer.ts"
 import { QuoteConsumer } from "./QuoteConsumer.ts"
 import { SpaceConsumer } from "./SpaceConsumer.ts"
 import { StringConsumer } from "./StringConsumer.ts"
 import { SymbolConsumer } from "./SymbolConsumer.ts"
-// import { KeywordConsumer } from "./KeywordConsumer.ts"
 
 export function useConsumers(): Array<Consumer> {
   return [
@@ -19,7 +19,7 @@ export function useConsumers(): Array<Consumer> {
     new CommentConsumer(),
     new StringConsumer(),
     new NumberConsumer(),
-    // new KeywordConsumer(),
+    new KeywordConsumer(),
     new SymbolConsumer(),
   ]
 }

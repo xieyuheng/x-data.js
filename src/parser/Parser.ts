@@ -129,7 +129,7 @@ export class Parser {
       }
 
       case "Keyword": {
-        let message = `I found keyword out side of bracket\n`
+        let message = `I found keyword at wrong place\n`
         throw new ErrorWithMeta(message, token.meta)
       }
     }
@@ -166,13 +166,8 @@ export class Parser {
         }
       }
 
-      if (token.kind === "Symbol" && token.value.startsWith(":")) {
+      if (token.kind === "Keyword") {
         const head = this.handleTokens(tokens.slice(1))
-        if (head.data.kind === "String" && head.data.content.startsWith(":")) {
-          let message = `I found key after key in attributes\n`
-          throw new ErrorWithMeta(message, token.meta)
-        }
-
         attributes[token.value.slice(1)] = head.data
         tokens = head.remain
         continue

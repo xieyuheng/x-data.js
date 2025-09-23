@@ -1,6 +1,7 @@
 import assert from "node:assert"
 import { test } from "node:test"
 import * as X from "../data/index.ts"
+import { formatData } from "../format/index.ts"
 import { matchData } from "../match/index.ts"
 import { parseData } from "../parser/index.ts"
 
@@ -12,9 +13,17 @@ function assertMatch(
   const pattern = parseData(patternInput)
   const data = typeof dataInput === "string" ? parseData(dataInput) : dataInput
   const subst = matchData("NormalMode", pattern, data)({})
-  const expectedData = parseData(expectedInput)
+  const expected = parseData(expectedInput)
   assert(subst)
-  assert(X.attributesEqual(subst, X.asTael(expectedData).attributes))
+  const ok = X.attributesEqual(subst, X.asTael(expected).attributes)
+  if (!ok) {
+    let message = `[assertMatch] fail\n`
+    message += `  pattern: ${formatData(pattern)}\n`
+    message += `  data: ${formatData(data)}\n`
+    message += `  subst: ${formatData(X.Record(subst))}\n`
+    message += `  expected: ${formatData(expected)}\n`
+    throw new Error(message)
+  }
 }
 
 function assertMatchFail(patternInput: string, dataInput: string): void {
