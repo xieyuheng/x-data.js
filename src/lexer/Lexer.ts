@@ -45,13 +45,13 @@ export class Lexer {
     return undefined
   }
 
-  get char(): string {
+  char(): string {
     const char = this.text[this.position.index]
     assert(char !== undefined)
     return char
   }
 
-  get rest(): string {
+  rest(): string {
     return this.text.slice(this.position.index)
   }
 
@@ -59,7 +59,7 @@ export class Lexer {
     if (this.isEnd()) return
 
     while (count-- > 0) {
-      this.position = positionForwardChar(this.position, this.char)
+      this.position = positionForwardChar(this.position, this.char())
     }
   }
 
@@ -83,7 +83,7 @@ export class Lexer {
       }
     }
 
-    let message = `Can not handle char: ${this.char}\n`
+    let message = `Can not handle char: ${this.char()}\n`
     throw new Error(message)
   }
 }

@@ -30,16 +30,16 @@ class SpaceHandler extends CharHandler {
   kind = undefined
 
   canHandle(lexer: Lexer): boolean {
-    const char = lexer.char
+    const char = lexer.char()
     return char.trim() === ""
   }
 
   handle(lexer: Lexer): string {
-    const char = lexer.char
+    const char = lexer.char()
     let value = char
     lexer.forward(1)
-    while (!lexer.isEnd() && lexer.char.trim() === "") {
-      value += lexer.char
+    while (!lexer.isEnd() && lexer.char().trim() === "") {
+      value += lexer.char()
       lexer.forward(1)
     }
 
@@ -51,12 +51,12 @@ class BracketStartHandler extends CharHandler {
   kind = "BracketStart" as const
 
   canHandle(lexer: Lexer): boolean {
-    const char = lexer.char
+    const char = lexer.char()
     return lexer.config.brackets.map(({ start }) => start).includes(char)
   }
 
   handle(lexer: Lexer): string {
-    const char = lexer.char
+    const char = lexer.char()
     lexer.forward(1)
     return char
   }
@@ -66,12 +66,12 @@ class BracketEndHandler extends CharHandler {
   kind = "BracketEnd" as const
 
   canHandle(lexer: Lexer): boolean {
-    const char = lexer.char
+    const char = lexer.char()
     return lexer.config.brackets.map(({ end }) => end).includes(char)
   }
 
   handle(lexer: Lexer): string {
-    const char = lexer.char
+    const char = lexer.char()
     lexer.forward(1)
     return char
   }
@@ -81,12 +81,12 @@ class QuoteHandler extends CharHandler {
   kind = "Quote" as const
 
   canHandle(lexer: Lexer): boolean {
-    const char = lexer.char
+    const char = lexer.char()
     return lexer.config.quotes.includes(char)
   }
 
   handle(lexer: Lexer): string {
-    const char = lexer.char
+    const char = lexer.char()
     lexer.forward(1)
     return char
   }
@@ -96,17 +96,17 @@ class CommentHandler extends CharHandler {
   kind = undefined
 
   canHandle(lexer: Lexer): boolean {
-    const char = lexer.char
-    const text = char + lexer.rest
+    const char = lexer.char()
+    const text = char + lexer.rest()
     return lexer.config.comments.some((prefix) => text.startsWith(prefix))
   }
 
   handle(lexer: Lexer): string {
-    const char = lexer.char
+    const char = lexer.char()
     let value = char
     lexer.forward(1)
-    while (!lexer.isEnd() && lexer.char !== "\n") {
-      value += lexer.char
+    while (!lexer.isEnd() && lexer.char() !== "\n") {
+      value += lexer.char()
       lexer.forward(1)
     }
 
@@ -118,13 +118,13 @@ class StringHandler extends CharHandler {
   kind = "String" as const
 
   canHandle(lexer: Lexer): boolean {
-    const char = lexer.char
+    const char = lexer.char()
     return char === '"'
   }
 
   handle(lexer: Lexer): string {
-    const char = lexer.char
-    const text = lexer.rest.split("\n")[0] || ""
+    const char = lexer.char()
+    const text = lexer.rest().split("\n")[0] || ""
     let index = 2 // over first `"` and the folloing char.
     while (index <= text.length) {
       const head = text.slice(0, index)
@@ -160,14 +160,14 @@ class NumberHandler extends CharHandler {
   kind = "Number" as const
 
   canHandle(lexer: Lexer): boolean {
-    const char = lexer.char
-    const text = lexer.rest.split("\n")[0] || ""
+    const char = lexer.char()
+    const text = lexer.rest().split("\n")[0] || ""
     return this.lastSuccessAt(lexer, text) !== undefined
   }
 
   handle(lexer: Lexer): string {
-    const char = lexer.char
-    const text = lexer.rest.split("\n")[0] || ""
+    const char = lexer.char()
+    const text = lexer.rest().split("\n")[0] || ""
     const index = this.lastSuccessAt(lexer, text)
     if (index === undefined) {
       let message = `Expect to find lastSuccessAt in text: ${text}\n`
@@ -216,20 +216,20 @@ class SymbolHandler extends CharHandler {
   kind = "Symbol" as const
 
   canHandle(lexer: Lexer): boolean {
-    const char = lexer.char
+    const char = lexer.char()
     return true
   }
 
   handle(lexer: Lexer): string {
-    const char = lexer.char
+    const char = lexer.char()
     let value = char
     lexer.forward(1)
     while (
       !lexer.isEnd() &&
-      lexer.char.trim() !== "" &&
-      !lexer.config.marks.includes(lexer.char)
+      lexer.char().trim() !== "" &&
+      !lexer.config.marks.includes(lexer.char())
     ) {
-      value += lexer.char
+      value += lexer.char()
       lexer.forward(1)
     }
 

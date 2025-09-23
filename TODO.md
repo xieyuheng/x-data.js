@@ -1,4 +1,3 @@
-`Lexer` quit using getters
 `useCharHandlers` should not take `lexer` as argument
 
 `Lexer` -- `KeywordHandler`
