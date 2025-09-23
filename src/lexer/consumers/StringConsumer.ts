@@ -7,12 +7,11 @@ export class StringConsumer implements Consumer {
   kind = "String" as const
 
   canConsume(lexer: Lexer): boolean {
-    const char = lexer.char()
-    return char === '"'
+    return lexer.char() === '"'
   }
 
   consume(lexer: Lexer): string {
-    const text = lexer.rest().split("\n")[0] || ""
+    const text = lexer.remain().split("\n")[0] || ""
     let index = 2 // over first `"` and the folloing char.
     while (index <= text.length) {
       const head = text.slice(0, index)

@@ -5,7 +5,7 @@ export class CommentConsumer implements Consumer {
   kind = undefined
 
   canConsume(lexer: Lexer): boolean {
-    const text = lexer.char() + lexer.rest()
+    const text = lexer.remain()
     return lexer.config.comments.some((prefix) => text.startsWith(prefix))
   }
 

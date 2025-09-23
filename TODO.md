@@ -1,7 +1,7 @@
-extract `isValidSymbol`
+[lexer] extract `isValidSymbol`
 
-`Lexer` -- use `KeywordConsumer`
-`Lexer` -- `StringKeywordConsumer` -- support `:"hello world"`
+[lexer] `Lexer` -- use `KeywordConsumer`
+[lexer] `Lexer` -- `StringKeywordConsumer` -- support `:"hello world"`
 
-`matchData` -- `var` -- test var with whitespace
-`matchData` -- `quote` -- test quoted literal string
+[match] `matchData` -- `var` -- test var with whitespace
+[match] `matchData` -- `quote` -- test quoted literal string

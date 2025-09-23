@@ -40,7 +40,7 @@ export class Lexer {
     return char
   }
 
-  rest(): string {
+  remain(): string {
     return this.text.slice(this.position.index)
   }
 
