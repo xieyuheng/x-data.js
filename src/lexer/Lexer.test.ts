@@ -88,6 +88,7 @@ test("lexer -- comments", () => {
 
 test("lexer -- keyword", () => {
   assertTokens(":abc", [{ kind: "Keyword", value: "abc" }])
+  assertTokens(':"hello world"', [{ kind: "Keyword", value: "hello world" }])
 })
 
 test("lexer -- string", () => {

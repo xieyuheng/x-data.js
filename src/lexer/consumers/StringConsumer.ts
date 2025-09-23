@@ -12,26 +12,30 @@ export class StringConsumer implements Consumer {
   }
 
   consume(lexer: Lexer): string {
-    const line = lexer.line()
-    let index = 2 // over first `"` and the folloing char.
-    while (index <= line.length) {
-      const head = line.slice(0, index)
-      const value = jsonParseString(head)
-      if (value === undefined) {
-        index++
-      } else {
-        lexer.forward(index)
-        return value
-      }
-    }
-
-    const start = lexer.position
-    const end = positionForwardChar(start, '"')
-    let message = `Fail to parse JSON string: ${line}\n`
-    throw new ErrorWithMeta(message, {
-      span: { start, end },
-      text: lexer.text,
-      url: lexer.url,
-    })
+    return consumeDoubleQoutedString(lexer)
   }
+}
+
+export function consumeDoubleQoutedString(lexer: Lexer): string {
+  const line = lexer.line()
+  let index = 2 // over first `"` and the folloing char.
+  while (index <= line.length) {
+    const head = line.slice(0, index)
+    const value = jsonParseString(head)
+    if (value === undefined) {
+      index++
+    } else {
+      lexer.forward(index)
+      return value
+    }
+  }
+
+  const start = lexer.position
+  const end = positionForwardChar(start, '"')
+  let message = `Fail to parse double qouted string: ${line}\n`
+  throw new ErrorWithMeta(message, {
+    span: { start, end },
+    text: lexer.text,
+    url: lexer.url,
+  })
 }
