@@ -5,13 +5,11 @@ export class NumberConsumer implements Consumer {
   kind = "Number" as const
 
   canConsume(lexer: Lexer): boolean {
-    const char = lexer.char()
     const text = lexer.rest().split("\n")[0] || ""
     return this.lastSuccessAt(lexer, text) !== undefined
   }
 
   consume(lexer: Lexer): string {
-    const char = lexer.char()
     const text = lexer.rest().split("\n")[0] || ""
     const index = this.lastSuccessAt(lexer, text)
     if (index === undefined) {

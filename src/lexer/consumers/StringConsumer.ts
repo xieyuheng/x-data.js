@@ -12,7 +12,6 @@ export class StringConsumer implements Consumer {
   }
 
   consume(lexer: Lexer): string {
-    const char = lexer.char()
     const text = lexer.rest().split("\n")[0] || ""
     let index = 2 // over first `"` and the folloing char.
     while (index <= text.length) {

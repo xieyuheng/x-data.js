@@ -10,9 +10,7 @@ import { SymbolConsumer } from "./SymbolConsumer.ts"
 
 export function useConsumers(): Array<Consumer> {
   return [
-    // The order matters,
-    // we must try `NumberConsumer`
-    // before `SymbolConsumer`.
+    // The order matters.
     new SpaceConsumer(),
     new QuoteConsumer(),
     new BracketStartConsumer(),

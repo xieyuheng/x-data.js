@@ -5,13 +5,11 @@ export class SymbolConsumer implements Consumer {
   kind = "Symbol" as const
 
   canConsume(lexer: Lexer): boolean {
-    const char = lexer.char()
     return true
   }
 
   consume(lexer: Lexer): string {
-    const char = lexer.char()
-    let value = char
+    let value = lexer.char()
     lexer.forward(1)
     while (
       !lexer.isEnd() &&
