@@ -2,7 +2,7 @@ import assert from "node:assert"
 import process from "node:process"
 import * as Readline from "node:readline"
 import { type Data } from "../data/index.ts"
-import { lexerMatchBrackets } from "../lexer/index.ts"
+import { LexerConfig } from "../lexer/index.ts"
 import { Parser } from "../parser/index.ts"
 import { type Token } from "../token/index.ts"
 import { errorReport } from "../utils/error/errorReport.ts"
@@ -65,7 +65,7 @@ function replHandleLine(repl: Repl, line: string) {
   assert(repl.rl)
   repl.text += line + "\n"
   const tokens = repl.parser.lexer.lex(repl.text)
-  const balance = bracketBalance(tokens)
+  const balance = bracketBalance(repl.parser.lexer.config, tokens)
   switch (balance) {
     case "Ok": {
       return
@@ -105,7 +105,7 @@ export function replClose(repl: Repl): void {
 
 type Balance = "Ok" | "Wrong" | "Perfect"
 
-function bracketBalance(tokens: Array<Token>): Balance {
+function bracketBalance(config: LexerConfig, tokens: Array<Token>): Balance {
   const bracketStack: Array<string> = []
   for (const token of tokens) {
     if (token.kind === "BracketStart") {
@@ -115,7 +115,7 @@ function bracketBalance(tokens: Array<Token>): Balance {
     if (token.kind === "BracketEnd") {
       const start = bracketStack.pop()
       if (start === undefined) return "Wrong"
-      if (!lexerMatchBrackets(start, token.value)) return "Wrong"
+      if (!config.matchBrackets(start, token.value)) return "Wrong"
     }
   }
 

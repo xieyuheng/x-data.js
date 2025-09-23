@@ -20,9 +20,25 @@ export function dataToJson(data: X.Data): Json {
   }
 }
 
+export function symbolToString(data: X.Data): string {
+  if (data.kind !== "Symbol") {
+    throw new Error(`[symbolToString] wrong data kind: ${data.kind}`)
+  }
+
+  return data.content
+}
+
 export function dataToString(data: X.Data): string {
   if (data.kind !== "String") {
     throw new Error(`[dataToString] wrong data kind: ${data.kind}`)
+  }
+
+  return data.content
+}
+
+export function dataToBoolean(data: X.Data): boolean {
+  if (data.kind !== "Bool") {
+    throw new Error(`[dataToBoolean] wrong data kind: ${data.kind}`)
   }
 
   return data.content

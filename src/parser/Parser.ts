@@ -1,7 +1,7 @@
 import * as X from "../data/index.ts"
 import { type Data } from "../data/index.ts"
 import { ErrorWithMeta } from "../errors/index.ts"
-import { Lexer, lexerMatchBrackets } from "../lexer/index.ts"
+import { Lexer } from "../lexer/index.ts"
 import { spanUnion } from "../span/index.ts"
 import { tokenMetaToDataMeta, type Token } from "../token/index.ts"
 
@@ -12,7 +12,19 @@ export type ParserMeta = {
 }
 
 export class Parser {
-  lexer = new Lexer()
+  lexer = new Lexer({
+    quotes: [
+      { mark: "'", symbol: "@quote" },
+      { mark: ",", symbol: "@unquote" },
+      { mark: "`", symbol: "@quasiquote" },
+    ],
+    brackets: [
+      { start: "(", end: ")" },
+      { start: "[", end: "]" },
+      { start: "{", end: "}" },
+    ],
+    comments: [";"],
+  })
 
   parse(text: string, meta: ParserMeta = {}): Array<Data> {
     let tokens = this.lexer.lex(text, meta)
@@ -38,8 +50,22 @@ export class Parser {
 
     switch (token.kind) {
       case "Symbol": {
+        if (token.value === "#f") {
+          return {
+            data: X.Bool(false, tokenMetaToDataMeta(token.meta)),
+            remain: tokens.slice(1),
+          }
+        }
+
+        if (token.value === "#t") {
+          return {
+            data: X.Bool(true, tokenMetaToDataMeta(token.meta)),
+            remain: tokens.slice(1),
+          }
+        }
+
         return {
-          data: X.String(token.value, tokenMetaToDataMeta(token.meta)),
+          data: X.Symbol(token.value, tokenMetaToDataMeta(token.meta)),
           remain: tokens.slice(1),
         }
       }
@@ -64,15 +90,15 @@ export class Parser {
         }
       }
 
-      case "DoubleQoutedString": {
+      case "String": {
+        const value = JSON.parse(token.value)
+        if (typeof value !== "string") {
+          let message = `I expect value to be a JSON string: ${value}\n`
+          throw new Error(message)
+        }
+
         return {
-          data: X.List(
-            [
-              X.String("@quote", tokenMetaToDataMeta(token.meta)),
-              X.String(token.value, tokenMetaToDataMeta(token.meta)),
-            ],
-            tokenMetaToDataMeta(token.meta),
-          ),
+          data: X.String(value, tokenMetaToDataMeta(token.meta)),
           remain: tokens.slice(1),
         }
       }
@@ -83,7 +109,7 @@ export class Parser {
             token,
             tokens.slice(1),
           )
-          return { data: X.Cons(X.String("@tael"), data), remain }
+          return { data: X.Cons(X.Symbol("@tael"), data), remain }
         }
 
         if (token.value === "{") {
@@ -91,7 +117,7 @@ export class Parser {
             token,
             tokens.slice(1),
           )
-          return { data: X.Cons(X.String("@set"), data), remain }
+          return { data: X.Cons(X.Symbol("@set"), data), remain }
         }
 
         return this.handleTokensInBracket(token, tokens.slice(1))
@@ -102,17 +128,11 @@ export class Parser {
         throw new ErrorWithMeta(message, token.meta)
       }
 
-      case "QuotationMark": {
+      case "Quote": {
         const { data, remain } = this.handleTokens(tokens.slice(1))
 
-        const quoteTable: Record<string, string> = {
-          "'": "@quote",
-          ",": "@unquote",
-          "`": "@quasiquote",
-        }
-
-        const quoteSymbol = X.String(
-          quoteTable[token.value],
+        const quoteSymbol = X.Symbol(
+          this.lexer.config.findQuoteSymbolOrFail(token.value),
           tokenMetaToDataMeta(token.meta),
         )
 
@@ -120,11 +140,6 @@ export class Parser {
           data: X.List([quoteSymbol, data], tokenMetaToDataMeta(token.meta)),
           remain,
         }
-      }
-
-      case "Keyword": {
-        let message = `I found keyword at wrong place\n`
-        throw new ErrorWithMeta(message, token.meta)
       }
     }
   }
@@ -142,7 +157,7 @@ export class Parser {
       const token = tokens[0]
 
       if (token.kind === "BracketEnd") {
-        if (!lexerMatchBrackets(start.value, token.value)) {
+        if (!this.lexer.config.matchBrackets(start.value, token.value)) {
           let message = `I expect a matching BracketEnd\n`
           throw new ErrorWithMeta(message, token.meta)
         }
@@ -160,9 +175,14 @@ export class Parser {
         }
       }
 
-      if (token.kind === "Keyword") {
+      if (token.kind === "Symbol" && token.value.startsWith(":")) {
         const head = this.handleTokens(tokens.slice(1))
-        attributes[token.value] = head.data
+        if (head.data.kind === "Symbol" && head.data.content.startsWith(":")) {
+          let message = `I found key after key in attributes\n`
+          throw new ErrorWithMeta(message, token.meta)
+        }
+
+        attributes[token.value.slice(1)] = head.data
         tokens = head.remain
         continue
       }

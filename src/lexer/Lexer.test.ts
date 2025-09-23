@@ -4,7 +4,20 @@ import { Lexer } from "../lexer/index.ts"
 import { type Token } from "../token/index.ts"
 
 function assertTokens(text: string, tokens: Array<Omit<Token, "meta">>): void {
-  const lexer = new Lexer()
+  const lexer = new Lexer({
+    quotes: [
+      { mark: "'", symbol: "@quote" },
+      { mark: ",", symbol: "@unquote" },
+      { mark: "`", symbol: "@quasiquote" },
+    ],
+    brackets: [
+      { start: "(", end: ")" },
+      { start: "[", end: "]" },
+      { start: "{", end: "}" },
+    ],
+    comments: [";"],
+  })
+
   const results = lexer.lex(text).map(({ kind, value }) => ({ kind, value }))
   assert.deepStrictEqual(results, tokens)
 }
@@ -31,12 +44,12 @@ test("lexer -- symbol", () => {
 
 test("lexer -- quotes", () => {
   assertTokens("'a", [
-    { kind: "QuotationMark", value: "'" },
+    { kind: "Quote", value: "'" },
     { kind: "Symbol", value: "a" },
   ])
 
   assertTokens("'  a", [
-    { kind: "QuotationMark", value: "'" },
+    { kind: "Quote", value: "'" },
     { kind: "Symbol", value: "a" },
   ])
 })
@@ -86,25 +99,20 @@ test("lexer -- comments", () => {
   assertTokens("; abc\nabc", [{ kind: "Symbol", value: "abc" }])
 })
 
-test("lexer -- keyword", () => {
-  assertTokens(":abc", [{ kind: "Keyword", value: "abc" }])
-  assertTokens(':"hello world"', [{ kind: "Keyword", value: "hello world" }])
-})
-
 test("lexer -- string", () => {
-  assertTokens('"abc"', [{ kind: "DoubleQoutedString", value: "abc" }])
+  assertTokens('"abc"', [{ kind: "String", value: '"abc"' }])
 
   assertTokens('"abc" "abc"', [
-    { kind: "DoubleQoutedString", value: "abc" },
-    { kind: "DoubleQoutedString", value: "abc" },
+    { kind: "String", value: '"abc"' },
+    { kind: "String", value: '"abc"' },
   ])
 
   assertTokens('"abc""abc"', [
-    { kind: "DoubleQoutedString", value: "abc" },
-    { kind: "DoubleQoutedString", value: "abc" },
+    { kind: "String", value: '"abc"' },
+    { kind: "String", value: '"abc"' },
   ])
 
-  assertTokens('";;"', [{ kind: "DoubleQoutedString", value: ";;" }])
+  assertTokens('";;"', [{ kind: "String", value: '";;"' }])
 })
 
 test("lexer -- number", () => {

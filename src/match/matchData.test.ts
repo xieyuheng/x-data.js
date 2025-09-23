@@ -1,7 +1,6 @@
 import assert from "node:assert"
 import { test } from "node:test"
 import * as X from "../data/index.ts"
-import { formatData } from "../format/index.ts"
 import { matchData } from "../match/index.ts"
 import { parseData } from "../parser/index.ts"
 
@@ -13,24 +12,9 @@ function assertMatch(
   const pattern = parseData(patternInput)
   const data = typeof dataInput === "string" ? parseData(dataInput) : dataInput
   const subst = matchData("NormalMode", pattern, data)({})
-  const expected = parseData(expectedInput)
-  if (subst === undefined) {
-    let message = `[assertMatch] match fail\n`
-    message += `  pattern: ${formatData(pattern)}\n`
-    message += `  data: ${formatData(data)}\n`
-    message += `  expected: ${formatData(expected)}\n`
-    throw new Error(message)
-  }
-
-  const ok = X.attributesEqual(subst, X.asTael(expected).attributes)
-  if (!ok) {
-    let message = `[assertMatch] subst not equal to expected subst\n`
-    message += `  pattern: ${formatData(pattern)}\n`
-    message += `  data: ${formatData(data)}\n`
-    message += `  subst: ${formatData(X.Record(subst))}\n`
-    message += `  expected: ${formatData(expected)}\n`
-    throw new Error(message)
-  }
+  const expectedData = parseData(expectedInput)
+  assert(subst)
+  assert(X.attributesEqual(subst, X.asTael(expectedData).attributes))
 }
 
 function assertMatchFail(patternInput: string, dataInput: string): void {
@@ -47,18 +31,14 @@ test("matchData -- var", () => {
   assertMatch("x", "hi", "[:x hi]")
 })
 
-test("matchData -- int", () => {
+test("matchData -- bool int float", () => {
+  assertMatch("#f", "#f", "[]")
   assertMatch("1", "1", "[]")
-  assertMatchFail("1", "2")
-})
-
-test("matchData -- float", () => {
   assertMatch("3.14", "3.14", "[]")
-  assertMatchFail("3.14", "3.1415")
-})
 
-test("matchData -- literal string", () => {
-  assertMatch('"hello world"', X.String("hello world"), "[]")
+  assertMatchFail("#f", "#t")
+  assertMatchFail("1", "2")
+  assertMatchFail("3.14", "3.1415")
 })
 
 test("matchData -- list", () => {
@@ -77,7 +57,6 @@ test("matchData -- quote", () => {
   assertMatch("'x", "x", "[]")
   assertMatch("(@quote x)", "x", "[]")
   assertMatch("(@quote 3)", "3", "[]")
-  assertMatch('(@quote "hello world")', '"hello world"', "[]")
 
   assertMatch("['lambda [x] x]", "(lambda (x) x)", "[:x x]")
   assertMatch("'(lambda (x) x)", "(lambda (x) x)", "[]")

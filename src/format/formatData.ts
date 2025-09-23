@@ -1,14 +1,21 @@
 import { type Data } from "../data/index.ts"
-import { stringIsSymbol } from "../data/symbolUtils.ts"
 
 export function formatData(data: Data): string {
   switch (data.kind) {
-    case "String": {
-      if (stringIsSymbol(data.content)) {
-        return `'${data.content}`
+    case "Bool": {
+      if (data.content) {
+        return "#t"
       } else {
-        return JSON.stringify(data.content)
+        return "#f"
       }
+    }
+
+    case "Symbol": {
+      return `'${data.content}`
+    }
+
+    case "String": {
+      return JSON.stringify(data.content)
     }
 
     case "Int": {

@@ -6,18 +6,20 @@ export type Effect = (subst: Subst) => Subst | void
 
 export function matchData(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return choiceEffect([
+    matchSymbol(mode, pattern, data),
     matchString(mode, pattern, data),
+    matchBool(mode, pattern, data),
     matchInt(mode, pattern, data),
     matchFloat(mode, pattern, data),
     matchList(mode, pattern, data),
   ])
 }
 
-function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
+function matchSymbol(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   switch (mode) {
     case "NormalMode": {
-      return ifEffect(pattern.kind === "String", ({ subst }) => {
-        const key = X.asString(pattern).content
+      return ifEffect(pattern.kind === "Symbol", ({ subst }) => {
+        const key = X.asSymbol(pattern).content
         const foundData = subst[key]
         return (subst) => {
           if (foundData) {
@@ -33,12 +35,30 @@ function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
     case "QuasiquoteMode": {
       return guardEffect(
         () =>
-          pattern.kind === "String" &&
-          data.kind === "String" &&
+          pattern.kind === "Symbol" &&
+          data.kind === "Symbol" &&
           pattern.content === data.content,
       )
     }
   }
+}
+
+function matchString(mode: Mode, pattern: X.Data, data: X.Data): Effect {
+  return guardEffect(
+    () =>
+      pattern.kind === "String" &&
+      data.kind === "String" &&
+      pattern.content === data.content,
+  )
+}
+
+function matchBool(mode: Mode, pattern: X.Data, data: X.Data): Effect {
+  return guardEffect(
+    () =>
+      pattern.kind === "Bool" &&
+      data.kind === "Bool" &&
+      pattern.content === data.content,
+  )
 }
 
 function matchInt(mode: Mode, pattern: X.Data, data: X.Data): Effect {
@@ -136,7 +156,7 @@ function matchUnquote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return ifEffect(
     pattern.kind === "Tael" &&
       pattern.elements.length >= 2 &&
-      pattern.elements[0].kind === "String" &&
+      pattern.elements[0].kind === "Symbol" &&
       pattern.elements[0].content === "@unquote",
     () => {
       const firstData = X.asTael(pattern).elements[1]
@@ -150,7 +170,7 @@ function matchTael(mode: Mode, pattern: X.Data, data: X.Data): Effect {
     pattern.kind === "Tael" &&
       data.kind === "Tael" &&
       pattern.elements.length >= 1 &&
-      pattern.elements[0].kind === "String" &&
+      pattern.elements[0].kind === "Symbol" &&
       pattern.elements[0].content === "@tael",
     () => {
       const patternBody = X.asTael(pattern).elements.slice(1)
@@ -174,7 +194,7 @@ function matchQuote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return ifEffect(
     pattern.kind === "Tael" &&
       pattern.elements.length >= 2 &&
-      pattern.elements[0].kind === "String" &&
+      pattern.elements[0].kind === "Symbol" &&
       pattern.elements[0].content === "@quote",
     () => {
       const firstData = X.asTael(pattern).elements[1]
@@ -187,7 +207,7 @@ function matchQuasiquote(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return ifEffect(
     pattern.kind === "Tael" &&
       pattern.elements.length >= 2 &&
-      pattern.elements[0].kind === "String" &&
+      pattern.elements[0].kind === "Symbol" &&
       pattern.elements[0].content === "@quasiquote",
     () => {
       const firstData = X.asTael(pattern).elements[1]
@@ -201,7 +221,7 @@ function matchCons(mode: Mode, pattern: X.Data, data: X.Data): Effect {
     pattern.kind === "Tael" &&
       data.kind === "Tael" &&
       pattern.elements.length === 3 &&
-      pattern.elements[0].kind === "String" &&
+      pattern.elements[0].kind === "Symbol" &&
       pattern.elements[0].content === "cons",
     () => {
       const listPattern = X.asTael(pattern)
@@ -226,7 +246,7 @@ function matchConsStar(mode: Mode, pattern: X.Data, data: X.Data): Effect {
     pattern.kind === "Tael" &&
       data.kind === "Tael" &&
       pattern.elements.length >= 3 &&
-      pattern.elements[0].kind === "String" &&
+      pattern.elements[0].kind === "Symbol" &&
       pattern.elements[0].content === "cons*",
     () => {
       const listPattern = X.asTael(pattern)
