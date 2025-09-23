@@ -2,11 +2,12 @@ import { type Span } from "../span/index.ts"
 
 export type TokenKind =
   | "Symbol"
-  | "String"
+  | "DoubleQoutedString"
   | "Number"
   | "BracketStart"
   | "BracketEnd"
-  | "Quote"
+  | "QuotationMark"
+  | "Keyword"
 
 export type TokenMeta = {
   span: Span
