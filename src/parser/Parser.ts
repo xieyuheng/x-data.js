@@ -13,11 +13,7 @@ export type ParserMeta = {
 
 export class Parser {
   lexer = new Lexer({
-    quotes: [
-      { mark: "'", symbol: "@quote" },
-      { mark: ",", symbol: "@unquote" },
-      { mark: "`", symbol: "@quasiquote" },
-    ],
+    quotes: ["'", ",", "`"],
     brackets: [
       { start: "(", end: ")" },
       { start: "[", end: "]" },
@@ -131,8 +127,14 @@ export class Parser {
       case "Quote": {
         const { data, remain } = this.handleTokens(tokens.slice(1))
 
+        const quoteTable: Record<string, string> = {
+          "'": "@quote",
+          ",": "@unquote",
+          "`": "@quasiquote",
+        }
+
         const quoteSymbol = X.String(
-          this.lexer.config.findQuoteSymbolOrFail(token.value),
+          quoteTable[token.value],
           tokenMetaToDataMeta(token.meta),
         )
 

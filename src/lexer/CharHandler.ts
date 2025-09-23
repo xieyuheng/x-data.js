@@ -80,7 +80,7 @@ class QuoteHandler extends CharHandler {
   kind = "Quote" as const
 
   canHandle(char: string): boolean {
-    return this.lexer.config.quotes.map(({ mark }) => mark).includes(char)
+    return this.lexer.config.quotes.includes(char)
   }
 
   handle(char: string): string {

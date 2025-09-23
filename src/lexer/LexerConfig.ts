@@ -1,11 +1,11 @@
 export type LexerOptions = {
-  quotes: Array<{ mark: string; symbol: string }>
+  quotes: Array<string>
   brackets: Array<{ start: string; end: string }>
   comments: Array<string>
 }
 
 export class LexerConfig {
-  quotes: Array<{ mark: string; symbol: string }>
+  quotes: Array<string>
   brackets: Array<{ start: string; end: string }>
   comments: Array<string>
   marks: Array<string>
@@ -15,7 +15,7 @@ export class LexerConfig {
     this.brackets = options.brackets
     this.comments = options.comments
     this.marks = [
-      ...options.quotes.map(({ mark }) => mark),
+      ...options.quotes,
       ...options.brackets.flatMap(({ start, end }) => [start, end]),
     ]
   }
@@ -31,15 +31,5 @@ export class LexerConfig {
     }
 
     return found.end === end
-  }
-
-  findQuoteSymbolOrFail(mark: string): string {
-    const found = this.quotes.find((entry) => entry.mark === mark)
-    if (found === undefined) {
-      let message = `Fail to find quote symbol for mark: ${mark}\n`
-      throw new Error(message)
-    }
-
-    return found.symbol
   }
 }
