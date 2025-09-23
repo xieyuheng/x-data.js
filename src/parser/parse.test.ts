@@ -77,6 +77,7 @@ test("parse -- list with attributes", () => {
 test("parse -- quotes", () => {
   assertParse("'a", X.List([X.Symbol("@quote"), X.Symbol("a")]))
   assertParse("'(a)", X.List([X.Symbol("@quote"), X.List([X.Symbol("a")])]))
+  assertParse("'(#a)", X.List([X.Symbol("@quote"), X.List([X.Hashtag("a")])]))
   assertParse(
     "'(a b c)",
     X.List([

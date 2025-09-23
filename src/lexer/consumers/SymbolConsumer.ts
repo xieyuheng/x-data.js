@@ -14,8 +14,7 @@ export class SymbolConsumer implements Consumer {
 }
 
 export function consumeSymbol(lexer: Lexer): string {
-  let value = lexer.char()
-  lexer.forward(1)
+  let value = ""
   while (
     !lexer.isEnd() &&
     lexer.char().trim() !== "" &&

@@ -6,9 +6,9 @@ export type Effect = (subst: Subst) => Subst | void
 
 export function matchData(mode: Mode, pattern: X.Data, data: X.Data): Effect {
   return choiceEffect([
-    matchSymbol(mode, pattern, data),
     matchString(mode, pattern, data),
     matchHashtag(mode, pattern, data),
+    matchSymbol(mode, pattern, data),
     matchInt(mode, pattern, data),
     matchFloat(mode, pattern, data),
     matchList(mode, pattern, data),
