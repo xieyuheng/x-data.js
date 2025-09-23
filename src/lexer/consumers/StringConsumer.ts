@@ -1,5 +1,6 @@
 import { ErrorWithMeta } from "../../errors/ErrorWithMeta.ts"
 import { positionForwardChar } from "../../span/Position.ts"
+import { jsonParseString } from "../../utils/json/jsonParse.ts"
 import type { Consumer } from "../Consumer.ts"
 import type { Lexer } from "../Lexer.ts"
 
@@ -15,7 +16,7 @@ export class StringConsumer implements Consumer {
     let index = 2 // over first `"` and the folloing char.
     while (index <= line.length) {
       const head = line.slice(0, index)
-      const str = tryParseString(head)
+      const str = jsonParseString(head)
       if (str === undefined) {
         index++
       } else {
@@ -32,15 +33,5 @@ export class StringConsumer implements Consumer {
       text: lexer.text,
       url: lexer.url,
     })
-  }
-}
-
-function tryParseString(text: string): string | undefined {
-  try {
-    const value = JSON.parse(text)
-    if (typeof value === "string") return value
-    else return undefined
-  } catch (error) {
-    return undefined
   }
 }

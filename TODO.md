@@ -1,5 +1,3 @@
-[json] extract `jsonParseNumber` and `jsonParseString`
-
 remove `Bool` from `Data`
 
 [lexer] `Lexer` -- use `KeywordConsumer`

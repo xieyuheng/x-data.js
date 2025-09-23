@@ -1,3 +1,4 @@
+import { jsonParseNumber } from "../../utils/json/jsonParse.ts"
 import { stringIsBlank } from "../../utils/string/stringIsBlank.ts"
 import type { Consumer } from "../Consumer.ts"
 import type { Lexer } from "../Lexer.ts"
@@ -28,7 +29,7 @@ function lastSuccessAt(lexer: Lexer, text: string): number | undefined {
   let lastSuccessAt: number | undefined = undefined
   while (index <= text.length) {
     const head = text.slice(0, index)
-    const value = tryParseNumber(head)
+    const value = jsonParseNumber(head)
     const lastChar = text[index - 1]
     const nextChar = text[index]
     if (
@@ -45,14 +46,4 @@ function lastSuccessAt(lexer: Lexer, text: string): number | undefined {
   }
 
   return lastSuccessAt
-}
-
-function tryParseNumber(text: string): number | undefined {
-  try {
-    const value = JSON.parse(text)
-    if (typeof value === "number") return value
-    else return undefined
-  } catch (error) {
-    return undefined
-  }
 }
