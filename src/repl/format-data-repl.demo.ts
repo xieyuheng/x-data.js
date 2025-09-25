@@ -2,7 +2,7 @@ import { formatData } from "../format/index.ts"
 import { createRepl, replStart } from "../repl/index.ts"
 
 const repl = createRepl({
-  welcome: "Welcome to format-data repl.",
+  welcome: "Welcome to format-data-repl.",
   prompt: "> ",
   onSexps(sexps) {
     for (const sexp of sexps) {
