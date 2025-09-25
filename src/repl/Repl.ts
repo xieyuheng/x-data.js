@@ -26,13 +26,13 @@ export function createRepl(options: ReplOptions): Repl {
     ...options,
     parser: new Parser(),
     text: "",
-    count: 0,
-  }
+    count: }
 }
 
 function replPrompt(repl: Repl) {
   assert(repl.rl)
-  repl.rl.prompt()
+  const preserveCursor = true
+  repl.rl.prompt(preserveCursor)
   repl.text = ""
 }
 
