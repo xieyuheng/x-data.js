@@ -26,7 +26,8 @@ export function createRepl(options: ReplOptions): Repl {
     ...options,
     parser: new Parser(),
     text: "",
-    count: }
+    count: 0,
+  }
 }
 
 function replPrompt(repl: Repl) {
