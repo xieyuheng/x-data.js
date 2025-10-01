@@ -1,6 +1,6 @@
 import assert from "node:assert"
 import * as X from "../data/index.ts"
-import { recordMap } from "../utils/record/recordMap.ts"
+import { recordMapValue } from "../utils/record/recordMapValue.ts"
 import { type TokenMeta } from "./Token.ts"
 
 export function tokenMetaToDataMeta(meta: TokenMeta): X.Attributes {
@@ -8,7 +8,7 @@ export function tokenMetaToDataMeta(meta: TokenMeta): X.Attributes {
 }
 
 export function tokenMetaFromDataMeta(meta: X.Attributes): TokenMeta {
-  const json: any = recordMap(meta, X.dataToJson)
+  const json: any = recordMapValue(meta, X.dataToJson)
 
   try {
     assert(json)

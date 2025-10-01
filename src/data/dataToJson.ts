@@ -1,6 +1,6 @@
 import * as X from "../data/index.ts"
 import { type Json } from "../utils/json/Json.ts"
-import { recordMap } from "../utils/record/recordMap.ts"
+import { recordMapValue } from "../utils/record/recordMapValue.ts"
 
 // Only translate those data that can be translated to JSON,
 // i.e. only pure list and pure record,
@@ -13,7 +13,7 @@ export function dataToJson(data: X.Data): Json {
 
   if (data.kind === "Tael") {
     if (data.elements.length === 0) {
-      return recordMap(data.attributes, dataToJson)
+      return recordMapValue(data.attributes, dataToJson)
     } else {
       return data.elements.map(dataToJson)
     }

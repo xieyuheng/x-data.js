@@ -2,7 +2,7 @@ import assert from "node:assert"
 import { test } from "node:test"
 import * as X from "../index.ts"
 import { errorReport } from "../utils/error/errorReport.ts"
-import { recordMap } from "../utils/record/recordMap.ts"
+import { recordMapValue } from "../utils/record/recordMapValue.ts"
 
 type Type = TypeVar | Arrow | Union | Inter | Tau
 type TypeVar = { kind: "TypeVar"; name: string }
@@ -67,7 +67,7 @@ const typeMatcher: X.Matcher<Type> = X.matcherChoice<Type>([
   X.matcher("(cons 'tau types)", ({ types }, { data }) =>
     Tau(
       X.dataToArray(types).map(matchType),
-      recordMap(X.asTael(data).attributes, matchType),
+      recordMapValue(X.asTael(data).attributes, matchType),
     ),
   ),
 
