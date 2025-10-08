@@ -33,12 +33,12 @@ const keywords = ["lambda", "let"]
 
 const expMatcher: X.Matcher<Exp> = X.matcherChoice<Exp>([
   X.matcher("`(lambda (,name) ,ret)", ({ name, ret }) =>
-    Lambda(X.symbolToString(name), X.match(expMatcher, ret)),
+    Lambda(X.symbolContent(name), X.match(expMatcher, ret)),
   ),
 
   X.matcher("`(let ((,name ,rhs)) ,body)", ({ name, rhs, body }) =>
     Let(
-      X.symbolToString(name),
+      X.symbolContent(name),
       X.match(expMatcher, rhs),
       X.match(expMatcher, body),
     ),
@@ -49,7 +49,7 @@ const expMatcher: X.Matcher<Exp> = X.matcherChoice<Exp>([
   ),
 
   X.matcher("name", ({ name }, { meta }) => {
-    const nameSymbol = X.symbolToString(name)
+    const nameSymbol = X.symbolContent(name)
     if (keywords.includes(nameSymbol)) {
       let message = "keywork should not be used as variable\n"
       throw new X.ErrorWithMeta(message, meta)

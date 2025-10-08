@@ -51,27 +51,27 @@ function matchType(data: X.Data): Type {
 
 const typeMatcher: X.Matcher<Type> = X.matcherChoice<Type>([
   X.matcher("(cons '-> types)", ({ types }) =>
-    X.dataToArray(types)
+    X.listElements(types)
       .map(matchType)
       .reduceRight((retType, argType) => Arrow(argType, retType)),
   ),
 
   X.matcher("(cons 'union types)", ({ types }) =>
-    Union(X.dataToArray(types).map(matchType)),
+    Union(X.listElements(types).map(matchType)),
   ),
 
   X.matcher("(cons 'inter types)", ({ types }) =>
-    Inter(X.dataToArray(types).map(matchType)),
+    Inter(X.listElements(types).map(matchType)),
   ),
 
   X.matcher("(cons 'tau types)", ({ types }, { data }) =>
     Tau(
-      X.dataToArray(types).map(matchType),
+      X.listElements(types).map(matchType),
       recordMapValue(X.asTael(data).attributes, matchType),
     ),
   ),
 
-  X.matcher("name", ({ name }) => TypeVar(X.symbolToString(name))),
+  X.matcher("name", ({ name }) => TypeVar(X.symbolContent(name))),
 ])
 
 function assertParse(text: string, type: Type): void {

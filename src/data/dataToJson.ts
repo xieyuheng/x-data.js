@@ -20,41 +20,41 @@ export function dataToJson(data: X.Data): Json {
   }
 }
 
-export function symbolToString(data: X.Data): string {
+export function symbolContent(data: X.Data): string {
   if (data.kind !== "Symbol") {
-    throw new Error(`[symbolToString] wrong data kind: ${data.kind}`)
+    throw new Error(`[symbolContent] wrong data kind: ${data.kind}`)
   }
 
   return data.content
 }
 
-export function hashtagToString(data: X.Data): string {
+export function hashtagContent(data: X.Data): string {
   if (data.kind !== "Hashtag") {
-    throw new Error(`[hashtagToString] wrong data kind: ${data.kind}`)
+    throw new Error(`[hashtagContent] wrong data kind: ${data.kind}`)
   }
 
   return data.content
 }
 
-export function dataToString(data: X.Data): string {
+export function stringContent(data: X.Data): string {
   if (data.kind !== "String") {
-    throw new Error(`[dataToString] wrong data kind: ${data.kind}`)
+    throw new Error(`[stringContent] wrong data kind: ${data.kind}`)
   }
 
   return data.content
 }
 
-export function dataToNumber(data: X.Data): number {
+export function numberContent(data: X.Data): number {
   if (data.kind !== "Int" && data.kind !== "Float") {
-    throw new Error(`[dataToNumber] wrong data kind: ${data.kind}`)
+    throw new Error(`[numberContent] wrong data kind: ${data.kind}`)
   }
 
   return data.content
 }
 
-export function dataToArray(data: X.Data): Array<X.Data> {
+export function listElements(data: X.Data): Array<X.Data> {
   if (data.kind !== "Tael") {
-    throw new Error(`[dataToArray] wrong data kind: ${data.kind}`)
+    throw new Error(`[listElements] wrong data kind: ${data.kind}`)
   }
 
   return data.elements
