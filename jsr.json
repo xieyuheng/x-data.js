@@ -1,7 +1,0 @@
-{
-  "name": "@xieyuheng/x-data",
-  "version": "0.5.3",
-  "repository": "github:xieyuheng/x-data.js",
-  "license": "GPL-3.0-or-later",
-  "exports": "./src/index.ts"
-}
