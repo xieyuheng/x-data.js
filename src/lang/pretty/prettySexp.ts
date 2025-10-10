@@ -14,6 +14,7 @@ const defaultConfig: Config = {
     ["import-all", 0],
     ["include-all", 0],
     ["include", 0],
+    ["=", 2],
     ["import", 0],
     ["define", 1],
     ["begin", 0],
@@ -83,8 +84,12 @@ export function renderSexp(config: Config): (sexp: Sexp) => pp.Node {
                   pp.indent(2, renderAttributes(config)(sexp.attributes)),
                 ),
               ]),
-          pp.indent(2, pp.br()),
-          pp.indent(2, renderSexps(config)(bodySexps)),
+          ...(bodySexps.length === 0
+            ? []
+            : [
+                pp.indent(2, pp.br()),
+                pp.indent(2, renderSexps(config)(bodySexps)),
+              ]),
           pp.text(")"),
         )
       }

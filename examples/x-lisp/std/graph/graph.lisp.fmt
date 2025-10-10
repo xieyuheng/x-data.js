@@ -34,7 +34,7 @@
 
 (define
     (make-graph vertices edges)
-  (= graph (cons-graph (@set ) (@hash )))
+  (= graph (cons-graph (@set) (@hash)))
   (graph-add-vertices! vertices graph)
   (graph-add-edges! edges graph))
 
