@@ -90,28 +90,19 @@ function renderSyntax(
   attributes: Record<string, Sexp>,
 ) => pp.Node {
   return (name, header, body, attributes) => {
-    const headNode =
-      header.length === 0
-        ? pp.text(name)
-        : pp.indent(
-            4,
-            pp.flexWrap([pp.text(name), ...header.map(renderSexp(config))]),
-          )
+    const headNode = pp.indent(
+      4,
+      pp.flexWrap([pp.text(name), ...header.map(renderSexp(config))]),
+    )
 
     const neckNode = recordIsEmpty(attributes)
       ? pp.nil()
-      : pp.concat(
-          pp.indent(2, pp.br()),
-          pp.group(pp.indent(2, renderAttributes(config)(attributes))),
-        )
+      : pp.group(pp.indent(2, pp.br(), renderAttributes(config)(attributes)))
 
     const bodyNode =
       body.length === 0
         ? pp.nil()
-        : pp.concat(
-            pp.indent(2, pp.br()),
-            pp.indent(2, pp.flexWrap(body.map(renderSexp(config)))),
-          )
+        : pp.indent(2, pp.br(), pp.flexWrap(body.map(renderSexp(config))))
 
     return pp.group(pp.text("("), headNode, neckNode, bodyNode, pp.text(")"))
   }
@@ -123,10 +114,7 @@ function renderApplication(
   return (elements, attributes) => {
     const footNode = recordIsEmpty(attributes)
       ? pp.nil()
-      : pp.concat(
-          pp.indent(1, pp.br()),
-          pp.group(pp.indent(1, renderAttributes(config)(attributes))),
-        )
+      : pp.group(pp.indent(1, pp.br(), renderAttributes(config)(attributes)))
 
     return pp.group(
       pp.text("("),
@@ -141,15 +129,13 @@ function renderElementLess(
   config: Config,
 ): (attributes: Record<string, Sexp>) => pp.Node {
   return (attributes) => {
-    if (recordIsEmpty(attributes)) {
-      return pp.text("()")
-    } else {
-      return pp.group(
-        pp.text("("),
-        pp.indent(1, renderAttributes(config)(attributes)),
-        pp.text(")"),
-      )
-    }
+    return recordIsEmpty(attributes)
+      ? pp.text("()")
+      : pp.group(
+          pp.text("("),
+          pp.indent(1, renderAttributes(config)(attributes)),
+          pp.text(")"),
+        )
   }
 }
 
