@@ -53,15 +53,7 @@ export function renderSexp(config: Config): (sexp: Sexp) => pp.Node {
     }
 
     if (sexp.elements.length === 0) {
-      if (recordIsEmpty(sexp.attributes)) {
-        return pp.text("()")
-      } else {
-        return pp.group(
-          pp.text("("),
-          pp.indent(1, renderAttributes(config)(sexp.attributes)),
-          pp.text(")"),
-        )
-      }
+      return renderElementLess(config)(sexp.attributes)
     }
 
     const [keyword, ...restSexps] = sexp.elements
@@ -71,53 +63,96 @@ export function renderSexp(config: Config): (sexp: Sexp) => pp.Node {
       )
       if (keywordConfig !== undefined) {
         const [name, headerLength] = keywordConfig
-        const headerSexps = restSexps.slice(0, headerLength)
-        const bodySexps = restSexps.slice(headerLength)
-        return pp.group(
-          pp.text("("),
-          ...(headerSexps.length === 0
-            ? [pp.text(name)]
-            : [
-                pp.indent(
-                  4,
-                  pp.flexWrap([
-                    pp.text(name),
-                    ...headerSexps.map(renderSexp(config)),
-                  ]),
-                ),
-              ]),
-          ...(recordIsEmpty(sexp.attributes)
-            ? []
-            : [
-                pp.indent(2, pp.br()),
-                pp.group(
-                  pp.indent(2, renderAttributes(config)(sexp.attributes)),
-                ),
-              ]),
-          ...(bodySexps.length === 0
-            ? []
-            : [
-                pp.indent(2, pp.br()),
-                pp.indent(2, pp.flexWrap(bodySexps.map(renderSexp(config)))),
-              ]),
-          pp.text(")"),
+        return renderSyntax(config)(
+          name,
+          restSexps.slice(0, headerLength),
+          restSexps.slice(headerLength),
+          sexp.attributes,
         )
       }
     }
 
-    return pp.group(
-      pp.text("("),
-      pp.group(
-        pp.indent(1, pp.flexWrap(sexp.elements.map(renderSexp(config)))),
-      ),
-      ...(recordIsEmpty(sexp.attributes)
+    return renderApplication(config)(sexp.elements, sexp.attributes)
+  }
+}
+
+function renderSyntax(
+  config: Config,
+): (
+  name: string,
+  headerSexps: Array<Sexp>,
+  bodySexps: Array<Sexp>,
+  attributes: Record<string, Sexp>,
+) => pp.Node {
+  return (name, header, body, attributes) => {
+    const headNode =
+      header.length === 0
+        ? [pp.text(name)]
+        : [
+            pp.indent(
+              4,
+              pp.flexWrap([pp.text(name), ...header.map(renderSexp(config))]),
+            ),
+          ]
+
+    const neckNode = recordIsEmpty(attributes)
+      ? []
+      : [
+          pp.indent(2, pp.br()),
+          pp.group(pp.indent(2, renderAttributes(config)(attributes))),
+        ]
+
+    const bodyNode =
+      body.length === 0
         ? []
         : [
-            pp.indent(1, pp.br()),
-            pp.group(pp.indent(1, renderAttributes(config)(sexp.attributes))),
-          ]),
+            pp.indent(2, pp.br()),
+            pp.indent(2, pp.flexWrap(body.map(renderSexp(config)))),
+          ]
+
+    return pp.group(
+      pp.text("("),
+      ...headNode,
+      ...neckNode,
+      ...bodyNode,
       pp.text(")"),
     )
+  }
+}
+
+function renderApplication(
+  config: Config,
+): (elements: Array<Sexp>, attributes: Record<string, Sexp>) => pp.Node {
+  return (elements, attributes) => {
+    const footNode = recordIsEmpty(attributes)
+      ? []
+      : [
+          pp.indent(1, pp.br()),
+          pp.group(pp.indent(1, renderAttributes(config)(attributes))),
+        ]
+
+    return pp.group(
+      pp.text("("),
+      pp.group(pp.indent(1, pp.flexWrap(elements.map(renderSexp(config))))),
+      ...footNode,
+      pp.text(")"),
+    )
+  }
+}
+
+function renderElementLess(
+  config: Config,
+): (attributes: Record<string, Sexp>) => pp.Node {
+  return (attributes) => {
+    if (recordIsEmpty(attributes)) {
+      return pp.text("()")
+    } else {
+      return pp.group(
+        pp.text("("),
+        pp.indent(1, renderAttributes(config)(attributes)),
+        pp.text(")"),
+      )
+    }
   }
 }
 
