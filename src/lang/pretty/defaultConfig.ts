@@ -1,0 +1,31 @@
+import type { Config } from "./prettySexp.ts"
+
+export const defaultConfig: Config = {
+  keywords: [
+    ["export", 0],
+    ["import-all", 0],
+    ["include-all", 0],
+    ["include", 0],
+    ["=", 2],
+    ["import", 0],
+    ["claim", 1],
+    ["define", 1],
+    ["define-data", 1],
+    ["begin", 0],
+    ["lambda", 1],
+    ["match", 1],
+    ["pipe", 1],
+    ["compose", 0],
+    ["->", 0],
+    ["*->", 0],
+    ["if", 1],
+    ["when", 1],
+    ["unless", 1],
+    ["cond", 0],
+    ["@list", 0],
+    ["@tael", 0],
+    ["@set", 0],
+    ["@hash", 0],
+    ["polymorphic", 1],
+  ],
+}

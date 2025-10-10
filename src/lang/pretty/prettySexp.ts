@@ -2,41 +2,13 @@ import * as pp from "../../helper/ppml/index.ts"
 import { recordIsEmpty } from "../../helper/record/recordIsEmpty.ts"
 import { formatSexp } from "../format/index.ts"
 import { isAtom, type Sexp } from "../sexp/index.ts"
+import { defaultConfig } from "./defaultConfig.ts"
 
-type KeywordConfig = [name: string, headerLength: number]
-type Config = {
+export type Config = {
   keywords: Array<KeywordConfig>
 }
 
-const defaultConfig: Config = {
-  keywords: [
-    ["export", 0],
-    ["import-all", 0],
-    ["include-all", 0],
-    ["include", 0],
-    ["=", 2],
-    ["import", 0],
-    ["claim", 1],
-    ["define", 1],
-    ["define-data", 1],
-    ["begin", 0],
-    ["lambda", 1],
-    ["match", 1],
-    ["pipe", 1],
-    ["compose", 0],
-    ["->", 0],
-    ["*->", 0],
-    ["if", 1],
-    ["when", 1],
-    ["unless", 1],
-    ["cond", 0],
-    ["@list", 0],
-    ["@tael", 0],
-    ["@set", 0],
-    ["@hash", 0],
-    ["polymorphic", 1],
-  ],
-}
+type KeywordConfig = [name: string, headerLength: number]
 
 export function prettySexp(
   maxWidth: number,

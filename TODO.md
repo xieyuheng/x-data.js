@@ -1,4 +1,9 @@
-[pretty] `renderSexp` -- parser level syntax sugar -- no config, just do it
+[pretty] `renderSet` -- parser level syntax sugar
+[pretty] `renderTael` -- parser level syntax sugar
+[pretty] `renderQuote` -- parser level syntax sugar
+[pretty] `renderUnquote` -- parser level syntax sugar
+[pretty] `renderQuasiquote` -- parser level syntax sugar
+
 [pretty] `renderSexp` -- function application with "short target" heuristic
 
 [ppml] support `hardbreak`
