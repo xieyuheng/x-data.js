@@ -9,13 +9,18 @@
     "src",
     "lib"
   ],
-  "bin": "lib/main.js",
+  "bin": {
+    "x-sexp.js": "lib/main.js"
+  },
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
     "test:node": "node --test 'lib/**/*.test.js'",
     "test": "npm run test:node",
     "format": "prettier src --write"
+  },
+  "dependencies": {
+    "@xieyuheng/commander.js": "^0.1.5"
   },
   "devDependencies": {
     "@types/node": "^24.7.1",
