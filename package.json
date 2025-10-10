@@ -1,7 +1,7 @@
 {
-  "name": "@xieyuheng/x-data.js",
+  "name": "@xieyuheng/x-sexp.js",
   "version": "0.5.3",
-  "repository": "github:xieyuheng/x-data.js",
+  "repository": "github:xieyuheng/x-sexp.js",
   "license": "GPL-3.0-or-later",
   "type": "module",
   "main": "./lib/index.js",

@@ -1,4 +1,4 @@
-# x-data.js
+# x-sexp.js
 
 An extension to [S-expression](https://en.wikipedia.org/wiki/S-expression)
 to support list with attributes.
@@ -57,7 +57,7 @@ which evaluates to:
 ## Install
 
 ```sh
-npm install @xieyuheng/x-data.js
+npm install @xieyuheng/x-sexp.js
 ```
 
 ## Examples
