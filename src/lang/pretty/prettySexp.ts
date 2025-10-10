@@ -10,6 +10,11 @@ type Config = {
 
 const defaultConfig: Config = {
   keywords: [
+    ["export", 0],
+    ["import-all", 0],
+    ["include-all", 0],
+    ["include", 0],
+    ["import", 0],
     ["define", 1],
     ["begin", 0],
     ["lambda", 1],

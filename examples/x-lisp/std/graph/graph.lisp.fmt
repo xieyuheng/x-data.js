@@ -1,16 +1,16 @@
 (export
- graph?
- make-graph
- graph-edge?
- graph-vertices
- graph-edges
- graph-neighbors
- graph-add-vertex!
- graph-add-vertices!
- graph-add-edge!
- graph-add-edges!
- graph-adjacent?
- graph-vertex-degree)
+  graph?
+  make-graph
+  graph-edge?
+  graph-vertices
+  graph-edges
+  graph-neighbors
+  graph-add-vertex!
+  graph-add-vertices!
+  graph-add-edge!
+  graph-add-edges!
+  graph-adjacent?
+  graph-vertex-degree)
 
 (define-data
  (graph? V)

@@ -1,13 +1,13 @@
 (export
- priority-queue?
- make-priority-queue
- priority-queue-empty?
- priority-queue-length
- priority-queue-get
- priority-queue-put!
- priority-queue-peek
- priority-queue-poll!
- priority-queue-delete!)
+  priority-queue?
+  make-priority-queue
+  priority-queue-empty?
+  priority-queue-length
+  priority-queue-get
+  priority-queue-put!
+  priority-queue-peek
+  priority-queue-poll!
+  priority-queue-delete!)
 
 (define-data
  (node? K P)
