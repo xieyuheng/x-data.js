@@ -101,7 +101,7 @@ export function renderSexp(config: Config): (sexp: Sexp) => pp.Node {
 
 function renderSexps(config: Config): (sexps: Array<Sexp>) => pp.Node {
   return (sexps) => {
-    return pp.mapWithBreak(renderSexp(config), sexps)
+    return pp.flex(sexps.map(renderSexp(config)))
   }
 }
 
@@ -117,6 +117,6 @@ function renderAttributes(
   config: Config,
 ): (attributes: Record<string, Sexp>) => pp.Node {
   return (attributes) => {
-    return pp.mapWithBreak(renderAttribute(config), Object.entries(attributes))
+    return pp.flex(Object.entries(attributes).map(renderAttribute(config)))
   }
 }

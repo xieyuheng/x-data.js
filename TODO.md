@@ -1,7 +1,6 @@
 [pretty] `PrettyCommand` -- setup and call `prettySexp`
 
-[pretty] pp.flex instead of pp.mapWithBreak
-[pretty] pp.flexWrap
+[pretty] `pp.flexWrap`
 
 [pretty] `renderSexp` -- function application with "short target" heuristic
 
