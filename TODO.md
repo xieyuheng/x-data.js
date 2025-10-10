@@ -1,4 +1,3 @@
-[pretty] `renderSexp` -- all `()` as function application
 [pretty] `renderSexp` -- can be config-ed by keyword lists -- like emacs scheme-mode
 [pretty] `renderSexp` -- function application with "short target" heuristic
 
