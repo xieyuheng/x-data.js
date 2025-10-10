@@ -1,10 +1,10 @@
-import * as X from "../data/index.ts"
+import * as X from "../sexp/index.ts"
 import { isJsonArray, isJsonObject } from "../utils/json/Json.ts"
 
 // Can not handle null and undefined,
 // when found in a record, they will be ignored.
 
-export function dataFromJson(json: any): X.Data {
+export function sexpFromJson(json: any): X.Sexp {
   if (typeof json === "string") {
     return X.String(json)
   }
@@ -30,7 +30,7 @@ export function dataFromJson(json: any): X.Data {
   }
 
   if (isJsonArray(json)) {
-    return X.Tael(json.map(dataFromJson), {})
+    return X.Tael(json.map(sexpFromJson), {})
   }
 
   if (isJsonObject(json)) {
@@ -38,10 +38,10 @@ export function dataFromJson(json: any): X.Data {
       Object.fromEntries(
         Object.entries(json)
           .filter(([key, value]) => value !== null && value !== undefined)
-          .map(([key, value]) => [key, dataFromJson(value)]),
+          .map(([key, value]) => [key, sexpFromJson(value)]),
       ),
     )
   }
 
-  throw new Error(`[dataFromJson] can not handle json: ${JSON.stringify(json)}`)
+  throw new Error(`[sexpFromJson] can not handle json: ${JSON.stringify(json)}`)
 }

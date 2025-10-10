@@ -1,37 +1,37 @@
 import assert from "node:assert"
 import { test } from "node:test"
-import * as X from "../data/index.ts"
-import { matchData } from "../match/index.ts"
-import { parseData } from "../parser/index.ts"
+import { matchSexp } from "../match/index.ts"
+import { parseSexp } from "../parser/index.ts"
+import * as X from "../sexp/index.ts"
 
 function assertMatch(
   patternInput: string,
-  dataInput: string | X.Data,
+  sexpInput: string | X.Sexp,
   expectedInput: string,
 ): void {
-  const pattern = parseData(patternInput)
-  const data = typeof dataInput === "string" ? parseData(dataInput) : dataInput
-  const subst = matchData("NormalMode", pattern, data)({})
-  const expectedData = parseData(expectedInput)
+  const pattern = parseSexp(patternInput)
+  const sexp = typeof sexpInput === "string" ? parseSexp(sexpInput) : sexpInput
+  const subst = matchSexp("NormalMode", pattern, sexp)({})
+  const expectedSexp = parseSexp(expectedInput)
   assert(subst)
-  assert(X.attributesEqual(subst, X.asTael(expectedData).attributes))
+  assert(X.attributesEqual(subst, X.asTael(expectedSexp).attributes))
 }
 
-function assertMatchFail(patternInput: string, dataInput: string): void {
-  const subst = matchData(
+function assertMatchFail(patternInput: string, sexpInput: string): void {
+  const subst = matchSexp(
     "NormalMode",
-    parseData(patternInput),
-    parseData(dataInput),
+    parseSexp(patternInput),
+    parseSexp(sexpInput),
   )({})
   assert.deepStrictEqual(subst, undefined)
 }
 
-test("matchData -- var", () => {
+test("matchSexp -- var", () => {
   assertMatch("x", "1", "[:x 1]")
   assertMatch("x", "hi", "[:x hi]")
 })
 
-test("matchData -- bool int float", () => {
+test("matchSexp -- bool int float", () => {
   assertMatch("#f", "#f", "[]")
   assertMatch("1", "1", "[]")
   assertMatch("3.14", "3.14", "[]")
@@ -41,7 +41,7 @@ test("matchData -- bool int float", () => {
   assertMatchFail("3.14", "3.1415")
 })
 
-test("matchData -- list", () => {
+test("matchSexp -- list", () => {
   assertMatch("[x y z]", "(1 2 3)", "[:x 1 :y 2 :z 3]")
   assertMatch(
     "[x y z :a a :b b]",
@@ -53,7 +53,7 @@ test("matchData -- list", () => {
   assertMatchFail("[x 0 z]", "(1 2 3)")
 })
 
-test("matchData -- quote", () => {
+test("matchSexp -- quote", () => {
   assertMatch("'x", "x", "[]")
   assertMatch("(@quote x)", "x", "[]")
   assertMatch("(@quote 3)", "3", "[]")
@@ -62,7 +62,7 @@ test("matchData -- quote", () => {
   assertMatch("'(lambda (x) x)", "(lambda (x) x)", "[]")
 })
 
-test("matchData -- quote record", () => {
+test("matchSexp -- quote record", () => {
   assertMatch("'(:x 1 :y 2)", "(:x 1 :y 2 :z 3)", "[]")
   assertMatchFail("'(:x 1 :y 2)", "(:x 1 :y 3)")
   assertMatchFail("'(:x 1 :y 2 :z 3)", "(:x 1 :y 2)")
@@ -73,18 +73,18 @@ test("matchData -- quote record", () => {
   )
 })
 
-test("matchData -- quasiquote", () => {
+test("matchSexp -- quasiquote", () => {
   assertMatch("`x", "x", "[]")
   assertMatch("`(lambda (,x) ,x)", "(lambda (x) x)", "[:x x]")
   assertMatch("`(lambda (,name) ,ret)", "(lambda (x) x)", "[:name x :ret x]")
   assertMatch("`(,target ,arg)", "(f x)", "[:target f :arg x]")
 })
 
-test("matchData -- cons", () => {
+test("matchSexp -- cons", () => {
   assertMatch("(cons head tail)", "(f x y)", "[:head f :tail (x y)]")
 })
 
-test("matchData -- cons*", () => {
+test("matchSexp -- cons*", () => {
   assertMatch(
     "(cons* head next tail)",
     "(f x y)",

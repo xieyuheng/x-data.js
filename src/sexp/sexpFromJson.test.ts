@@ -1,18 +1,18 @@
 import assert from "node:assert"
 import { test } from "node:test"
-import * as X from "../data/index.js"
-import { dataFromJson } from "../data/index.js"
+import * as X from "../sexp/index.js"
+import { sexpFromJson } from "../sexp/index.js"
 
-test("dataFromJson", () => {
-  assert.deepStrictEqual(dataFromJson("abc"), X.String("abc"))
+test("sexpFromJson", () => {
+  assert.deepStrictEqual(sexpFromJson("abc"), X.String("abc"))
 
   assert.deepStrictEqual(
-    dataFromJson(["a", "b", "c"]),
+    sexpFromJson(["a", "b", "c"]),
     X.Tael([X.String("a"), X.String("b"), X.String("c")], {}),
   )
 
   assert.deepStrictEqual(
-    dataFromJson({ a: 1, b: 2, c: 3 }),
+    sexpFromJson({ a: 1, b: 2, c: 3 }),
     X.Record({
       a: X.Int(1),
       b: X.Int(2),

@@ -1,16 +1,16 @@
 import assert from "node:assert"
 import process from "node:process"
 import * as Readline from "node:readline"
-import { type Data } from "../data/index.ts"
 import { lexerMatchBrackets } from "../lexer/index.ts"
 import { Parser } from "../parser/index.ts"
+import { type Sexp } from "../sexp/index.ts"
 import { type Token } from "../token/index.ts"
 import { errorReport } from "../utils/error/errorReport.ts"
 
 type ReplOptions = {
   welcome?: string
   prompt: string
-  onSexps: (sexps: Array<Data>) => void
+  onSexps: (sexps: Array<Sexp>) => void
   onClose?: () => void
 }
 

@@ -1,8 +1,8 @@
-export type Data = Atom | Tael
+export type Sexp = Atom | Tael
 
 export type Atom = Symbol | String | Int | Float | Hashtag
 
-export type Attributes = Record<string, Data>
+export type Attributes = Record<string, Sexp>
 
 export type Symbol = {
   kind: "Symbol"
@@ -80,13 +80,13 @@ export function Hashtag(content: string, meta: Attributes = {}): Hashtag {
 
 export type Tael = {
   kind: "Tael"
-  elements: Array<Data>
+  elements: Array<Sexp>
   attributes: Attributes
   meta: Attributes
 }
 
 export function Tael(
-  elements: Array<Data>,
+  elements: Array<Sexp>,
   attributes: Attributes,
   meta: Attributes = {},
 ): Tael {

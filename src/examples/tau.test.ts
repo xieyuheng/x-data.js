@@ -45,8 +45,8 @@ function Tau(
   }
 }
 
-function matchType(data: X.Data): Type {
-  return X.match(typeMatcher, data)
+function matchType(sexp: X.Sexp): Type {
+  return X.match(typeMatcher, sexp)
 }
 
 const typeMatcher: X.Matcher<Type> = X.matcherChoice<Type>([
@@ -64,10 +64,10 @@ const typeMatcher: X.Matcher<Type> = X.matcherChoice<Type>([
     Inter(X.listElements(types).map(matchType)),
   ),
 
-  X.matcher("(cons 'tau types)", ({ types }, { data }) =>
+  X.matcher("(cons 'tau types)", ({ types }, { sexp }) =>
     Tau(
       X.listElements(types).map(matchType),
-      recordMapValue(X.asTael(data).attributes, matchType),
+      recordMapValue(X.asTael(sexp).attributes, matchType),
     ),
   ),
 
@@ -76,7 +76,7 @@ const typeMatcher: X.Matcher<Type> = X.matcherChoice<Type>([
 
 function assertParse(text: string, type: Type): void {
   const url = new URL("test:tau")
-  assert.deepStrictEqual(matchType(X.parseData(text, { url })), type)
+  assert.deepStrictEqual(matchType(X.parseSexp(text, { url })), type)
 }
 
 test("examples/tau", () => {
@@ -136,7 +136,7 @@ test("examples/tau", () => {
 function assertErrorWithMeta(text: string): void {
   try {
     const url = new URL("test:tau")
-    matchType(X.parseData(text, { url }))
+    matchType(X.parseSexp(text, { url }))
   } catch (error) {
     console.log(errorReport(error))
   }

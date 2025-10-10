@@ -1,14 +1,14 @@
 import assert from "node:assert"
-import * as X from "../data/index.ts"
+import * as X from "../sexp/index.ts"
 import { recordMapValue } from "../utils/record/recordMapValue.ts"
 import { type TokenMeta } from "./Token.ts"
 
-export function tokenMetaToDataMeta(meta: TokenMeta): X.Attributes {
-  return X.asTael(X.dataFromJson(meta)).attributes
+export function tokenMetaToSexpMeta(meta: TokenMeta): X.Attributes {
+  return X.asTael(X.sexpFromJson(meta)).attributes
 }
 
-export function tokenMetaFromDataMeta(meta: X.Attributes): TokenMeta {
-  const json: any = recordMapValue(meta, X.dataToJson)
+export function tokenMetaFromSexpMeta(meta: X.Attributes): TokenMeta {
+  const json: any = recordMapValue(meta, X.sexpToJson)
 
   try {
     assert(json)
@@ -24,7 +24,7 @@ export function tokenMetaFromDataMeta(meta: X.Attributes): TokenMeta {
   } catch (error) {
     console.dir(
       {
-        who: "tokenMetaFromData",
+        who: "tokenMetaFromSexp",
         json,
         meta,
         error,

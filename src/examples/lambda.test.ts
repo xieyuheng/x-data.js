@@ -25,8 +25,8 @@ function Let(name: string, rhs: Exp, body: Exp): Let {
   return { kind: "Let", name, rhs, body }
 }
 
-function matchExp(data: X.Data): Exp {
-  return X.match(expMatcher, data)
+function matchExp(sexp: X.Sexp): Exp {
+  return X.match(expMatcher, sexp)
 }
 
 const keywords = ["lambda", "let"]
@@ -61,7 +61,7 @@ const expMatcher: X.Matcher<Exp> = X.matcherChoice<Exp>([
 
 function assertParse(text: string, exp: Exp): void {
   const url = new URL("test:lambda")
-  assert.deepStrictEqual(matchExp(X.parseData(text, { url })), exp)
+  assert.deepStrictEqual(matchExp(X.parseSexp(text, { url })), exp)
 }
 
 test("examples/lambda", () => {
@@ -85,7 +85,7 @@ test("examples/lambda", () => {
 function assertErrorWithMeta(text: string): void {
   try {
     const url = new URL("test:lambda")
-    matchExp(X.parseData(text, { url }))
+    matchExp(X.parseSexp(text, { url }))
   } catch (error) {
     console.log(errorReport(error))
   }
