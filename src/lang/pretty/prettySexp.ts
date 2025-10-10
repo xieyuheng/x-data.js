@@ -32,6 +32,7 @@ const defaultConfig: Config = {
     ["@tael", 0],
     ["@set", 0],
     ["@hash", 0],
+    ["polymorphic", 1],
   ],
 }
 
@@ -75,7 +76,13 @@ export function renderSexp(config: Config): (sexp: Sexp) => pp.Node {
           pp.text(name),
           ...(headerSexps.length === 0
             ? []
-            : [pp.indent(4, pp.br(), renderSexps(config)(headerSexps))]),
+            : [
+                pp.indent(
+                  4,
+                  pp.br(),
+                  pp.flexWrap(headerSexps.map(renderSexp(config))),
+                ),
+              ]),
           ...(recordIsEmpty(sexp.attributes)
             ? []
             : [
@@ -88,7 +95,7 @@ export function renderSexp(config: Config): (sexp: Sexp) => pp.Node {
             ? []
             : [
                 pp.indent(2, pp.br()),
-                pp.indent(2, renderSexps(config)(bodySexps)),
+                pp.indent(2, pp.flexWrap(bodySexps.map(renderSexp(config)))),
               ]),
           pp.text(")"),
         )
@@ -97,7 +104,9 @@ export function renderSexp(config: Config): (sexp: Sexp) => pp.Node {
 
     return pp.group(
       pp.text("("),
-      pp.group(pp.indent(1, renderSexps(config)(sexp.elements))),
+      pp.group(
+        pp.indent(1, pp.flexWrap(sexp.elements.map(renderSexp(config)))),
+      ),
       ...(recordIsEmpty(sexp.attributes)
         ? []
         : [
@@ -106,12 +115,6 @@ export function renderSexp(config: Config): (sexp: Sexp) => pp.Node {
           ]),
       pp.text(")"),
     )
-  }
-}
-
-function renderSexps(config: Config): (sexps: Array<Sexp>) => pp.Node {
-  return (sexps) => {
-    return pp.flexWrap(sexps.map(renderSexp(config)))
   }
 }
 

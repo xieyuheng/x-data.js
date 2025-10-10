@@ -7,8 +7,9 @@
 (define (coloring? V) (hash? V color?))
 
 (claim graph-coloring!
- (polymorphic (V)
-  (-> (coloring? V) (list? V) (graph? V) (coloring? V))))
+ (polymorphic
+     (V)
+   (-> (coloring? V) (list? V) (graph? V) (coloring? V))))
 
 (define
     (graph-coloring! coloring queue graph)
@@ -40,8 +41,9 @@
     color))
 
 (claim vertex-saturation
- (polymorphic (V)
-  (-> (graph? V) (coloring? V) V (set? color?))))
+ (polymorphic
+     (V)
+   (-> (graph? V) (coloring? V) V (set? color?))))
 
 (define
     (vertex-saturation graph coloring vertex)

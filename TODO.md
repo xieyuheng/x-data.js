@@ -1,3 +1,4 @@
+[pretty] `renderSexp` -- target wrap with header
 [pretty] `renderSexp` -- function application with "short target" heuristic
 
 [ppml] support `hardbreak`

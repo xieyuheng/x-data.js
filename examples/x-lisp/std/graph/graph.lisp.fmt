@@ -21,8 +21,9 @@
   (union (tau V V) (negate (apply equal?))))
 
 (claim make-graph
- (polymorphic (V)
-  (-> (list? V) (list? (graph-edge? V)) (graph? V))))
+ (polymorphic
+     (V)
+   (-> (list? V) (list? (graph-edge? V)) (graph? V))))
 
 (define
     (make-graph vertices edges)
@@ -71,7 +72,9 @@
   (list-each (swap graph-add-vertex! graph) vertices) graph)
 
 (claim graph-add-edge!
- (polymorphic (V) (-> (graph-edge? V) (graph? V) (graph? V))))
+ (polymorphic
+     (V)
+   (-> (graph-edge? V) (graph? V) (graph? V))))
 
 (define
     (graph-add-edge! (@tael source target) graph)
@@ -91,8 +94,9 @@
   graph)
 
 (claim graph-add-edges!
- (polymorphic (V)
-  (-> (list? (graph-edge? V)) (graph? V) (graph? V))))
+ (polymorphic
+     (V)
+   (-> (list? (graph-edge? V)) (graph? V) (graph? V))))
 
 (define
     (graph-add-edges! edges graph)

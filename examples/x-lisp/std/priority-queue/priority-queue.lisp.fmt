@@ -42,16 +42,18 @@
   (list-empty? (priority-queue-heap queue)))
 
 (claim make-priority-queue
- (polymorphic (K P)
-  (-> (-> P P sort-order?) (priority-queue? K P))))
+ (polymorphic
+     (K P)
+   (-> (-> P P sort-order?) (priority-queue? K P))))
 
 (define
     (make-priority-queue compare)
   (cons-priority-queue compare (@hash) (@list)))
 
 (claim priority-queue-get
- (polymorphic (K P)
-  (-> K (priority-queue? K P) (optional? P))))
+ (polymorphic
+     (K P)
+   (-> K (priority-queue? K P) (optional? P))))
 
 (define
     (priority-queue-get key queue)
@@ -59,7 +61,9 @@
   (if (null? node) null (node-priority node)))
 
 (claim priority-queue-peek
- (polymorphic (K P) (-> (priority-queue? K P) (optional? K))))
+ (polymorphic
+     (K P)
+   (-> (priority-queue? K P) (optional? K))))
 
 (define
     (priority-queue-peek queue)
@@ -69,7 +73,9 @@
      (node-key first))))
 
 (claim priority-queue-poll!
- (polymorphic (K P) (-> (priority-queue? K P) (optional? K))))
+ (polymorphic
+     (K P)
+   (-> (priority-queue? K P) (optional? K))))
 
 (define
     (priority-queue-poll! queue)
@@ -93,8 +99,9 @@
      (node-key first))))
 
 (claim priority-queue-delete!
- (polymorphic (K P)
-  (-> K (priority-queue? K P) (priority-queue? K P))))
+ (polymorphic
+     (K P)
+   (-> K (priority-queue? K P) (priority-queue? K P))))
 
 (define
     (priority-queue-delete! key queue)
@@ -115,8 +122,9 @@
   queue)
 
 (claim priority-queue-put!
- (polymorphic (K P)
-  (-> K P (priority-queue? K P) (priority-queue? K P))))
+ (polymorphic
+     (K P)
+   (-> K P (priority-queue? K P) (priority-queue? K P))))
 
 (define
     (priority-queue-put! key priority queue)
@@ -135,8 +143,9 @@
   queue)
 
 (claim node-blance!
- (polymorphic (K P)
-  (-> (heap? K P) (-> P P sort-order?) (node? K P) void?)))
+ (polymorphic
+     (K P)
+   (-> (heap? K P) (-> P P sort-order?) (node? K P) void?)))
 
 (define
     (node-blance! heap compare node)
@@ -164,8 +173,9 @@
     (else void)))
 
 (claim node-swap!
- (polymorphic (K P)
-  (-> (heap? K P) (node? K P) (node? K P) void?)))
+ (polymorphic
+     (K P)
+   (-> (heap? K P) (node? K P) (node? K P) void?)))
 
 (define
     (node-swap! heap lhs rhs)
@@ -179,8 +189,9 @@
 
 (define
     node-getter-schema
-  (polymorphic (K P)
-   (-> (heap? K P) (node? K P) (optional? (node? K P)))))
+  (polymorphic
+      (K P)
+    (-> (heap? K P) (node? K P) (optional? (node? K P)))))
 
 (claim node-left-child node-getter-schema)
 
