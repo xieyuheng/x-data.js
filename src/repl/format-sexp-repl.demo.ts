@@ -1,4 +1,4 @@
-import { formatSexp } from "../format/index.ts"
+import * as X from "../lang/index.ts"
 import { createRepl, replStart } from "../repl/index.ts"
 
 const repl = createRepl({
@@ -6,7 +6,7 @@ const repl = createRepl({
   prompt: "> ",
   onSexps(sexps) {
     for (const sexp of sexps) {
-      process.stdout.write(formatSexp(sexp))
+      process.stdout.write(X.formatSexp(sexp))
       process.stdout.write(" ")
     }
     console.log()

@@ -2,20 +2,17 @@ import assert from "node:assert"
 import process from "node:process"
 import * as Readline from "node:readline"
 import { errorReport } from "../helper/error/errorReport.ts"
-import { lexerMatchBrackets } from "../lexer/index.ts"
-import { Parser } from "../parser/index.ts"
-import { type Sexp } from "../sexp/index.ts"
-import { type Token } from "../token/index.ts"
+import * as X from "../lang/index.ts"
 
 type ReplOptions = {
   welcome?: string
   prompt: string
-  onSexps: (sexps: Array<Sexp>) => void
+  onSexps: (sexps: Array<X.Sexp>) => void
   onClose?: () => void
 }
 
 type Repl = ReplOptions & {
-  parser: Parser
+  parser: X.Parser
   text: string
   count: number
   rl?: Readline.Interface
@@ -24,7 +21,7 @@ type Repl = ReplOptions & {
 export function createRepl(options: ReplOptions): Repl {
   return {
     ...options,
-    parser: new Parser(),
+    parser: new X.Parser(),
     text: "",
     count: 0,
   }
@@ -106,7 +103,7 @@ export function replClose(repl: Repl): void {
 
 type Balance = "Ok" | "Wrong" | "Perfect"
 
-function bracketBalance(tokens: Array<Token>): Balance {
+function bracketBalance(tokens: Array<X.Token>): Balance {
   const bracketStack: Array<string> = []
   for (const token of tokens) {
     if (token.kind === "BracketStart") {
@@ -116,7 +113,7 @@ function bracketBalance(tokens: Array<Token>): Balance {
     if (token.kind === "BracketEnd") {
       const start = bracketStack.pop()
       if (start === undefined) return "Wrong"
-      if (!lexerMatchBrackets(start, token.value)) return "Wrong"
+      if (!X.lexerMatchBrackets(start, token.value)) return "Wrong"
     }
   }
 

@@ -1,6 +1,6 @@
+import * as pp from "../../helper/ppml/index.ts"
+import { recordIsEmpty } from "../../helper/record/recordIsEmpty.ts"
 import { formatSexp } from "../format/index.ts"
-import * as pp from "../helper/ppml/index.ts"
-import { recordIsEmpty } from "../helper/record/recordIsEmpty.ts"
 import { isAtom, type Sexp } from "../sexp/index.ts"
 
 type KeywordConfig = [name: string, headerLength: number]

@@ -1,4 +1,4 @@
-import { urlRelativeToCwd } from "../helper/url/urlRelativeToCwd.ts"
+import { urlRelativeToCwd } from "../../helper/url/urlRelativeToCwd.ts"
 import { spanReport, type Position } from "../span/index.ts"
 import { type TokenMeta } from "./Token.ts"
 

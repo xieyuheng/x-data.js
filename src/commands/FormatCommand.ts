@@ -24,6 +24,7 @@ export const FormatCommand: Command = {
     try {
       const url = createUrlOrFileUrl(commander.args[0])
       const text = loadText(url)
+      console.log(text)
     } catch (error) {
       console.log(errorReport(error))
       process.exit(1)

@@ -1,5 +1,5 @@
-import { leftPad } from "../helper/format/leftPad.ts"
-import { stringIsBlank } from "../helper/string/stringIsBlank.ts"
+import { leftPad } from "../../helper/format/leftPad.ts"
+import { stringIsBlank } from "../../helper/string/stringIsBlank.ts"
 import { type Span } from "./Span.ts"
 
 type Line = {

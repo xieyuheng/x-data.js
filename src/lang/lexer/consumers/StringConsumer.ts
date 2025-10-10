@@ -1,5 +1,5 @@
+import { jsonParseString } from "../../../helper/json/jsonParse.ts"
 import { ErrorWithMeta } from "../../errors/ErrorWithMeta.ts"
-import { jsonParseString } from "../../helper/json/jsonParse.ts"
 import { positionForwardChar } from "../../span/Position.ts"
 import type { Consumer } from "../Consumer.ts"
 import type { Lexer } from "../Lexer.ts"

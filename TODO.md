@@ -1,4 +1,3 @@
-move some code to lang/
 [pretty] `PrettyCommand` -- call `prettySexp`
 [pretty] `pp.flexWrap`
 
