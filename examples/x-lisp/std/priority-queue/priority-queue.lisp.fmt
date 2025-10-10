@@ -8,7 +8,7 @@
   priority-queue-delete!)
 
 (define-data (node? K P)
- (cons-node (key K) (priority P) (index int?)))
+  (cons-node (key K) (priority P) (index int?)))
 
 (define node-key cons-node-key)
 
@@ -23,9 +23,9 @@
 (define (heap? K P) (list? (node? K P)))
 
 (define-data (priority-queue? K P)
- (cons-priority-queue (compare (-> P P sort-order?))
-  (hash (hash? K (node? K P)))
-  (heap (heap? K P))))
+  (cons-priority-queue (compare (-> P P sort-order?))
+   (hash (hash? K (node? K P)))
+   (heap (heap? K P))))
 
 (define priority-queue-compare cons-priority-queue-compare)
 
@@ -40,23 +40,23 @@
   (list-empty? (priority-queue-heap queue)))
 
 (claim make-priority-queue
- (polymorphic (K P)
-   (-> (-> P P sort-order?) (priority-queue? K P))))
+  (polymorphic (K P)
+    (-> (-> P P sort-order?) (priority-queue? K P))))
 
 (define (make-priority-queue compare)
   (cons-priority-queue compare (@hash) (@list)))
 
 (claim priority-queue-get
- (polymorphic (K P)
-   (-> K (priority-queue? K P) (optional? P))))
+  (polymorphic (K P)
+    (-> K (priority-queue? K P) (optional? P))))
 
 (define (priority-queue-get key queue)
   (= node (hash-get key (priority-queue-hash queue)))
   (if (null? node) null (node-priority node)))
 
 (claim priority-queue-peek
- (polymorphic (K P)
-   (-> (priority-queue? K P) (optional? K))))
+  (polymorphic (K P)
+    (-> (priority-queue? K P) (optional? K))))
 
 (define (priority-queue-peek queue)
   (cond
@@ -65,8 +65,8 @@
      (node-key first))))
 
 (claim priority-queue-poll!
- (polymorphic (K P)
-   (-> (priority-queue? K P) (optional? K))))
+  (polymorphic (K P)
+    (-> (priority-queue? K P) (optional? K))))
 
 (define (priority-queue-poll! queue)
   (cond
@@ -89,8 +89,8 @@
      (node-key first))))
 
 (claim priority-queue-delete!
- (polymorphic (K P)
-   (-> K (priority-queue? K P) (priority-queue? K P))))
+  (polymorphic (K P)
+    (-> K (priority-queue? K P) (priority-queue? K P))))
 
 (define (priority-queue-delete! key queue)
   (= compare (priority-queue-compare queue))
@@ -109,8 +109,8 @@
   queue)
 
 (claim priority-queue-put!
- (polymorphic (K P)
-   (-> K P (priority-queue? K P) (priority-queue? K P))))
+  (polymorphic (K P)
+    (-> K P (priority-queue? K P) (priority-queue? K P))))
 
 (define (priority-queue-put! key priority queue)
   (= compare (priority-queue-compare queue))
@@ -128,8 +128,8 @@
   queue)
 
 (claim node-blance!
- (polymorphic (K P)
-   (-> (heap? K P) (-> P P sort-order?) (node? K P) void?)))
+  (polymorphic (K P)
+    (-> (heap? K P) (-> P P sort-order?) (node? K P) void?)))
 
 (define (node-blance! heap compare node)
   (= parent (node-parent heap node))
@@ -156,8 +156,8 @@
     (else void)))
 
 (claim node-swap!
- (polymorphic (K P)
-   (-> (heap? K P) (node? K P) (node? K P) void?)))
+  (polymorphic (K P)
+    (-> (heap? K P) (node? K P) (node? K P) void?)))
 
 (define (node-swap! heap lhs rhs)
   (= lhs-index (node-index lhs))

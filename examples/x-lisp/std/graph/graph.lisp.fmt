@@ -9,8 +9,8 @@
   graph-vertex-degree)
 
 (define-data (graph? V)
- (cons-graph (vertices (set? V))
-  (neighbor-hash (hash? V (set? V)))))
+  (cons-graph (vertices (set? V))
+   (neighbor-hash (hash? V (set? V)))))
 
 (define graph-vertices cons-graph-vertices)
 
@@ -20,8 +20,8 @@
   (union (tau V V) (negate (apply equal?))))
 
 (claim make-graph
- (polymorphic (V)
-   (-> (list? V) (list? (graph-edge? V)) (graph? V))))
+  (polymorphic (V)
+    (-> (list? V) (list? (graph-edge? V)) (graph? V))))
 
 (define (make-graph vertices edges)
   (= graph (cons-graph (@set) (@hash)))
@@ -29,13 +29,13 @@
   (graph-add-edges! edges graph))
 
 (claim graph-neighbors
- (polymorphic (V) (-> V (graph? V) (set? V))))
+  (polymorphic (V) (-> V (graph? V) (set? V))))
 
 (define (graph-neighbors vertex graph)
   (hash-get vertex (graph-neighbor-hash graph)))
 
 (claim graph-edges
- (polymorphic (V) (-> (graph? V) (set? (graph-edge? V)))))
+  (polymorphic (V) (-> (graph? V) (set? (graph-edge? V)))))
 
 (define (graph-edges graph)
   (pipe graph
@@ -50,20 +50,20 @@
     list-to-set))
 
 (claim graph-add-vertex!
- (polymorphic (V) (-> V (graph? V) (graph? V))))
+  (polymorphic (V) (-> V (graph? V) (graph? V))))
 
 (define (graph-add-vertex! vertex graph)
   (set-add! vertex (graph-vertices graph)) graph)
 
 (claim graph-add-vertices!
- (polymorphic (V) (-> (list? V) (graph? V) (graph? V))))
+  (polymorphic (V) (-> (list? V) (graph? V) (graph? V))))
 
 (define (graph-add-vertices! vertices graph)
   (list-each (swap graph-add-vertex! graph) vertices) graph)
 
 (claim graph-add-edge!
- (polymorphic (V)
-   (-> (graph-edge? V) (graph? V) (graph? V))))
+  (polymorphic (V)
+    (-> (graph-edge? V) (graph? V) (graph? V))))
 
 (define (graph-add-edge! (@tael source target) graph)
   (graph-add-vertex! source graph)
@@ -80,20 +80,20 @@
   graph)
 
 (claim graph-add-edges!
- (polymorphic (V)
-   (-> (list? (graph-edge? V)) (graph? V) (graph? V))))
+  (polymorphic (V)
+    (-> (list? (graph-edge? V)) (graph? V) (graph? V))))
 
 (define (graph-add-edges! edges graph)
   (list-each (swap graph-add-edge! graph) edges) graph)
 
 (claim graph-adjacent?
- (polymorphic (V) (-> V V (graph? V) bool?)))
+  (polymorphic (V) (-> V V (graph? V) bool?)))
 
 (define (graph-adjacent? source target graph)
   (set-member? target (graph-neighbors source graph)))
 
 (claim graph-vertex-degree
- (polymorphic (V) (-> V (graph? V) int?)))
+  (polymorphic (V) (-> V (graph? V) int?)))
 
 (define (graph-vertex-degree vertex graph)
   (set-size (graph-neighbors vertex graph)))
