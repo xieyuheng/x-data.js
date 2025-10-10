@@ -1,4 +1,5 @@
-[pretty] `PrettyCommand` -- call `prettySexp`
+[pretty] setup scripts tests
+
 [pretty] `pp.flexWrap`
 
 [pretty] `renderSexp` -- function application with "short target" heuristic

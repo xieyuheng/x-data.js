@@ -1,15 +1,12 @@
 import { type Sexp } from "../sexp/index.ts"
 import { Parser, type ParserMeta } from "./Parser.ts"
 
-export function parseSexpArray(
-  text: string,
-  meta: ParserMeta = {},
-): Array<Sexp> {
+export function parseSexps(text: string, meta: ParserMeta = {}): Array<Sexp> {
   return new Parser().parse(text, meta)
 }
 
 export function parseSexp(text: string, meta: ParserMeta = {}): Sexp {
-  const array = parseSexpArray(text, meta)
+  const array = parseSexps(text, meta)
   if (array.length === 1) {
     return array[0]
   }
