@@ -1,6 +1,6 @@
 import assert from "node:assert"
+import { recordMapValue } from "../helper/record/recordMapValue.ts"
 import * as X from "../sexp/index.ts"
-import { recordMapValue } from "../utils/record/recordMapValue.ts"
 import { type TokenMeta } from "./Token.ts"
 
 export function tokenMetaToSexpMeta(meta: TokenMeta): X.Attributes {

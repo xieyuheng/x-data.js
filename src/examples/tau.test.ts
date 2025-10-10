@@ -1,8 +1,8 @@
 import assert from "node:assert"
 import { test } from "node:test"
+import { errorReport } from "../helper/error/errorReport.ts"
+import { recordMapValue } from "../helper/record/recordMapValue.ts"
 import * as X from "../index.ts"
-import { errorReport } from "../utils/error/errorReport.ts"
-import { recordMapValue } from "../utils/record/recordMapValue.ts"
 
 type Type = TypeVar | Arrow | Union | Inter | Tau
 type TypeVar = { kind: "TypeVar"; name: string }

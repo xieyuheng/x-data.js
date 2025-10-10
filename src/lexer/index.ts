@@ -1,2 +1,2 @@
 export * from "./Lexer.ts"
-export * from "./lexerUtils.ts"
+export * from "./lexerHelper.ts"

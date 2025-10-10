@@ -1,5 +1,5 @@
+import { urlRelativeToCwd } from "../helper/url/urlRelativeToCwd.ts"
 import { spanReport, type Position } from "../span/index.ts"
-import { urlRelativeToCwd } from "../utils/url/urlRelativeToCwd.ts"
 import { type TokenMeta } from "./Token.ts"
 
 export function tokenMetaReport(meta: TokenMeta): string {
