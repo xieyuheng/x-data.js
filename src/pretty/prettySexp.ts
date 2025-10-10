@@ -2,14 +2,22 @@ import { formatSexp } from "../format/index.ts"
 import * as pp from "../helper/ppml/index.ts"
 import { isTael, type Sexp } from "../sexp/index.ts"
 
-export function prettySexp(maxWidth: number, sexp: Sexp): string {
-  return pp.format(maxWidth, renderSexp(sexp))
+type Config = {}
+
+const defaultConfig = {}
+
+export function prettySexp(
+  maxWidth: number,
+  sexp: Sexp,
+  config: Config = defaultConfig,
+): string {
+  return pp.format(maxWidth, renderSexp(config, sexp))
 }
 
-export function renderSexp(sexp: Sexp): pp.Node {
+export function renderSexp(config: Config, sexp: Sexp): pp.Node {
   if (isTael(sexp)) {
-    const elements = renderSexps(sexp.elements)
-    const attributes = renderAttributes(Object.entries(sexp.attributes))
+    const elements = renderSexps(config, sexp.elements)
+    const attributes = renderAttributes(config, Object.entries(sexp.attributes))
     if (
       sexp.elements.length === 0 &&
       Object.keys(sexp.attributes).length === 0
@@ -33,14 +41,17 @@ export function renderSexp(sexp: Sexp): pp.Node {
   return pp.text(formatSexp(sexp))
 }
 
-function renderSexps(sexps: Array<Sexp>): pp.Node {
-  return pp.mapWithBreak(renderSexp, sexps)
+function renderSexps(config: Config, sexps: Array<Sexp>): pp.Node {
+  return pp.mapWithBreak((sexp) => renderSexp(config, sexp), sexps)
 }
 
-function renderAttribute([key, sexp]: [string, Sexp]): pp.Node {
-  return pp.group(pp.text(`:${key}`), pp.br(), renderSexp(sexp))
+function renderAttribute(config: Config, [key, sexp]: [string, Sexp]): pp.Node {
+  return pp.group(pp.text(`:${key}`), pp.br(), renderSexp(config, sexp))
 }
 
-function renderAttributes(entries: Array<[string, Sexp]>): pp.Node {
-  return pp.mapWithBreak(renderAttribute, entries)
+function renderAttributes(
+  config: Config,
+  entries: Array<[string, Sexp]>,
+): pp.Node {
+  return pp.mapWithBreak((entry) => renderAttribute(config, entry), entries)
 }
