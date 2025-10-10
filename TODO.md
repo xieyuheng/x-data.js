@@ -1,5 +1,11 @@
+[pretty] `prettySexp` -- setup
 [pretty] `prettySexp` -- can be config-ed by keyword lists -- like emacs scheme-mode
 
-setup format command
+[pretty] `PrettyCommand` -- setup and call `prettySexp`
+[pretty] `PrettyCommand` -- read config from a tael lisp file
 
-- x-sexp -- should be a sexp formatter -- read config from a tael lisp file
+[ppml] support `hardbreak`
+
+[lexer] `Comment` should be token
+[parser] `parseSexpWithComment`
+[parser] parse `Comment` as `(@line-comment "<comment-line>")`
