@@ -13,23 +13,20 @@
    (graph-add-vertices! (@tael 1 2 3) graph)))
 
 (begin
-  (=
-      graph
+  (= graph
       (make-graph (@tael 1 2 3)
        (@tael (@tael 1 2) (@tael 2 3) (@tael 3 1))))
   (assert-equal (@set 1 2 3) (graph-vertices graph)))
 
 (begin
-  (=
-      graph
+  (= graph
       (make-graph (@tael 1 2 3)
        (@tael (@tael 1 2) (@tael 2 3) (@tael 3 1))))
   (assert-equal (@set (@set 1 2) (@set 2 3) (@set 3 1))
    (pipe (graph-edges graph) (set-map list-to-set))))
 
 (begin
-  (=
-      graph
+  (= graph
       (make-graph (@tael 1 2 3)
        (@tael (@tael 1 2) (@tael 2 3) (@tael 3 1))))
   (assert-equal (@set 2 3) (graph-neighbors 1 graph))
@@ -37,8 +34,7 @@
   (assert-equal (@set 1 2) (graph-neighbors 3 graph)))
 
 (begin
-  (=
-      graph
+  (= graph
       (make-graph (@tael 1 2 3)
        (@tael (@tael 1 2) (@tael 2 3) (@tael 3 1))))
   (assert (graph-adjacent? 1 2 graph))
@@ -49,8 +45,7 @@
   (assert (graph-adjacent? 3 1 graph)))
 
 (begin
-  (=
-      graph
+  (= graph
       (make-graph (@tael 1 2 3)
        (@tael (@tael 1 2) (@tael 2 3) (@tael 3 1))))
   (assert-equal 2 (graph-vertex-degree 1 graph))

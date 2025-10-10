@@ -9,8 +9,7 @@
   (= coloring (@hash))
   (= vertices (set-to-list (graph-vertices graph)))
   (assert-equal 2
-   (pipe
-       graph
+   (pipe graph
      (graph-coloring! coloring vertices) hash-values
      list-to-set
      set-size)))
@@ -27,8 +26,7 @@
   (= coloring (@hash))
   (= vertices (set-to-list (graph-vertices graph)))
   (assert-equal 3
-   (pipe
-       graph
+   (pipe graph
      (graph-coloring! coloring vertices) hash-values
      list-to-set
      set-size)))

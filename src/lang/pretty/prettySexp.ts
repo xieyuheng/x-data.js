@@ -73,14 +73,15 @@ export function renderSexp(config: Config): (sexp: Sexp) => pp.Node {
         const bodySexps = restSexps.slice(headerLength)
         return pp.group(
           pp.text("("),
-          pp.text(name),
           ...(headerSexps.length === 0
-            ? []
+            ? [pp.text(name)]
             : [
                 pp.indent(
                   4,
-                  pp.br(),
-                  pp.flexWrap(headerSexps.map(renderSexp(config))),
+                  pp.flexWrap([
+                    pp.text(name),
+                    ...headerSexps.map(renderSexp(config)),
+                  ]),
                 ),
               ]),
           ...(recordIsEmpty(sexp.attributes)
