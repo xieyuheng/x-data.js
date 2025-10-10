@@ -22,6 +22,19 @@ export function flex(nodes: Array<pp.Node>): pp.Node {
   }
 }
 
+export function flexWrap(nodes: Array<pp.Node>): pp.Node {
+  if (nodes.length === 0) {
+    return pp.nil()
+  }
+
+  let result = nodes[0]
+  for (const node of nodes.slice(1)) {
+    result = pp.group(result, pp.br(), node)
+  }
+
+  return result
+}
+
 export function text(content: string): pp.Node {
   return pp.TextNode(content)
 }

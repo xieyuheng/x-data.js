@@ -1,4 +1,3 @@
-[pretty] `pp.flexWrap`
 [pretty] `renderSexp` -- function application with "short target" heuristic
 
 [ppml] support `hardbreak`

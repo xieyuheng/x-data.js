@@ -6,10 +6,8 @@
 
 (define (coloring? V) (hash? V color?))
 
-(claim
- graph-coloring!
- (polymorphic
-  (V)
+(claim graph-coloring!
+ (polymorphic (V)
   (-> (coloring? V) (list? V) (graph? V) (coloring? V))))
 
 (define
@@ -41,10 +39,8 @@
     (next-not-used-color/loop color-set (iadd 1 color))
     color))
 
-(claim
- vertex-saturation
- (polymorphic
-  (V)
+(claim vertex-saturation
+ (polymorphic (V)
   (-> (graph? V) (coloring? V) V (set? color?))))
 
 (define
@@ -52,8 +48,7 @@
   (= neighbors (graph-neighbors vertex graph))
   (pipe
       neighbors
-    (set-map (swap hash-get coloring))
-    (set-reject null?)))
+    (set-map (swap hash-get coloring)) (set-reject null?)))
 
 (define
     (queue-sort-by-saturation! graph coloring queue)
@@ -66,8 +61,7 @@
        (set-size (vertex-saturation graph coloring v2))))
     (lambda
         (v1 v2)
-      (int-compare-descending
-       (graph-vertex-degree v1 graph)
+      (int-compare-descending (graph-vertex-degree v1 graph)
        (graph-vertex-degree v2 graph))))
    queue))
 
