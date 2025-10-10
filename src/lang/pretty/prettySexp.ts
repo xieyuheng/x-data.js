@@ -56,23 +56,28 @@ export function renderSexp(config: Config): (sexp: Sexp) => pp.Node {
       return renderElementLess(config)(sexp.attributes)
     }
 
-    const [keyword, ...restSexps] = sexp.elements
-    if (keyword.kind === "Symbol") {
-      const keywordConfig = config.keywords.find(
-        ([name]) => name === keyword.content,
+    const [firstSexp, ...restSexps] = sexp.elements
+    const keywordConfig = findKeywordConfig(config, firstSexp)
+    if (keywordConfig !== undefined) {
+      const [name, headerLength] = keywordConfig
+      return renderSyntax(config)(
+        name,
+        restSexps.slice(0, headerLength),
+        restSexps.slice(headerLength),
+        sexp.attributes,
       )
-      if (keywordConfig !== undefined) {
-        const [name, headerLength] = keywordConfig
-        return renderSyntax(config)(
-          name,
-          restSexps.slice(0, headerLength),
-          restSexps.slice(headerLength),
-          sexp.attributes,
-        )
-      }
     }
 
     return renderApplication(config)(sexp.elements, sexp.attributes)
+  }
+}
+
+function findKeywordConfig(
+  config: Config,
+  sexp: Sexp,
+): KeywordConfig | undefined {
+  if (sexp.kind === "Symbol") {
+    return config.keywords.find(([name]) => name === sexp.content)
   }
 }
 
