@@ -1,57 +1,122 @@
 import { formatSexp } from "../format/index.ts"
 import * as pp from "../helper/ppml/index.ts"
-import { isTael, type Sexp } from "../sexp/index.ts"
+import { recordIsEmpty } from "../helper/record/recordIsEmpty.ts"
+import { isAtom, type Sexp } from "../sexp/index.ts"
 
-type Config = {}
+type KeywordConfig = [name: string, headerLength: number]
+type Config = {
+  keywords: Array<KeywordConfig>
+}
 
-const defaultConfig = {}
+const defaultConfig: Config = {
+  keywords: [
+    ["define", 1],
+    ["begin", 0],
+    ["lambda", 1],
+    ["match", 1],
+    ["pipe", 1],
+    ["compose", 0],
+    ["->", 0],
+    ["*->", 0],
+    ["if", 1],
+    ["when", 1],
+    ["unless", 1],
+    ["cond", 0],
+    ["@list", 0],
+    ["@tael", 0],
+    ["@set", 0],
+    ["@hash", 0],
+  ],
+}
 
 export function prettySexp(
   maxWidth: number,
   sexp: Sexp,
   config: Config = defaultConfig,
 ): string {
-  return pp.format(maxWidth, renderSexp(config, sexp))
+  return pp.format(maxWidth, renderSexp(config)(sexp))
 }
 
-export function renderSexp(config: Config, sexp: Sexp): pp.Node {
-  if (isTael(sexp)) {
-    const elements = renderSexps(config, sexp.elements)
-    const attributes = renderAttributes(config, Object.entries(sexp.attributes))
-    if (
-      sexp.elements.length === 0 &&
-      Object.keys(sexp.attributes).length === 0
-    ) {
-      return pp.text("()")
-    } else if (Object.keys(sexp.attributes).length === 0) {
-      return pp.group(pp.text("("), pp.indent(1, elements), pp.text(")"))
-    } else if (sexp.elements.length === 0) {
-      return pp.group(pp.text("("), pp.indent(1, attributes), pp.text(")"))
-    } else {
-      return pp.group(
-        pp.text("("),
-        pp.group(pp.indent(1, attributes)),
-        pp.indent(1, pp.br()),
-        pp.group(pp.indent(1, elements)),
-        pp.text(")"),
-      )
+export function renderSexp(config: Config): (sexp: Sexp) => pp.Node {
+  return (sexp) => {
+    if (isAtom(sexp)) {
+      return pp.text(formatSexp(sexp))
     }
+
+    if (sexp.elements.length === 0) {
+      if (recordIsEmpty(sexp.attributes)) {
+        return pp.text("()")
+      } else {
+        return pp.group(
+          pp.text("("),
+          pp.indent(1, renderAttributes(config)(sexp.attributes)),
+          pp.text(")"),
+        )
+      }
+    }
+
+    const [keyword, ...restSexps] = sexp.elements
+    if (keyword.kind === "Symbol") {
+      const keywordConfig = config.keywords.find(
+        ([name]) => name === keyword.content,
+      )
+      if (keywordConfig !== undefined) {
+        const [name, headerLength] = keywordConfig
+        const headerSexps = restSexps.slice(0, headerLength)
+        const bodySexps = restSexps.slice(headerLength)
+        return pp.group(
+          pp.text("("),
+          pp.text(name),
+          ...(headerSexps.length === 0
+            ? []
+            : [pp.indent(4, pp.br(), renderSexps(config)(headerSexps))]),
+          ...(recordIsEmpty(sexp.attributes)
+            ? []
+            : [
+                pp.indent(2, pp.br()),
+                pp.group(
+                  pp.indent(2, renderAttributes(config)(sexp.attributes)),
+                ),
+              ]),
+          pp.indent(2, pp.br()),
+          pp.indent(2, renderSexps(config)(bodySexps)),
+          pp.text(")"),
+        )
+      }
+    }
+
+    return pp.group(
+      pp.text("("),
+      pp.group(pp.indent(1, renderSexps(config)(sexp.elements))),
+      ...(recordIsEmpty(sexp.attributes)
+        ? []
+        : [
+            pp.indent(1, pp.br()),
+            pp.group(pp.indent(1, renderAttributes(config)(sexp.attributes))),
+          ]),
+      pp.text(")"),
+    )
   }
-
-  return pp.text(formatSexp(sexp))
 }
 
-function renderSexps(config: Config, sexps: Array<Sexp>): pp.Node {
-  return pp.mapWithBreak((sexp) => renderSexp(config, sexp), sexps)
+function renderSexps(config: Config): (sexps: Array<Sexp>) => pp.Node {
+  return (sexps) => {
+    return pp.mapWithBreak(renderSexp(config), sexps)
+  }
 }
 
-function renderAttribute(config: Config, [key, sexp]: [string, Sexp]): pp.Node {
-  return pp.group(pp.text(`:${key}`), pp.br(), renderSexp(config, sexp))
+function renderAttribute(
+  config: Config,
+): ([key, sexp]: [string, Sexp]) => pp.Node {
+  return ([key, sexp]) => {
+    return pp.group(pp.text(`:${key}`), pp.br(), renderSexp(config)(sexp))
+  }
 }
 
 function renderAttributes(
   config: Config,
-  entries: Array<[string, Sexp]>,
-): pp.Node {
-  return pp.mapWithBreak((entry) => renderAttribute(config, entry), entries)
+): (attributes: Record<string, Sexp>) => pp.Node {
+  return (attributes) => {
+    return pp.mapWithBreak(renderAttribute(config), Object.entries(attributes))
+  }
 }
