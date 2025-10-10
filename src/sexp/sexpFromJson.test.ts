@@ -1,7 +1,7 @@
 import assert from "node:assert"
 import { test } from "node:test"
-import * as X from "../sexp/index.js"
-import { sexpFromJson } from "../sexp/index.js"
+import * as X from "../sexp/index.ts"
+import { sexpFromJson } from "../sexp/index.ts"
 
 test("sexpFromJson", () => {
   assert.deepStrictEqual(sexpFromJson("abc"), X.String("abc"))

@@ -1,6 +1,6 @@
 import assert from "node:assert"
 import { test } from "node:test"
-import { sexpFromJson, sexpToJson } from "../sexp/index.js"
+import { sexpFromJson, sexpToJson } from "../sexp/index.ts"
 
 test("sexpToJson", () => {
   assert.deepStrictEqual("abc", sexpToJson(sexpFromJson("abc")))
