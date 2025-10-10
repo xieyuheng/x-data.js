@@ -92,36 +92,28 @@ function renderSyntax(
   return (name, header, body, attributes) => {
     const headNode =
       header.length === 0
-        ? [pp.text(name)]
-        : [
-            pp.indent(
-              4,
-              pp.flexWrap([pp.text(name), ...header.map(renderSexp(config))]),
-            ),
-          ]
+        ? pp.text(name)
+        : pp.indent(
+            4,
+            pp.flexWrap([pp.text(name), ...header.map(renderSexp(config))]),
+          )
 
     const neckNode = recordIsEmpty(attributes)
-      ? []
-      : [
+      ? pp.nil()
+      : pp.concat(
           pp.indent(2, pp.br()),
           pp.group(pp.indent(2, renderAttributes(config)(attributes))),
-        ]
+        )
 
     const bodyNode =
       body.length === 0
-        ? []
-        : [
+        ? pp.nil()
+        : pp.concat(
             pp.indent(2, pp.br()),
             pp.indent(2, pp.flexWrap(body.map(renderSexp(config)))),
-          ]
+          )
 
-    return pp.group(
-      pp.text("("),
-      ...headNode,
-      ...neckNode,
-      ...bodyNode,
-      pp.text(")"),
-    )
+    return pp.group(pp.text("("), headNode, neckNode, bodyNode, pp.text(")"))
   }
 }
 
@@ -130,16 +122,16 @@ function renderApplication(
 ): (elements: Array<Sexp>, attributes: Record<string, Sexp>) => pp.Node {
   return (elements, attributes) => {
     const footNode = recordIsEmpty(attributes)
-      ? []
-      : [
+      ? pp.nil()
+      : pp.concat(
           pp.indent(1, pp.br()),
           pp.group(pp.indent(1, renderAttributes(config)(attributes))),
-        ]
+        )
 
     return pp.group(
       pp.text("("),
       pp.group(pp.indent(1, pp.flexWrap(elements.map(renderSexp(config))))),
-      ...footNode,
+      footNode,
       pp.text(")"),
     )
   }
