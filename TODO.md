@@ -1,7 +1,8 @@
-[pretty] `prettySexp` -- setup
-[pretty] `prettySexp` -- all `()` as function application
-[pretty] `prettySexp` -- can be config-ed by keyword lists -- like emacs scheme-mode
-[pretty] `prettySexp` -- function application with "short target" heuristic
+[pretty] setup `prettySexp` test
+
+[pretty] `renderSexp` -- all `()` as function application
+[pretty] `renderSexp` -- can be config-ed by keyword lists -- like emacs scheme-mode
+[pretty] `renderSexp` -- function application with "short target" heuristic
 
 [pretty] `PrettyCommand` -- setup and call `prettySexp`
 [pretty] `PrettyCommand` -- read config from a tael lisp file
