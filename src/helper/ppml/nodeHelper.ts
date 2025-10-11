@@ -43,13 +43,6 @@ export function indent(indentation: number, ...nodes: Array<pp.Node>): pp.Node {
   return pp.IndentNode(indentation, concat(...nodes))
 }
 
-export function indentGroup(
-  indentation: number,
-  ...nodes: Array<pp.Node>
-): pp.Node {
-  return pp.IndentNode(indentation, group(...nodes))
-}
-
 export function concat(...nodes: Array<pp.Node>): pp.Node {
   if (nodes.length === 0) {
     return pp.NullNode()

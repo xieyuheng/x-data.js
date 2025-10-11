@@ -155,9 +155,9 @@ function renderApplication(
 ): Render {
   return (config) => {
     // "short target" heuristic -- for `and` `or` `->` `*->`
-    const shortTargetLength = 4
+    const shortLength = 4
     const [head, ...rest] = elements
-    if (head.kind === "Symbol" && head.content.length <= shortTargetLength) {
+    if (head.kind === "Symbol" && head.content.length <= shortLength) {
       // +1 for "("
       // +1 for " "
       const indentation = head.content.length + 2
