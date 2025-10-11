@@ -1,4 +1,3 @@
-[pretty] `renderQuote` -- parser level syntax sugar
 [pretty] `renderUnquote` -- parser level syntax sugar
 [pretty] `renderQuasiquote` -- parser level syntax sugar
 

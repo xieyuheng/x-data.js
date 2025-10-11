@@ -2,5 +2,5 @@
 
 (assert-not (negate string? "abc"))
 
-(assert (negate string? (@quote abc)))
+(assert (negate string? 'abc))
 

@@ -1,11 +1,6 @@
 (import-all "list-find-index")
 
-(assert-equal
-  2
-  (list-find-index int? [(@quote a) (@quote b) 3 (@quote d)]))
+(assert-equal 2 (list-find-index int? ['a 'b 3 'd]))
 
-(assert-equal
-  null
-  (list-find-index int?
-   [(@quote a) (@quote b) (@quote c) (@quote d)]))
+(assert-equal null (list-find-index int? ['a 'b 'c 'd]))
 

@@ -1,4 +1,4 @@
 (import-all "record-unit")
 
-(assert-equal [:a 1] (record-unit (@quote a) 1))
+(assert-equal [:a 1] (record-unit 'a 1))
 

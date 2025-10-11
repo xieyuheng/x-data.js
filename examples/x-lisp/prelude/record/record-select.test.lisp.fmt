@@ -16,8 +16,7 @@
 
 (assert-equal
   [:a 1 :b 2]
-  (record-select-key
-   (union (equal? (@quote a)) (equal? (@quote b)))
+  (record-select-key (union (equal? 'a) (equal? 'b))
    [:a 1 :b 2 :x -1 :y -2]))
 
 (assert-equal
@@ -32,7 +31,6 @@
 
 (assert-equal
   [:x -1 :y -2]
-  (record-reject-key
-   (union (equal? (@quote a)) (equal? (@quote b)))
+  (record-reject-key (union (equal? 'a) (equal? 'b))
    [:a 1 :b 2 :x -1 :y -2]))
 

@@ -1,6 +1,5 @@
 (import-all "hash-from-entries")
 
 (assert-equal
-  (@hash (@quote a) 1 (@quote b) 2)
-  (hash-from-entries [[(@quote a) 1] [(@quote b) 2]]))
+  (@hash 'a 1 'b 2) (hash-from-entries [['a 1] ['b 2]]))
 

@@ -1,6 +1,5 @@
 (import-all "list-unzip")
 
 (assert-equal
-  (list-unzip [[(@quote a) 1] [(@quote b) 2] [(@quote c) 3]])
-  [[(@quote a) (@quote b) (@quote c)] [1 2 3]])
+  (list-unzip [['a 1] ['b 2] ['c 3]]) [['a 'b 'c] [1 2 3]])
 

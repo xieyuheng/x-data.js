@@ -1,10 +1,6 @@
 (import-all "list-index")
 
-(assert-equal
-  2 (list-index 3 [(@quote a) (@quote b) 3 (@quote d)]))
+(assert-equal 2 (list-index 3 ['a 'b 3 'd]))
 
-(assert-equal
-  null
-  (list-index 3
-   [(@quote a) (@quote b) (@quote c) (@quote d)]))
+(assert-equal null (list-index 3 ['a 'b 'c 'd]))
 

@@ -40,6 +40,14 @@ export function renderSexp(sexp: Sexp): Render {
         case "@tael": {
           return renderTael(rest, sexp.attributes)(config)
         }
+
+        case "@quote": {
+          if (rest.length === 1) {
+            return renderQuote(rest[0])(config)
+          } else {
+            break
+          }
+        }
       }
     }
 
@@ -55,6 +63,12 @@ export function renderSexp(sexp: Sexp): Render {
     }
 
     return renderApplication(sexp.elements, sexp.attributes)(config)
+  }
+}
+
+function renderQuote(sexp: Sexp): Render {
+  return (config) => {
+    return pp.concat(pp.text("'"), renderSexp(sexp)(config))
   }
 }
 

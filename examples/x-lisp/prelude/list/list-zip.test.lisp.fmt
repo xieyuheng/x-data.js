@@ -1,10 +1,7 @@
 (import-all "list-zip")
 
 (assert-equal
-  (list-zip [(@quote a) (@quote b) (@quote c)] [1 2 3])
-  [[(@quote a) 1] [(@quote b) 2] [(@quote c) 3]])
+  (list-zip ['a 'b 'c] [1 2 3]) [['a 1] ['b 2] ['c 3]])
 
-(assert-equal
-  (list-zip [(@quote a) (@quote b) (@quote c)] [1 2])
-  [[(@quote a) 1] [(@quote b) 2]])
+(assert-equal (list-zip ['a 'b 'c] [1 2]) [['a 1] ['b 2]])
 
