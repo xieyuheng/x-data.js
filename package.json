@@ -16,7 +16,7 @@
     "build": "tsc",
     "build:watch": "tsc --watch",
     "test:node": "node --test 'lib/**/*.test.js'",
-    "test:lang": "sh scripts/format-examples.sh",
+    "test:lang": "sh scripts/format-x-lisp.sh",
     "test": "npm run test:node && npm run test:lang",
     "format": "prettier src --write"
   },

@@ -1,3 +1,5 @@
+more examples form x-lisp
+
 [pretty] `renderSexp` -- function application with "short target" heuristic
 
 [ppml] support `hardbreak`
