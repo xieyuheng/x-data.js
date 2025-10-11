@@ -1,0 +1,4 @@
+(import-all "record-unit")
+
+(assert-equal (@tael :a 1) (record-unit (@quote a) 1))
+

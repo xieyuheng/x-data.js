@@ -1,0 +1,38 @@
+(import-all "../function")
+
+(import-all "../string")
+
+(import-all "../list")
+
+(import-all "pretty")
+
+(define (test-widths widths value)
+  (pipe widths
+    (list-each
+     (lambda (width)
+       (write (string-repeat width "-")) (write "|")
+       (write (format width))
+       (write "\n")
+       (pretty-print width value)))))
+
+(test-widths (@tael 30 10 5)
+ (@tael (@tael 1 2 3) (@tael 4 5 6) (@tael 7 8 9)))
+
+(test-widths (@tael 30 10 5)
+ (@set (@set 1 2 3) (@set 4 5 6) (@set 7 8 9)))
+
+(test-widths (@tael 30 10 5)
+ (@tael
+   :x (@tael :x 1 :y 2 :z 3)
+   :y (@tael :x 4 :y 5 :z 6)
+   :z (@tael :x 7 :y 8 :z 9)))
+
+(test-widths (@tael 30 10 5 3) (@tael :x 1 :y 2 :z 3 1 2 3))
+
+(test-widths (@tael 60 30 10 5)
+ (@hash
+   "x" (@hash "x" 1 "y" 2 "z" 3) "y"
+   (@hash "x" 4 "y" 5 "z" 6)
+   "z"
+   (@hash "x" 7 "y" 8 "z" 9)))
+

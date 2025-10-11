@@ -1,0 +1,10 @@
+(import-all "list-concat")
+
+(assert-equal
+ (list-concat (@tael (@tael 1 2 3) (@tael 4 5 6)))
+ (@tael 1 2 3 4 5 6))
+
+(assert-equal
+ (list-concat (@tael (@tael :x 1 1 2 3) (@tael :y 2 4 5 6)))
+ (@tael 1 2 3 4 5 6))
+

@@ -1,0 +1,12 @@
+(import-all "list-take")
+
+(assert-equal (list-take 0 (@tael 1 2 3)) (@tael))
+
+(assert-equal (list-take 1 (@tael 1 2 3)) (@tael 1))
+
+(assert-equal (list-take 2 (@tael 1 2 3)) (@tael 1 2))
+
+(assert-equal (list-take 3 (@tael 1 2 3)) (@tael 1 2 3))
+
+(assert-equal (list-take 4 (@tael 1 2 3)) (@tael 1 2 3))
+

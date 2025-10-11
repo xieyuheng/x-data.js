@@ -1,0 +1,16 @@
+(import-all "set-select")
+
+(assert-equal (@set 0 1 2)
+ (set-select int-non-negative? (@set -2 -1 0 1 2)))
+
+(assert-equal (@set 0 1 2)
+ ((specific set-select int?) int-non-negative?
+  (@set -2 -1 0 1 2)))
+
+(assert-equal (@set -1 -2)
+ (set-reject int-non-negative? (@set -2 -1 0 1 2)))
+
+(assert-equal (@set -1 -2)
+ ((specific set-reject int?) int-non-negative?
+  (@set -2 -1 0 1 2)))
+

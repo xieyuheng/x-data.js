@@ -11,6 +11,7 @@
 [lexer] empty line as `Token` -- for formatter
 
 - be like XML parser which include all information
-  [lexer] `Comment` as `Token` -- for formatter
-  [parser] `parseSexpWithComment`
-  [parser] parse `Comment` as `(@line-comment "<comment-line>")`
+
+[lexer] `Comment` as `Token` -- for formatter
+[parser] `parseSexpWithComment`
+[parser] parse `Comment` as `(@line-comment "<comment-line>")`

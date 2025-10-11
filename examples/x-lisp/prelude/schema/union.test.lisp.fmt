@@ -1,0 +1,6 @@
+(import-all "union")
+
+(assert ((union string? symbol?) (@quote abc)))
+
+(assert ((union string? symbol?) "abc"))
+

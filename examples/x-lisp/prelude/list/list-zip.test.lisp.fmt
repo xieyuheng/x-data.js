@@ -1,0 +1,14 @@
+(import-all "list-zip")
+
+(assert-equal
+ (list-zip (@tael (@quote a) (@quote b) (@quote c))
+  (@tael 1 2 3))
+ (@tael
+   (@tael (@quote a) 1) (@tael (@quote b) 2)
+   (@tael (@quote c) 3)))
+
+(assert-equal
+ (list-zip (@tael (@quote a) (@quote b) (@quote c))
+  (@tael 1 2))
+ (@tael (@tael (@quote a) 1) (@tael (@quote b) 2)))
+

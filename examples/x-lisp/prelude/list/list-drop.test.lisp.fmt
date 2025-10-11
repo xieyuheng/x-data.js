@@ -1,0 +1,12 @@
+(import-all "list-drop")
+
+(assert-equal (list-drop 0 (@tael 1 2 3)) (@tael 1 2 3))
+
+(assert-equal (list-drop 1 (@tael 1 2 3)) (@tael 2 3))
+
+(assert-equal (list-drop 2 (@tael 1 2 3)) (@tael 3))
+
+(assert-equal (list-drop 3 (@tael 1 2 3)) (@tael))
+
+(assert-equal (list-drop 4 (@tael 1 2 3)) (@tael))
+

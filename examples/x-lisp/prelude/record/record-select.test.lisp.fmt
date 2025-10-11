@@ -1,0 +1,32 @@
+(import-all "../function")
+
+(import-all "../schema")
+
+(import-all "record-select")
+
+(assert-equal (@tael :a 1 :b 2)
+ (record-select (drop int-non-negative?)
+  (@tael :a 1 :b 2 :x -1 :y -2)))
+
+(assert-equal (@tael :a 1 :b 2)
+ (record-select-value int-non-negative?
+  (@tael :a 1 :b 2 :x -1 :y -2)))
+
+(assert-equal (@tael :a 1 :b 2)
+ (record-select-key
+  (union (equal? (@quote a)) (equal? (@quote b)))
+  (@tael :a 1 :b 2 :x -1 :y -2)))
+
+(assert-equal (@tael :x -1 :y -2)
+ (record-reject (drop int-non-negative?)
+  (@tael :a 1 :b 2 :x -1 :y -2)))
+
+(assert-equal (@tael :x -1 :y -2)
+ (record-reject-value int-non-negative?
+  (@tael :a 1 :b 2 :x -1 :y -2)))
+
+(assert-equal (@tael :x -1 :y -2)
+ (record-reject-key
+  (union (equal? (@quote a)) (equal? (@quote b)))
+  (@tael :a 1 :b 2 :x -1 :y -2)))
+

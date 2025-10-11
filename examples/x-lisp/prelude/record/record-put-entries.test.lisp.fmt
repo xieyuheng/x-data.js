@@ -1,0 +1,15 @@
+(import-all "record-put-entries")
+
+(assert-equal (@tael :a 1 :b 2)
+ (record-put-entries
+  (@tael (@tael (@quote a) 1) (@tael (@quote b) 2))
+  (@tael)))
+
+(begin
+  (= record (@tael))
+  (assert-equal (@tael :a 1 :b 2)
+   (record-put-entries!
+    (@tael (@tael (@quote a) 1) (@tael (@quote b) 2))
+    record))
+  (assert-equal (@tael :a 1 :b 2) record))
+
