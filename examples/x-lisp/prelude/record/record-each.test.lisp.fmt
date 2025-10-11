@@ -1,23 +1,23 @@
 (import-all "record-each")
 
 (begin
-  (= record (@tael :a 1 :b 2)) (= list (@tael))
+  (= record [ :a 1 :b 2]) (= list [])
   (record-each-value
    (lambda (value) (list-push! value list))
    record)
-  (assert-equal (@tael 1 2) list))
+  (assert-equal [1 2] list))
 
 (begin
-  (= record (@tael :a 1 :b 2)) (= list (@tael))
+  (= record [ :a 1 :b 2]) (= list [])
   (record-each-key (lambda (key) (list-push! key list))
    record)
-  (assert-equal (@tael (@quote a) (@quote b)) list))
+  (assert-equal [(@quote a) (@quote b)] list))
 
 (begin
-  (= record (@tael :a 1 :b 2)) (= list (@tael))
+  (= record [ :a 1 :b 2]) (= list [])
   (record-each
    (lambda (key value)
      (list-push! key list) (list-push! value list))
    record)
-  (assert-equal (@tael (@quote a) 1 (@quote b) 2) list))
+  (assert-equal [(@quote a) 1 (@quote b) 2] list))
 

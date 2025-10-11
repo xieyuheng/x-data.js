@@ -3,6 +3,5 @@
 (claim record-unit
   (polymorphic (A) (-> symbol? A (record? A))))
 
-(define (record-unit key value)
-  (record-put key value (@tael)))
+(define (record-unit key value) (record-put key value []))
 

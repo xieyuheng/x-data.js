@@ -5,7 +5,7 @@
 (assert-equal
   (@hash 2 3 4 5)
   (pipe (@hash 1 2 3 4)
-    (hash-map (lambda (k v) (@tael (iadd 1 k) (iadd 1 v))))))
+    (hash-map (lambda (k v) [(iadd 1 k) (iadd 1 v)]))))
 
 (assert-equal
   (@hash 2 2 4 4)

@@ -15,20 +15,19 @@
        (write "\n")
        (pretty-print width value)))))
 
-(test-widths (@tael 30 10 5)
- (@tael (@tael 1 2 3) (@tael 4 5 6) (@tael 7 8 9)))
+(test-widths [30 10 5] [[1 2 3] [4 5 6] [7 8 9]])
 
-(test-widths (@tael 30 10 5) {{1 2 3} {4 5 6} {7 8 9}})
+(test-widths [30 10 5] {{1 2 3} {4 5 6} {7 8 9}})
 
-(test-widths (@tael 30 10 5)
- (@tael
-   :x (@tael :x 1 :y 2 :z 3)
-   :y (@tael :x 4 :y 5 :z 6)
-   :z (@tael :x 7 :y 8 :z 9)))
+(test-widths [30 10 5]
+ [
+  :x [ :x 1 :y 2 :z 3]
+  :y [ :x 4 :y 5 :z 6]
+  :z [ :x 7 :y 8 :z 9]])
 
-(test-widths (@tael 30 10 5 3) (@tael :x 1 :y 2 :z 3 1 2 3))
+(test-widths [30 10 5 3] [1 2 3 :x 1 :y 2 :z 3])
 
-(test-widths (@tael 60 30 10 5)
+(test-widths [60 30 10 5]
  (@hash
    "x" (@hash "x" 1 "y" 2 "z" 3) "y"
    (@hash "x" 4 "y" 5 "z" 6)

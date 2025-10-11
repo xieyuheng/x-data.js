@@ -1,10 +1,6 @@
 (import-all "list-unzip")
 
 (assert-equal
-  (list-unzip
-   (@tael
-     (@tael (@quote a) 1) (@tael (@quote b) 2)
-     (@tael (@quote c) 3)))
-  (@tael
-    (@tael (@quote a) (@quote b) (@quote c)) (@tael 1 2 3)))
+  (list-unzip [[(@quote a) 1] [(@quote b) 2] [(@quote c) 3]])
+  [[(@quote a) (@quote b) (@quote c)] [1 2 3]])
 

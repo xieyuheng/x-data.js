@@ -7,6 +7,5 @@
 
 (define (list-concat lists)
   (if (list-empty? lists)
-    (@tael)
-    (list-append (car lists) (list-concat (cdr lists)))))
+    [] (list-append (car lists) (list-concat (cdr lists)))))
 

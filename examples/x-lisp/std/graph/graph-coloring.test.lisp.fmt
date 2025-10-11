@@ -1,11 +1,11 @@
 (import-all "index")
 
 (begin
-  (= graph (make-graph (@tael) (@tael)))
-  (graph-add-edge! (@tael "a" "b") graph)
-  (graph-add-edge! (@tael "b" "c") graph)
-  (graph-add-edge! (@tael "c" "d") graph)
-  (graph-add-edge! (@tael "d" "a") graph)
+  (= graph (make-graph [] []))
+  (graph-add-edge! ["a" "b"] graph)
+  (graph-add-edge! ["b" "c"] graph)
+  (graph-add-edge! ["c" "d"] graph)
+  (graph-add-edge! ["d" "a"] graph)
   (= coloring (@hash))
   (= vertices (set-to-list (graph-vertices graph)))
   (assert-equal
@@ -16,14 +16,14 @@
       set-size)))
 
 (begin
-  (= graph (make-graph (@tael) (@tael)))
-  (graph-add-edge! (@tael "d" "e") graph)
-  (graph-add-edge! (@tael "a" "b") graph)
-  (graph-add-edge! (@tael "b" "c") graph)
-  (graph-add-edge! (@tael "c" "a") graph)
-  (graph-add-edge! (@tael "b" "c") graph)
-  (graph-add-edge! (@tael "c" "d") graph)
-  (graph-add-edge! (@tael "d" "b") graph)
+  (= graph (make-graph [] []))
+  (graph-add-edge! ["d" "e"] graph)
+  (graph-add-edge! ["a" "b"] graph)
+  (graph-add-edge! ["b" "c"] graph)
+  (graph-add-edge! ["c" "a"] graph)
+  (graph-add-edge! ["b" "c"] graph)
+  (graph-add-edge! ["c" "d"] graph)
+  (graph-add-edge! ["d" "b"] graph)
   (= coloring (@hash))
   (= vertices (set-to-list (graph-vertices graph)))
   (assert-equal

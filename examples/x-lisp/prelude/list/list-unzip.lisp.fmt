@@ -9,6 +9,5 @@
     (-> (list? (tau A B)) (tau (list? A) (list? B)))))
 
 (define (list-unzip pairs)
-  (@tael
-    (list-map list-first pairs) (list-map list-second pairs)))
+  [(list-map list-first pairs) (list-map list-second pairs)])
 

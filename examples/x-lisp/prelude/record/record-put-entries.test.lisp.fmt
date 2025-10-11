@@ -1,17 +1,14 @@
 (import-all "record-put-entries")
 
 (assert-equal
-  (@tael :a 1 :b 2)
-  (record-put-entries
-   (@tael (@tael (@quote a) 1) (@tael (@quote b) 2))
-   (@tael)))
+  [ :a 1 :b 2]
+  (record-put-entries [[(@quote a) 1] [(@quote b) 2]] []))
 
 (begin
-  (= record (@tael))
+  (= record [])
   (assert-equal
-    (@tael :a 1 :b 2)
-    (record-put-entries!
-     (@tael (@tael (@quote a) 1) (@tael (@quote b) 2))
+    [ :a 1 :b 2]
+    (record-put-entries! [[(@quote a) 1] [(@quote b) 2]]
      record))
-  (assert-equal (@tael :a 1 :b 2) record))
+  (assert-equal [ :a 1 :b 2] record))
 

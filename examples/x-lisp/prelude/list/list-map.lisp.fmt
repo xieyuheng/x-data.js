@@ -5,5 +5,5 @@
 
 (define (list-map f list)
   (if (list-empty? list)
-    (@tael) (cons (f (car list)) (list-map f (cdr list)))))
+    [] (cons (f (car list)) (list-map f (cdr list)))))
 

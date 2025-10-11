@@ -15,8 +15,7 @@
 
 (define (hash-invert hash)
   (pipe hash
-    hash-entries
-    (list-map (lambda ((@tael k v)) (@tael v k)))
+    hash-entries (list-map (lambda ([k v]) [v k]))
     hash-from-entries))
 
 (claim hash-invert-group

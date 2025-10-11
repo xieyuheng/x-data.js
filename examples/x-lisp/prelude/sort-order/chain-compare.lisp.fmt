@@ -8,7 +8,7 @@
   (lambda fs
     (lambda (x y)
       (match fs
-        ((@tael) 0)
+        ([] 0)
         ((cons f tail)
          (match (f x y)
            (-1 -1) (1 1)

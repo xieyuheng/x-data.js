@@ -2,11 +2,10 @@
 
 (assert-equal
   2
-  (list-find-index int?
-   (@tael (@quote a) (@quote b) 3 (@quote d))))
+  (list-find-index int? [(@quote a) (@quote b) 3 (@quote d)]))
 
 (assert-equal
   null
   (list-find-index int?
-   (@tael (@quote a) (@quote b) (@quote c) (@quote d))))
+   [(@quote a) (@quote b) (@quote c) (@quote d)]))
 

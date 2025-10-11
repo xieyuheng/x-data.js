@@ -13,7 +13,7 @@
 
 (define (hash-put-entries! entries hash)
   (match entries
-    ((@tael) hash)
-    ((cons (@tael k v) tail) (hash-put! k v hash)
+    ([] hash)
+    ((cons [k v] tail) (hash-put! k v hash)
      (hash-put-entries! tail hash))))
 

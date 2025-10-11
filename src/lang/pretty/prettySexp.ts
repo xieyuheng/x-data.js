@@ -36,6 +36,10 @@ export function renderSexp(sexp: Sexp): Render {
         case "@set": {
           return renderSet(rest)(config)
         }
+
+        case "@tael": {
+          return renderTael(rest, sexp.attributes)(config)
+        }
       }
     }
 
@@ -56,16 +60,34 @@ export function renderSexp(sexp: Sexp): Render {
 
 function renderSet(elements: Array<Sexp>): Render {
   return (config) => {
-    return pp.group(
-      pp.text("{"),
-      pp.group(
-        pp.indent(
-          1,
-          pp.flexWrap(elements.map((element) => renderSexp(element)(config))),
-        ),
+    const bodyNode = pp.group(
+      pp.indent(
+        1,
+        pp.flexWrap(elements.map((element) => renderSexp(element)(config))),
       ),
-      pp.text("}"),
     )
+
+    return pp.group(pp.text("{"), bodyNode, pp.text("}"))
+  }
+}
+
+function renderTael(
+  elements: Array<Sexp>,
+  attributes: Record<string, Sexp>,
+): Render {
+  return (config) => {
+    const bodyNode = pp.group(
+      pp.indent(
+        1,
+        pp.flexWrap(elements.map((element) => renderSexp(element)(config))),
+      ),
+    )
+
+    const footNode = recordIsEmpty(attributes)
+      ? pp.nil()
+      : pp.group(pp.indent(1, pp.br(), renderAttributes(attributes)(config)))
+
+    return pp.group(pp.text("["), bodyNode, footNode, pp.text("]"))
   }
 }
 

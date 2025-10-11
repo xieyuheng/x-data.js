@@ -41,7 +41,7 @@
   (pipe graph
     graph-neighbor-hash hash-entries
     (list-lift
-     (lambda ((@tael vertex neighbors))
+     (lambda ([vertex neighbors])
        (pipe neighbors
          set-to-list
          (list-map (lambda (neighbor) {vertex neighbor})))))
@@ -64,7 +64,7 @@
   (polymorphic (V)
     (-> (graph-edge? V) (graph? V) (graph? V))))
 
-(define (graph-add-edge! (@tael source target) graph)
+(define (graph-add-edge! [source target] graph)
   (graph-add-vertex! source graph)
   (graph-add-vertex! target graph)
   (= neighbor-hash (graph-neighbor-hash graph))

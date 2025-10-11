@@ -14,7 +14,7 @@
 
 (claim list-unit (polymorphic (A) (-> A (list? A))))
 
-(define (list-unit x) (@tael x))
+(define (list-unit x) [x])
 
 (define list-bind (swap list-lift))
 

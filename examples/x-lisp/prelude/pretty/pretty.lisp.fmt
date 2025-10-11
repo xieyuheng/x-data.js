@@ -25,7 +25,7 @@
           (render-elements (set-to-list value))))
      (group-node
       (concat-node
-       (@tael (text-node "{") elements (text-node "}")))))
+       [(text-node "{") elements (text-node "}")])))
     ((and (list? anything? value) (list-empty? value)
       (record-empty? value))
      (text-node "[]"))
@@ -33,14 +33,14 @@
      (= elements (indent-node 1 (render-elements value)))
      (group-node
       (concat-node
-       (@tael (text-node "[") elements (text-node "]")))))
+       [(text-node "[") elements (text-node "]")])))
     ((and (record? anything? value) (list-empty? value))
      (= attributes
          (indent-node 1
           (render-attributes (record-entries value))))
      (group-node
       (concat-node
-       (@tael (text-node "[") attributes (text-node "]")))))
+       [(text-node "[") attributes (text-node "]")])))
     ((record? anything? value)
      (= elements (indent-node 1 (render-elements value)))
      (= attributes
@@ -48,11 +48,10 @@
           (render-attributes (record-entries value))))
      (group-node
       (concat-node
-       (@tael
-         (text-node "[") (group-node elements)
-         (indent-node 1 (break-node " "))
-         attributes
-         (text-node "]")))))
+       [(text-node "[") (group-node elements)
+        (indent-node 1 (break-node " "))
+        attributes
+        (text-node "]")])))
     ((and (hash? anything? anything? value)
       (hash-empty? value))
      (text-node "(@hash)"))
@@ -62,21 +61,19 @@
           (render-hash-entries (hash-entries value))))
      (group-node
       (concat-node
-       (@tael
-         (text-node "(@hash")
-         (indent-node 2 (break-node " "))
-         entries
-         (text-node ")")))))
+       [(text-node "(@hash")
+        (indent-node 2 (break-node " "))
+        entries
+        (text-node ")")])))
     (else (text-node (format value)))))
 
 (define (render-elements elements)
   (match elements
-    ((@tael) null-node) ((@tael element) (render element))
+    ([] null-node) ([element] (render element))
     ((cons element tail)
      (concat-node
-      (@tael
-        (render element) (break-node " ")
-        (render-elements tail))))))
+      [(render element) (break-node " ")
+       (render-elements tail)]))))
 
 (define (render-key key)
   (text-node (string-append ":" (symbol-to-string key))))
@@ -84,30 +81,28 @@
 (define (render-attribute key value)
   (group-node
    (concat-node
-    (@tael (render-key key) (break-node " ") (render value)))))
+    [(render-key key) (break-node " ") (render value)])))
 
 (define (render-attributes entries)
   (match entries
-    ((@tael) null-node)
-    ((@tael (@tael key value)) (render-attribute key value))
-    ((cons (@tael key value) tail)
+    ([] null-node)
+    ([[key value]] (render-attribute key value))
+    ((cons [key value] tail)
      (concat-node
-      (@tael
-        (render-attribute key value) (break-node " ")
-        (render-attributes tail))))))
+      [(render-attribute key value) (break-node " ")
+       (render-attributes tail)]))))
 
 (define (render-hash-entry key value)
   (group-node
    (concat-node
-    (@tael (render key) (break-node " ") (render value)))))
+    [(render key) (break-node " ") (render value)])))
 
 (define (render-hash-entries entries)
   (match entries
-    ((@tael) null-node)
-    ((@tael (@tael key value)) (render-hash-entry key value))
-    ((cons (@tael key value) tail)
+    ([] null-node)
+    ([[key value]] (render-hash-entry key value))
+    ((cons [key value] tail)
      (concat-node
-      (@tael
-        (render-hash-entry key value) (break-node " ")
-        (render-hash-entries tail))))))
+      [(render-hash-entry key value) (break-node " ")
+       (render-hash-entries tail)]))))
 

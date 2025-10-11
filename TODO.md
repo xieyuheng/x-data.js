@@ -1,4 +1,4 @@
-[pretty] `renderTael` -- parser level syntax sugar
+[pretty] `renderTael` -- handle pure record
 [pretty] `renderQuote` -- parser level syntax sugar
 [pretty] `renderUnquote` -- parser level syntax sugar
 [pretty] `renderQuasiquote` -- parser level syntax sugar

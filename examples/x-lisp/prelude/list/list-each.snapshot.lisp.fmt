@@ -1,4 +1,4 @@
 (import-all "list-each")
 
-(list-each (lambda (x) (print x) (write "\n")) (@tael 1 2 3))
+(list-each (lambda (x) (print x) (write "\n")) [1 2 3])
 

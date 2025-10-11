@@ -13,7 +13,7 @@
 (define (graph-coloring! coloring queue graph)
   (queue-sort-by-saturation! graph coloring queue)
   (match queue
-    ((@tael) coloring)
+    ([] coloring)
     ((cons first rest-queue)
      (unless (hash-has? first coloring)
        (= saturation

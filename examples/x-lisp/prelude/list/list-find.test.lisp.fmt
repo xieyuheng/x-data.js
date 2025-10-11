@@ -1,11 +1,10 @@
 (import-all "list-find")
 
 (assert-equal
-  3
-  (list-find int? (@tael (@quote a) (@quote b) 3 (@quote d))))
+  3 (list-find int? [(@quote a) (@quote b) 3 (@quote d)]))
 
 (assert-equal
   null
   (list-find int?
-   (@tael (@quote a) (@quote b) (@quote c) (@quote d))))
+   [(@quote a) (@quote b) (@quote c) (@quote d)]))
 

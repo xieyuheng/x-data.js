@@ -17,7 +17,7 @@
      (lambda (value)
        (= key (f value)) (= group (hash-get key new-hash))
        (if (null? group)
-         (hash-put! key (@tael value) new-hash)
+         (hash-put! key [value] new-hash)
          (list-push! value group)))))
   new-hash)
 

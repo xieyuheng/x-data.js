@@ -19,7 +19,7 @@
 
 (define (concat-node nodes)
   (match nodes
-    ((@tael) null-node) ((@tael node) node)
+    ([] null-node) ([node] node)
     ((cons head tail) (append-node head (concat-node tail)))))
 
 (define-data grouping-mode? grouping-inline grouping-block)
@@ -28,8 +28,8 @@
   (-> int-non-negative? ppml-node? string?))
 
 (define (ppml-format max-width node)
-  (= target (@tael 0 grouping-inline (group-node node)))
-  (layout max-width 0 (@tael target)))
+  (= target [0 grouping-inline (group-node node)])
+  (layout max-width 0 [target]))
 
 (define layout-target?
   (tau int-non-negative? grouping-mode? ppml-node?))
@@ -44,39 +44,36 @@
   (if (list-empty? targets)
     ""
     (match (car targets)
-      ((@tael indentation mode null-node)
+      ([indentation mode null-node]
        (layout max-width cursor (cdr targets)))
-      ((@tael indentation mode (text-node content))
+      ([indentation mode (text-node content)]
        (string-append content
         (layout max-width
          (iadd cursor (string-length content))
          (cdr targets))))
-      ((@tael indentation mode (append-node left right))
+      ([indentation mode (append-node left right)]
        (layout max-width cursor
-        (cons (@tael indentation mode left)
-         (cons (@tael indentation mode right) (cdr targets)))))
-      ((@tael indentation mode (indent-node length child))
+        (cons [indentation mode left]
+         (cons [indentation mode right] (cdr targets)))))
+      ([indentation mode (indent-node length child)]
        (layout max-width cursor
-        (cons (@tael (iadd indentation length) mode child)
+        (cons [(iadd indentation length) mode child]
          (cdr targets))))
-      ((@tael
-         indentation grouping-inline (break-node space))
+      ([indentation grouping-inline (break-node space)]
        (string-append space
         (layout max-width
          (iadd cursor (string-length space))
          (cdr targets))))
-      ((@tael indentation grouping-block (break-node space))
+      ([indentation grouping-block (break-node space)]
        (string-append
         (string-append "\n" (string-repeat indentation " "))
         (layout max-width indentation (cdr targets))))
-      ((@tael indentation mode (group-node child))
+      ([indentation mode (group-node child)]
        (= grouping-mode
-           (if
-               (fit-inline? (isub max-width cursor)
-                (@tael child))
+           (if (fit-inline? (isub max-width cursor) [child])
              grouping-inline grouping-block))
        (layout max-width cursor
-        (cons (@tael indentation grouping-mode child)
+        (cons [indentation grouping-mode child]
          (cdr targets)))))))
 
 (claim fit-inline? (-> int? (list? ppml-node?) bool?))
