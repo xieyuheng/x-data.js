@@ -9,11 +9,14 @@
 (define example-node
   (concat-node
    [(text-node "begin")
-    (indent-node 3
-     (append-node (break-node " ")
+    (indent-node
+     3
+     (append-node
+      (break-node " ")
       (group-node
        (concat-node
-        [(text-node "stmt") (break-node " ")
+        [(text-node "stmt")
+         (break-node " ")
          (text-node "stmt")
          (break-node " ")
          (text-node "stmt")]))))
@@ -24,7 +27,8 @@
   (pipe widths
     (list-each
      (lambda (width)
-       (write (string-repeat width "-")) (write "|")
+       (write (string-repeat width "-"))
+       (write "|")
        (write (format width))
        (write "\n")
        (write (ppml-format width node))

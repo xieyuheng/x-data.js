@@ -5,7 +5,8 @@
 (assert-equal (list-lift list-unit [1 2 3]) [1 2 3])
 
 (assert-equal
-  ((specific list-lift int? int?) list-unit [1 2 3]) [1 2 3])
+  ((specific list-lift int? int?) list-unit [1 2 3])
+  [1 2 3])
 
 (assert-equal (list-unit 1) [1])
 

@@ -6,6 +6,8 @@
 
 (assert-equal
   [1 2 3 4]
-  ((specific list-fold-right int? (list? int?)) cons []
+  ((specific list-fold-right int? (list? int?))
+   cons
+   []
    [1 2 3 4]))
 

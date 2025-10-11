@@ -5,6 +5,7 @@
 
 (define (list-member? x list)
   (cond
-    ((list-empty? list) false) ((equal? x (car list)) true)
+    ((list-empty? list) false)
+    ((equal? x (car list)) true)
     (else (list-member? x (cdr list)))))
 

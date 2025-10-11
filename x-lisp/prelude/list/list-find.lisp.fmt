@@ -8,6 +8,7 @@
 
 (define (list-find p list)
   (cond
-    ((list-empty? list) null) ((p (car list)) (car list))
+    ((list-empty? list) null)
+    ((p (car list)) (car list))
     (else (list-find p (cdr list)))))
 

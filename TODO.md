@@ -1,8 +1,3 @@
-[pretty] `flex` and `wrap` be part of ppml
-
-- [bug] `wrap` does not really wrap well -- using `group` is not enough
-  - x-lisp/examples/langs/blackjack/blackjack.lisp
-
 [pretty] put every attributes after the first elements
 
 - [bug] the position of attributes relative to elements, is lost

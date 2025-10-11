@@ -5,6 +5,7 @@
 
 (define (list-any? p list)
   (cond
-    ((list-empty? list) false) ((p (car list)) true)
+    ((list-empty? list) false)
+    ((p (car list)) true)
     (else (list-any? p (cdr list)))))
 

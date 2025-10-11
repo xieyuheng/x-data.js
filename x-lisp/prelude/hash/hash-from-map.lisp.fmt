@@ -11,5 +11,6 @@
 
 (define (hash-from-map f keys)
   (pipe keys
-    (list-map (lambda (k) [k (f k)])) hash-from-entries))
+    (list-map (lambda (k) [k (f k)]))
+    hash-from-entries))
 

@@ -8,12 +8,15 @@
 
 (claim record-map
   (polymorphic (V)
-    (-> (-> symbol? V (tau symbol? V)) (record? V)
+    (-> (-> symbol? V (tau symbol? V))
+        (record? V)
         (record? V))))
 
 (define (record-map f record)
   (pipe record
-    record-entries (list-map (apply f)) record-from-entries))
+    record-entries
+    (list-map (apply f))
+    record-from-entries))
 
 (claim record-map-key
   (polymorphic (V)
@@ -21,7 +24,8 @@
 
 (define (record-map-key f record)
   (pipe record
-    record-entries (list-map (lambda ([k v]) [(f k) v]))
+    record-entries
+    (list-map (lambda ([k v]) [(f k) v]))
     record-from-entries))
 
 (claim record-map-value
@@ -30,6 +34,7 @@
 
 (define (record-map-value f record)
   (pipe record
-    record-entries (list-map (lambda ([k v]) [k (f v)]))
+    record-entries
+    (list-map (lambda ([k v]) [k (f v)]))
     record-from-entries))
 

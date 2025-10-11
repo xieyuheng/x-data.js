@@ -1,5 +1,7 @@
 (export
-  priority-queue? make-priority-queue priority-queue-empty?
+  priority-queue?
+  make-priority-queue
+  priority-queue-empty?
   priority-queue-length
   priority-queue-get
   priority-queue-put!
@@ -23,7 +25,8 @@
 (define (heap? K P) (list? (node? K P)))
 
 (define-data (priority-queue? K P)
-  (cons-priority-queue (compare (-> P P sort-order?))
+  (cons-priority-queue
+   (compare (-> P P sort-order?))
    (hash (hash? K (node? K P)))
    (heap (heap? K P))))
 
@@ -106,7 +109,8 @@
        (list-pop! heap)
        (hash-delete! (node-key found) hash))
       (else
-        (node-swap! heap found last) (list-pop! heap)
+        (node-swap! heap found last)
+        (list-pop! heap)
         (node-blance! heap compare last)
         (hash-delete! (node-key found) hash))))
   queue)
@@ -121,7 +125,8 @@
   (= heap (priority-queue-heap queue))
   (= found (hash-get key hash))
   (cond
-    ((not (null? found)) (put-node-priority! priority found)
+    ((not (null? found))
+     (put-node-priority! priority found)
      (node-blance! heap compare found))
     (else
       (= index (list-length heap))
@@ -142,19 +147,22 @@
   (cond
     ((and (not (null? parent))
           (sort-order-before?
-           (compare (node-priority node)
+           (compare
+            (node-priority node)
             (node-priority parent))))
      (node-swap! heap node parent)
      (node-blance! heap compare node))
     ((and (not (null? left-child))
           (sort-order-after?
-           (compare (node-priority node)
+           (compare
+            (node-priority node)
             (node-priority left-child))))
      (node-swap! heap node left-child)
      (node-blance! heap compare node))
     ((and (not (null? right-child))
           (sort-order-after?
-           (compare (node-priority node)
+           (compare
+            (node-priority node)
             (node-priority right-child))))
      (node-swap! heap node right-child)
      (node-blance! heap compare node))
@@ -182,14 +190,16 @@
 (define (node-left-child heap node)
   (= child-index (iadd 1 (imul 2 (node-index node))))
   (if (int-smaller? child-index (list-length heap))
-    (list-get child-index heap) null))
+    (list-get child-index heap)
+    null))
 
 (claim node-right-child node-getter-schema)
 
 (define (node-right-child heap node)
   (= child-index (iadd 2 (imul 2 (node-index node))))
   (if (int-smaller? child-index (list-length heap))
-    (list-get child-index heap) null))
+    (list-get child-index heap)
+    null))
 
 (claim node-parent node-getter-schema)
 
@@ -200,5 +210,6 @@
         ((equal? 1 (imod index 2)) (idiv index 2))
         (else (isub (idiv index 2) 1))))
   (if (int-non-negative? parent-index)
-    (list-get parent-index heap) null))
+    (list-get parent-index heap)
+    null))
 

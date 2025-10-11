@@ -4,5 +4,6 @@
 
 (define (float-product xs)
   (if (list-empty? xs)
-    1.0 (fmul (car xs) (float-product (cdr xs)))))
+    1.0
+    (fmul (car xs) (float-product (cdr xs)))))
 

@@ -23,7 +23,8 @@
 (assert-equal nil nil)
 
 (assert-equal
-  (li 1 (li 2 (li 3 nil))) (li 1 (li 2 (li 3 nil))))
+  (li 1 (li 2 (li 3 nil)))
+  (li 1 (li 2 (li 3 nil))))
 
 (assert-equal (li-tail (li 1 nil)) nil)
 

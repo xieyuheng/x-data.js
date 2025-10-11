@@ -15,7 +15,8 @@
   (pipe list
     (list-each
      (lambda (value)
-       (= key (f value)) (= group (hash-get key new-hash))
+       (= key (f value))
+       (= group (hash-get key new-hash))
        (if (null? group)
          (hash-put! key [value] new-hash)
          (list-push! value group)))))

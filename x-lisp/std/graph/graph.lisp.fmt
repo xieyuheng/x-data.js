@@ -1,5 +1,9 @@
 (export
-  graph? make-graph graph-edge? graph-vertices graph-edges
+  graph?
+  make-graph
+  graph-edge?
+  graph-vertices
+  graph-edges
   graph-neighbors
   graph-add-vertex!
   graph-add-vertices!
@@ -9,7 +13,8 @@
   graph-vertex-degree)
 
 (define-data (graph? V)
-  (cons-graph (vertices (set? V))
+  (cons-graph
+   (vertices (set? V))
    (neighbor-hash (hash? V (set? V)))))
 
 (define graph-vertices cons-graph-vertices)
@@ -39,7 +44,8 @@
 
 (define (graph-edges graph)
   (pipe graph
-    graph-neighbor-hash hash-entries
+    graph-neighbor-hash
+    hash-entries
     (list-lift
      (lambda ([vertex neighbors])
        (pipe neighbors
@@ -52,13 +58,15 @@
   (polymorphic (V) (-> V (graph? V) (graph? V))))
 
 (define (graph-add-vertex! vertex graph)
-  (set-add! vertex (graph-vertices graph)) graph)
+  (set-add! vertex (graph-vertices graph))
+  graph)
 
 (claim graph-add-vertices!
   (polymorphic (V) (-> (list? V) (graph? V) (graph? V))))
 
 (define (graph-add-vertices! vertices graph)
-  (list-each (swap graph-add-vertex! graph) vertices) graph)
+  (list-each (swap graph-add-vertex! graph) vertices)
+  graph)
 
 (claim graph-add-edge!
   (polymorphic (V)
@@ -83,7 +91,8 @@
     (-> (list? (graph-edge? V)) (graph? V) (graph? V))))
 
 (define (graph-add-edges! edges graph)
-  (list-each (swap graph-add-edge! graph) edges) graph)
+  (list-each (swap graph-add-edge! graph) edges)
+  graph)
 
 (claim graph-adjacent?
   (polymorphic (V) (-> V V (graph? V) bool?)))

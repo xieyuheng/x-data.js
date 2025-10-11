@@ -5,7 +5,10 @@
 (import-all "hash-from-entries")
 
 (export
-  hash-select hash-select-key hash-select-value hash-reject
+  hash-select
+  hash-select-key
+  hash-select-value
+  hash-reject
   hash-reject-key
   hash-reject-value)
 
@@ -15,7 +18,9 @@
 
 (define (hash-select p hash)
   (pipe hash
-    hash-entries (list-select (apply p)) hash-from-entries))
+    hash-entries
+    (list-select (apply p))
+    hash-from-entries))
 
 (claim hash-select-key
   (polymorphic (K V)
@@ -23,7 +28,8 @@
 
 (define (hash-select-key p hash)
   (pipe hash
-    hash-entries (list-select (apply (swap (drop p))))
+    hash-entries
+    (list-select (apply (swap (drop p))))
     hash-from-entries))
 
 (claim hash-select-value
@@ -32,7 +38,8 @@
 
 (define (hash-select-value p hash)
   (pipe hash
-    hash-entries (list-select (apply (drop p)))
+    hash-entries
+    (list-select (apply (drop p)))
     hash-from-entries))
 
 (claim hash-reject
@@ -41,7 +48,9 @@
 
 (define (hash-reject p hash)
   (pipe hash
-    hash-entries (list-reject (apply p)) hash-from-entries))
+    hash-entries
+    (list-reject (apply p))
+    hash-from-entries))
 
 (claim hash-reject-key
   (polymorphic (K V)
@@ -49,7 +58,8 @@
 
 (define (hash-reject-key p hash)
   (pipe hash
-    hash-entries (list-reject (apply (swap (drop p))))
+    hash-entries
+    (list-reject (apply (swap (drop p))))
     hash-from-entries))
 
 (claim hash-reject-value
@@ -58,6 +68,7 @@
 
 (define (hash-reject-value p hash)
   (pipe hash
-    hash-entries (list-reject (apply (drop p)))
+    hash-entries
+    (list-reject (apply (drop p)))
     hash-from-entries))
 

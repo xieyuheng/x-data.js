@@ -11,7 +11,8 @@
 (assert-not-equal (my-add 1) (my-add 2))
 
 (define-data (either? L R)
-  (left (value L)) (right (value R)))
+  (left (value L))
+  (right (value R)))
 
 (assert ((either? int? symbol?) (left 1)))
 
@@ -22,8 +23,10 @@
 (define (id x) x)
 
 (assert-equal
-  (the (-> int? int?) id) (the (-> int? int?) id))
+  (the (-> int? int?) id)
+  (the (-> int? int?) id))
 
 (assert-not-equal
-  (the (-> int? int?) id) (the (-> float? float?) id))
+  (the (-> int? int?) id)
+  (the (-> float? float?) id))
 

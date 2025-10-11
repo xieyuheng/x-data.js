@@ -11,7 +11,8 @@
   (assert-equal
     2
     (pipe graph
-      (graph-coloring! coloring vertices) hash-values
+      (graph-coloring! coloring vertices)
+      hash-values
       list-to-set
       set-size)))
 
@@ -29,7 +30,8 @@
   (assert-equal
     3
     (pipe graph
-      (graph-coloring! coloring vertices) hash-values
+      (graph-coloring! coloring vertices)
+      hash-values
       list-to-set
       set-size)))
 

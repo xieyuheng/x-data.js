@@ -17,6 +17,7 @@
 (define (record-put-entries! entries record)
   (match entries
     ([] record)
-    ((cons [k v] tail) (record-put! k v record)
+    ((cons [k v] tail)
+     (record-put! k v record)
      (record-put-entries! tail record))))
 

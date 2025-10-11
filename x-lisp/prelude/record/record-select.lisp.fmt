@@ -5,7 +5,9 @@
 (import-all "record-from-entries")
 
 (export
-  record-select record-select-key record-select-value
+  record-select
+  record-select-key
+  record-select-value
   record-reject
   record-reject-key
   record-reject-value)
@@ -16,7 +18,8 @@
 
 (define (record-select p record)
   (pipe record
-    record-entries (list-select (apply p))
+    record-entries
+    (list-select (apply p))
     record-from-entries))
 
 (claim record-select-key
@@ -25,7 +28,8 @@
 
 (define (record-select-key p record)
   (pipe record
-    record-entries (list-select (apply (swap (drop p))))
+    record-entries
+    (list-select (apply (swap (drop p))))
     record-from-entries))
 
 (claim record-select-value
@@ -34,7 +38,8 @@
 
 (define (record-select-value p record)
   (pipe record
-    record-entries (list-select (apply (drop p)))
+    record-entries
+    (list-select (apply (drop p)))
     record-from-entries))
 
 (claim record-reject
@@ -43,7 +48,8 @@
 
 (define (record-reject p record)
   (pipe record
-    record-entries (list-reject (apply p))
+    record-entries
+    (list-reject (apply p))
     record-from-entries))
 
 (claim record-reject-key
@@ -52,7 +58,8 @@
 
 (define (record-reject-key p record)
   (pipe record
-    record-entries (list-reject (apply (swap (drop p))))
+    record-entries
+    (list-reject (apply (swap (drop p))))
     record-from-entries))
 
 (claim record-reject-value
@@ -61,6 +68,7 @@
 
 (define (record-reject-value p record)
   (pipe record
-    record-entries (list-reject (apply (drop p)))
+    record-entries
+    (list-reject (apply (drop p)))
     record-from-entries))
 

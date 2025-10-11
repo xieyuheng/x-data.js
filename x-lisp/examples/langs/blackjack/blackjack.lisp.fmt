@@ -1,7 +1,17 @@
 (define-data suit? club diamond spade heart)
 
 (define-data rank?
-  two three four five six seven eight nine ten jack queen
+  two
+  three
+  four
+  five
+  six
+  seven
+  eight
+  nine
+  ten
+  jack
+  queen
   king
   ace)
 
