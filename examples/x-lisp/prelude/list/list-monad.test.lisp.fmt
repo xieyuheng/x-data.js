@@ -2,20 +2,20 @@
 
 (import-all "list-monad")
 
-(assert-equal (list-lift list-unit (@tael 1 2 3))
- (@tael 1 2 3))
+(assert-equal
+  (list-lift list-unit (@tael 1 2 3)) (@tael 1 2 3))
 
 (assert-equal
- ((specific list-lift int? int?) list-unit (@tael 1 2 3))
- (@tael 1 2 3))
+  ((specific list-lift int? int?) list-unit (@tael 1 2 3))
+  (@tael 1 2 3))
 
 (assert-equal (list-unit 1) (@tael 1))
 
 (assert-equal ((specific list-unit int?) 1) (@tael 1))
 
-(assert-equal ((list-lift list-unit) (@tael 1 2 3))
- (@tael 1 2 3))
+(assert-equal
+  ((list-lift list-unit) (@tael 1 2 3)) (@tael 1 2 3))
 
-(assert-equal (pipe (@tael 1 2 3) (list-lift list-unit))
- (@tael 1 2 3))
+(assert-equal
+  (pipe (@tael 1 2 3) (list-lift list-unit)) (@tael 1 2 3))
 

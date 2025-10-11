@@ -8,11 +8,12 @@
   (graph-add-edge! (@tael "d" "a") graph)
   (= coloring (@hash))
   (= vertices (set-to-list (graph-vertices graph)))
-  (assert-equal 2
-   (pipe graph
-     (graph-coloring! coloring vertices) hash-values
-     list-to-set
-     set-size)))
+  (assert-equal
+    2
+    (pipe graph
+      (graph-coloring! coloring vertices) hash-values
+      list-to-set
+      set-size)))
 
 (begin
   (= graph (make-graph (@tael) (@tael)))
@@ -25,9 +26,10 @@
   (graph-add-edge! (@tael "d" "b") graph)
   (= coloring (@hash))
   (= vertices (set-to-list (graph-vertices graph)))
-  (assert-equal 3
-   (pipe graph
-     (graph-coloring! coloring vertices) hash-values
-     list-to-set
-     set-size)))
+  (assert-equal
+    3
+    (pipe graph
+      (graph-coloring! coloring vertices) hash-values
+      list-to-set
+      set-size)))
 

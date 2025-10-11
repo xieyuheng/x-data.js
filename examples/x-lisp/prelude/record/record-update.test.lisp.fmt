@@ -1,14 +1,16 @@
 (import-all "record-update")
 
-(assert-equal (@tael :a 2 :b 2)
- (record-update (@quote a)
-  (lambda (a) (if (null? a) 0 (iadd 1 a)))
-  (@tael :a 1 :b 2)))
+(assert-equal
+  (@tael :a 2 :b 2)
+  (record-update (@quote a)
+   (lambda (a) (if (null? a) 0 (iadd 1 a)))
+   (@tael :a 1 :b 2)))
 
-(assert-equal (@tael :a 0 :b 2)
- (record-update (@quote a)
-  (lambda (a) (if (null? a) 0 (iadd 1 a)))
-  (@tael :b 2)))
+(assert-equal
+  (@tael :a 0 :b 2)
+  (record-update (@quote a)
+   (lambda (a) (if (null? a) 0 (iadd 1 a)))
+   (@tael :b 2)))
 
 (begin
   (= record (@tael :a 1 :b 2))

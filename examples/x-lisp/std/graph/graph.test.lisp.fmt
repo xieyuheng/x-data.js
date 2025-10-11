@@ -1,16 +1,18 @@
 (import-all "graph")
 
-(assert-equal (make-graph (@tael 1 2 3) (@tael))
- (begin
-   (= graph (make-graph (@tael) (@tael)))
-   (graph-add-vertex! 1 graph)
-   (graph-add-vertex! 2 graph)
-   (graph-add-vertex! 3 graph)))
+(assert-equal
+  (make-graph (@tael 1 2 3) (@tael))
+  (begin
+    (= graph (make-graph (@tael) (@tael)))
+    (graph-add-vertex! 1 graph)
+    (graph-add-vertex! 2 graph)
+    (graph-add-vertex! 3 graph)))
 
-(assert-equal (make-graph (@tael 1 2 3) (@tael))
- (begin
-   (= graph (make-graph (@tael) (@tael)))
-   (graph-add-vertices! (@tael 1 2 3) graph)))
+(assert-equal
+  (make-graph (@tael 1 2 3) (@tael))
+  (begin
+    (= graph (make-graph (@tael) (@tael)))
+    (graph-add-vertices! (@tael 1 2 3) graph)))
 
 (begin
   (= graph
@@ -22,8 +24,9 @@
   (= graph
       (make-graph (@tael 1 2 3)
        (@tael (@tael 1 2) (@tael 2 3) (@tael 3 1))))
-  (assert-equal (@set (@set 1 2) (@set 2 3) (@set 3 1))
-   (pipe (graph-edges graph) (set-map list-to-set))))
+  (assert-equal
+    (@set (@set 1 2) (@set 2 3) (@set 3 1))
+    (pipe (graph-edges graph) (set-map list-to-set))))
 
 (begin
   (= graph

@@ -8,6 +8,6 @@
 
 (assert-equal ((compose (iadd 1) (iadd 1) (iadd 1)) 0) 3)
 
-(assert-equal ((compose (iadd 1) (imul 2)) 1)
- (iadd 1 (imul 2 1)))
+(assert-equal
+  ((compose (iadd 1) (imul 2)) 1) (iadd 1 (imul 2 1)))
 

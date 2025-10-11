@@ -1,5 +1,5 @@
 (import-all "list-map")
 
-(assert-equal (list-map (iadd 10) (@tael 1 2 3))
- (@tael 11 12 13))
+(assert-equal
+  (list-map (iadd 10) (@tael 1 2 3)) (@tael 11 12 13))
 

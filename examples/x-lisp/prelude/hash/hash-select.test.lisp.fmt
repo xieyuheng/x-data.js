@@ -2,33 +2,39 @@
 
 (import-all "hash-select")
 
-(assert-equal (@hash (@quote a) 1 (@quote b) 2)
- (hash-select (drop int-non-negative?)
-  (@hash
-    (@quote a) 1 (@quote b) 2 (@quote x) -1 (@quote y) -2)))
+(assert-equal
+  (@hash (@quote a) 1 (@quote b) 2)
+  (hash-select (drop int-non-negative?)
+   (@hash
+     (@quote a) 1 (@quote b) 2 (@quote x) -1 (@quote y) -2)))
 
-(assert-equal (@hash (@quote a) 1 (@quote b) 2)
- (hash-select-value int-non-negative?
-  (@hash
-    (@quote a) 1 (@quote b) 2 (@quote x) -1 (@quote y) -2)))
+(assert-equal
+  (@hash (@quote a) 1 (@quote b) 2)
+  (hash-select-value int-non-negative?
+   (@hash
+     (@quote a) 1 (@quote b) 2 (@quote x) -1 (@quote y) -2)))
 
-(assert-equal (@hash 1 (@quote a) 2 (@quote b))
- (hash-select-key int-non-negative?
-  (@hash
-    1 (@quote a) 2 (@quote b) -1 (@quote x) -2 (@quote y))))
+(assert-equal
+  (@hash 1 (@quote a) 2 (@quote b))
+  (hash-select-key int-non-negative?
+   (@hash
+     1 (@quote a) 2 (@quote b) -1 (@quote x) -2 (@quote y))))
 
-(assert-equal (@hash (@quote x) -1 (@quote y) -2)
- (hash-reject (drop int-non-negative?)
-  (@hash
-    (@quote a) 1 (@quote b) 2 (@quote x) -1 (@quote y) -2)))
+(assert-equal
+  (@hash (@quote x) -1 (@quote y) -2)
+  (hash-reject (drop int-non-negative?)
+   (@hash
+     (@quote a) 1 (@quote b) 2 (@quote x) -1 (@quote y) -2)))
 
-(assert-equal (@hash (@quote x) -1 (@quote y) -2)
- (hash-reject-value int-non-negative?
-  (@hash
-    (@quote a) 1 (@quote b) 2 (@quote x) -1 (@quote y) -2)))
+(assert-equal
+  (@hash (@quote x) -1 (@quote y) -2)
+  (hash-reject-value int-non-negative?
+   (@hash
+     (@quote a) 1 (@quote b) 2 (@quote x) -1 (@quote y) -2)))
 
-(assert-equal (@hash -1 (@quote x) -2 (@quote y))
- (hash-reject-key int-non-negative?
-  (@hash
-    1 (@quote a) 2 (@quote b) -1 (@quote x) -2 (@quote y))))
+(assert-equal
+  (@hash -1 (@quote x) -2 (@quote y))
+  (hash-reject-key int-non-negative?
+   (@hash
+     1 (@quote a) 2 (@quote b) -1 (@quote x) -2 (@quote y))))
 

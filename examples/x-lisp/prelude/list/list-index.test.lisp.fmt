@@ -1,9 +1,11 @@
 (import-all "list-index")
 
-(assert-equal 2
- (list-index 3 (@tael (@quote a) (@quote b) 3 (@quote d))))
+(assert-equal
+  2
+  (list-index 3 (@tael (@quote a) (@quote b) 3 (@quote d))))
 
-(assert-equal null
- (list-index 3
-  (@tael (@quote a) (@quote b) (@quote c) (@quote d))))
+(assert-equal
+  null
+  (list-index 3
+   (@tael (@quote a) (@quote b) (@quote c) (@quote d))))
 
