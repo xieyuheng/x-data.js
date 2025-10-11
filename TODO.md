@@ -1,5 +1,3 @@
-[pretty] `renderSexp` -- "short target" heuristic -- for `and` `or` `->` `*->`
-
 [pretty] `flex` and `wrap` be part of ppml
 
 - [bug] `wrap` does not really wrap well -- using `group` is not enough

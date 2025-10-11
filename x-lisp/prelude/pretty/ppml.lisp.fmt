@@ -36,8 +36,8 @@
 
 (claim layout
   (-> int-non-negative? int-non-negative?
-   (list? layout-target?)
-   string?))
+      (list? layout-target?)
+      string?))
 
 (define (layout max-width cursor targets)
   (if (list-empty? targets)
@@ -53,11 +53,11 @@
       ([indentation mode (append-node left right)]
        (layout max-width cursor
         (cons [indentation mode left]
-         (cons [indentation mode right] (cdr targets)))))
+              (cons [indentation mode right] (cdr targets)))))
       ([indentation mode (indent-node length child)]
        (layout max-width cursor
         (cons [(iadd indentation length) mode child]
-         (cdr targets))))
+              (cdr targets))))
       ([indentation grouping-inline (break-node space)]
        (string-append space
         (layout max-width
@@ -73,7 +73,7 @@
              grouping-inline grouping-block))
        (layout max-width cursor
         (cons [indentation grouping-mode child]
-         (cdr targets)))))))
+              (cdr targets)))))))
 
 (claim fit-inline? (-> int? (list? ppml-node?) bool?))
 
@@ -81,20 +81,20 @@
   (cond
     ((int-smaller? width 0) false)
     ((list-empty? nodes) true)
-    (else
-     (match (car nodes)
-       (null-node (fit-inline? width (cdr nodes)))
-       ((text-node content)
-        (fit-inline? (isub width (string-length content))
-         (cdr nodes)))
-       ((append-node left right)
-        (fit-inline? width
-         (cons left (cons right (cdr nodes)))))
-       ((indent-node length child)
-        (fit-inline? width (cons child (cdr nodes))))
-       ((break-node space)
-        (fit-inline? (isub width (string-length space))
-         (cdr nodes)))
-       ((group-node child)
-        (fit-inline? width (cons child (cdr nodes))))))))
+    (else (match (car nodes)
+            (null-node (fit-inline? width (cdr nodes)))
+            ((text-node content)
+             (fit-inline?
+              (isub width (string-length content))
+              (cdr nodes)))
+            ((append-node left right)
+             (fit-inline? width
+              (cons left (cons right (cdr nodes)))))
+            ((indent-node length child)
+             (fit-inline? width (cons child (cdr nodes))))
+            ((break-node space)
+             (fit-inline? (isub width (string-length space))
+              (cdr nodes)))
+            ((group-node child)
+             (fit-inline? width (cons child (cdr nodes))))))))
 

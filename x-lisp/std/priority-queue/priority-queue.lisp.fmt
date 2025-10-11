@@ -62,7 +62,7 @@
   (cond
     ((priority-queue-empty? queue) null)
     (else (= first (list-head (priority-queue-heap queue)))
-     (node-key first))))
+          (node-key first))))
 
 (claim priority-queue-poll!
   (polymorphic (K P)
@@ -78,15 +78,15 @@
      (hash-delete! (node-key first) hash)
      (node-key first))
     (else (= heap (priority-queue-heap queue))
-     (= compare (priority-queue-compare queue))
-     (= first (list-head heap))
-     (= hash (priority-queue-hash queue))
-     (hash-delete! (node-key first) hash)
-     (= last (list-last heap))
-     (node-swap! heap first last)
-     (list-pop! heap)
-     (node-blance! heap compare last)
-     (node-key first))))
+          (= compare (priority-queue-compare queue))
+          (= first (list-head heap))
+          (= hash (priority-queue-hash queue))
+          (hash-delete! (node-key first) hash)
+          (= last (list-last heap))
+          (node-swap! heap first last)
+          (list-pop! heap)
+          (node-blance! heap compare last)
+          (node-key first))))
 
 (claim priority-queue-delete!
   (polymorphic (K P)
@@ -104,8 +104,8 @@
        (list-pop! heap)
        (hash-delete! (node-key found) hash))
       (else (node-swap! heap found last) (list-pop! heap)
-       (node-blance! heap compare last)
-       (hash-delete! (node-key found) hash))))
+            (node-blance! heap compare last)
+            (hash-delete! (node-key found) hash))))
   queue)
 
 (claim priority-queue-put!
@@ -121,10 +121,10 @@
     ((not (null? found)) (put-node-priority! priority found)
      (node-blance! heap compare found))
     (else (= index (list-length heap))
-     (= new-node (cons-node key priority index))
-     (list-push! new-node heap)
-     (hash-put! key new-node hash)
-     (node-blance! heap compare new-node)))
+          (= new-node (cons-node key priority index))
+          (list-push! new-node heap)
+          (hash-put! key new-node hash)
+          (node-blance! heap compare new-node)))
   queue)
 
 (claim node-blance!
@@ -137,20 +137,21 @@
   (= right-child (node-right-child heap node))
   (cond
     ((and (not (null? parent))
-      (sort-order-before?
-       (compare (node-priority node) (node-priority parent))))
+          (sort-order-before?
+           (compare (node-priority node)
+            (node-priority parent))))
      (node-swap! heap node parent)
      (node-blance! heap compare node))
     ((and (not (null? left-child))
-      (sort-order-after?
-       (compare (node-priority node)
-        (node-priority left-child))))
+          (sort-order-after?
+           (compare (node-priority node)
+            (node-priority left-child))))
      (node-swap! heap node left-child)
      (node-blance! heap compare node))
     ((and (not (null? right-child))
-      (sort-order-after?
-       (compare (node-priority node)
-        (node-priority right-child))))
+          (sort-order-after?
+           (compare (node-priority node)
+            (node-priority right-child))))
      (node-swap! heap node right-child)
      (node-blance! heap compare node))
     (else void)))

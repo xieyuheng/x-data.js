@@ -154,6 +154,35 @@ function renderApplication(
   attributes: Record<string, Sexp>,
 ): Render {
   return (config) => {
+    // "short target" heuristic -- for `and` `or` `->` `*->`
+    const [head, ...rest] = elements
+    if (head.kind === "Symbol" && head.content.length <= 4) {
+      const indentation = head.content.length + 2
+      const bodyNode =
+        rest.length === 0
+          ? pp.text(head.content)
+          : pp.group(
+              pp.indent(
+                indentation,
+                pp.text(head.content),
+                pp.text(" "),
+                pp.wrap(rest.map((element) => renderSexp(element)(config))),
+              ),
+            )
+
+      const footNode = recordIsEmpty(attributes)
+        ? pp.nil()
+        : pp.group(
+            pp.indent(
+              indentation,
+              pp.br(),
+              renderAttributes(attributes)(config),
+            ),
+          )
+
+      return pp.group(pp.text("("), bodyNode, footNode, pp.text(")"))
+    }
+
     const bodyNode = pp.group(
       pp.indent(
         1,

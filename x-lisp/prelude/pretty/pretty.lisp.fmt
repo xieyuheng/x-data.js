@@ -27,7 +27,7 @@
       (concat-node
        [(text-node "{") elements (text-node "}")])))
     ((and (list? anything? value) (list-empty? value)
-      (record-empty? value))
+          (record-empty? value))
      (text-node "[]"))
     ((and (list? anything? value) (record-empty? value))
      (= elements (indent-node 1 (render-elements value)))
@@ -53,7 +53,7 @@
         attributes
         (text-node "]")])))
     ((and (hash? anything? anything? value)
-      (hash-empty? value))
+          (hash-empty? value))
      (text-node "(@hash)"))
     ((hash? anything? anything? value)
      (= entries
