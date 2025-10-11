@@ -1,6 +1,3 @@
-[pretty] `renderUnquote` -- parser level syntax sugar
-[pretty] `renderQuasiquote` -- parser level syntax sugar
-
 [pretty] `renderSexp` -- function application with "short target" heuristic
 
 [ppml] support `hardbreak`

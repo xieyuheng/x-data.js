@@ -31,23 +31,24 @@ export function renderSexp(sexp: Sexp): Render {
     }
 
     const [first, ...rest] = sexp.elements
+
+    if (first.kind === "Symbol" && rest.length === 1) {
+      switch (first.content) {
+        case "@quote":
+          return pp.concat(pp.text("'"), renderSexp(rest[0])(config))
+        case "@unquote":
+          return pp.concat(pp.text(","), renderSexp(rest[0])(config))
+        case "@quasiquote":
+          return pp.concat(pp.text("`"), renderSexp(rest[0])(config))
+      }
+    }
+
     if (first.kind === "Symbol") {
       switch (first.content) {
-        case "@set": {
+        case "@set":
           return renderSet(rest)(config)
-        }
-
-        case "@tael": {
+        case "@tael":
           return renderTael(rest, sexp.attributes)(config)
-        }
-
-        case "@quote": {
-          if (rest.length === 1) {
-            return renderQuote(rest[0])(config)
-          } else {
-            break
-          }
-        }
       }
     }
 
@@ -63,12 +64,6 @@ export function renderSexp(sexp: Sexp): Render {
     }
 
     return renderApplication(sexp.elements, sexp.attributes)(config)
-  }
-}
-
-function renderQuote(sexp: Sexp): Render {
-  return (config) => {
-    return pp.concat(pp.text("'"), renderSexp(sexp)(config))
   }
 }
 
