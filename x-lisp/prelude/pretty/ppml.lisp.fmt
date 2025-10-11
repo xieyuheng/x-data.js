@@ -35,10 +35,9 @@
   (tau int-non-negative? grouping-mode? ppml-node?))
 
 (claim layout
-  (->
-    int-non-negative? int-non-negative?
-    (list? layout-target?)
-    string?))
+  (-> int-non-negative? int-non-negative?
+   (list? layout-target?)
+   string?))
 
 (define (layout max-width cursor targets)
   (if (list-empty? targets)

@@ -21,8 +21,6 @@ export const defaultConfig: Config = {
     ["match", 1],
     ["pipe", 1],
     ["compose", 0],
-    ["->", 0],
-    ["*->", 0],
     ["if", 1],
     ["when", 1],
     ["unless", 1],
@@ -31,6 +29,7 @@ export const defaultConfig: Config = {
     ["@tael", 0],
     ["@set", 0],
     ["@hash", 0],
+    ["specific", 1],
     ["polymorphic", 1],
   ],
 }

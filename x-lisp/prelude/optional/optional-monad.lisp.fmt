@@ -4,8 +4,8 @@
 
 (claim optional-lift
   (polymorphic (A B)
-    (->
-      (-> A (optional? B)) (-> (optional? A) (optional? B)))))
+    (-> (-> A (optional? B))
+     (-> (optional? A) (optional? B)))))
 
 (define (optional-lift f)
   (lambda (x) (if (null? x) null (f x))))

@@ -4,10 +4,9 @@
 
 (claim list-foremost
   (polymorphic (A)
-    (->
-      (-> A A sort-order?)
-      (inter (list? A) (negate list-empty?))
-      A)))
+    (-> (-> A A sort-order?)
+     (inter (list? A) (negate list-empty?))
+     A)))
 
 (define (list-foremost compare list)
   (list-foremost/loop compare (cdr list) (car list)))
@@ -22,10 +21,9 @@
 
 (claim list-rearmost
   (polymorphic (A)
-    (->
-      (-> A A sort-order?)
-      (inter (list? A) (negate list-empty?))
-      A)))
+    (-> (-> A A sort-order?)
+     (inter (list? A) (negate list-empty?))
+     A)))
 
 (define (list-rearmost compare list)
   (list-rearmost/loop compare (cdr list) (car list)))

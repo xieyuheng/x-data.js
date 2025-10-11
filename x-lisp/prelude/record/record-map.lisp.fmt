@@ -8,8 +8,8 @@
 
 (claim record-map
   (polymorphic (V)
-    (->
-      (-> symbol? V (tau symbol? V)) (record? V) (record? V))))
+    (-> (-> symbol? V (tau symbol? V)) (record? V)
+     (record? V))))
 
 (define (record-map f record)
   (pipe record
