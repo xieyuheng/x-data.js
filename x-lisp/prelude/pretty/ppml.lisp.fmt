@@ -81,20 +81,20 @@
   (cond
     ((int-smaller? width 0) false)
     ((list-empty? nodes) true)
-    (else (match (car nodes)
-            (null-node (fit-inline? width (cdr nodes)))
-            ((text-node content)
-             (fit-inline?
-              (isub width (string-length content))
-              (cdr nodes)))
-            ((append-node left right)
-             (fit-inline? width
-              (cons left (cons right (cdr nodes)))))
-            ((indent-node length child)
-             (fit-inline? width (cons child (cdr nodes))))
-            ((break-node space)
-             (fit-inline? (isub width (string-length space))
-              (cdr nodes)))
-            ((group-node child)
-             (fit-inline? width (cons child (cdr nodes))))))))
+    (else
+      (match (car nodes)
+        (null-node (fit-inline? width (cdr nodes)))
+        ((text-node content)
+         (fit-inline? (isub width (string-length content))
+          (cdr nodes)))
+        ((append-node left right)
+         (fit-inline? width
+          (cons left (cons right (cdr nodes)))))
+        ((indent-node length child)
+         (fit-inline? width (cons child (cdr nodes))))
+        ((break-node space)
+         (fit-inline? (isub width (string-length space))
+          (cdr nodes)))
+        ((group-node child)
+         (fit-inline? width (cons child (cdr nodes))))))))
 
