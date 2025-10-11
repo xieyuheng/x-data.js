@@ -1,8 +1,8 @@
-[pretty] `renderSexp` -- "short target" heuristic -- for `if` `and` `or` `->` `*->`
+[pretty] `renderSexp` -- "short target" heuristic -- for `and` `or` `->` `*->`
 
 [pretty] `flex` and `wrap` be part of ppml
 
-- [bug] `flexWrap` does not really wrap well -- using `group` is not enough
+- [bug] `wrap` does not really wrap well -- using `group` is not enough
   - x-lisp/examples/langs/blackjack/blackjack.lisp
 
 [pretty] put every attributes after the first elements

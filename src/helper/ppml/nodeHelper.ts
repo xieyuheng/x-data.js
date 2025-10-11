@@ -22,7 +22,7 @@ export function flex(nodes: Array<pp.Node>): pp.Node {
   }
 }
 
-export function flexWrap(nodes: Array<pp.Node>): pp.Node {
+export function wrap(nodes: Array<pp.Node>): pp.Node {
   if (nodes.length === 0) {
     return pp.nil()
   }

@@ -72,7 +72,7 @@ function renderSet(elements: Array<Sexp>): Render {
     const bodyNode = pp.group(
       pp.indent(
         1,
-        pp.flexWrap(elements.map((element) => renderSexp(element)(config))),
+        pp.wrap(elements.map((element) => renderSexp(element)(config))),
       ),
     )
 
@@ -95,7 +95,7 @@ function renderTael(
       const bodyNode = pp.group(
         pp.indent(
           1,
-          pp.flexWrap(elements.map((element) => renderSexp(element)(config))),
+          pp.wrap(elements.map((element) => renderSexp(element)(config))),
         ),
       )
 
@@ -126,7 +126,7 @@ function renderSyntax(
   return (config) => {
     const headNode = pp.indent(
       4,
-      pp.flexWrap([
+      pp.wrap([
         pp.text(name),
         ...header.map((sexp) => renderSexp(sexp)(config)),
       ]),
@@ -142,7 +142,7 @@ function renderSyntax(
         : pp.indent(
             2,
             pp.br(),
-            pp.flexWrap(body.map((sexp) => renderSexp(sexp)(config))),
+            pp.wrap(body.map((sexp) => renderSexp(sexp)(config))),
           )
 
     return pp.group(pp.text("("), headNode, neckNode, bodyNode, pp.text(")"))
@@ -157,7 +157,7 @@ function renderApplication(
     const bodyNode = pp.group(
       pp.indent(
         1,
-        pp.flexWrap(elements.map((element) => renderSexp(element)(config))),
+        pp.wrap(elements.map((element) => renderSexp(element)(config))),
       ),
     )
 
