@@ -15,42 +15,42 @@ export function prettySexp(
   sexp: Sexp,
   config: Config = defaultConfig,
 ): string {
-  return pp.format(maxWidth, renderSexp(config)(sexp))
+  return pp.format(maxWidth, renderSexp(sexp)(config))
 }
 
-export function renderSexp(config: Config): (sexp: Sexp) => pp.Node {
-  return (sexp) => {
+type Render = (config: Config) => pp.Node
+
+export function renderSexp(sexp: Sexp): Render {
+  return (config) => {
     if (isAtom(sexp)) {
       return pp.text(formatSexp(sexp))
     }
 
     if (sexp.elements.length === 0) {
-      return renderElementLess(config)(sexp.attributes)
+      return renderElementLess(sexp.attributes)(config)
     }
 
     const [first, ...rest] = sexp.elements
     if (first.kind === "Symbol") {
-      switch (
-        first.content
-        // case "@set": {
-        //   renderSet(config)(rest)
-        // }
-      ) {
+      switch (first.content) {
+        case "@set": {
+          // renderSet(config)(rest)
+        }
       }
     }
 
     const keywordConfig = findKeywordConfig(config, first)
     if (keywordConfig !== undefined) {
       const [name, headerLength] = keywordConfig
-      return renderSyntax(config)(
+      return renderSyntax(
         name,
         rest.slice(0, headerLength),
         rest.slice(headerLength),
         sexp.attributes,
-      )
+      )(config)
     }
 
-    return renderApplication(config)(sexp.elements, sexp.attributes)
+    return renderApplication(sexp.elements, sexp.attributes)(config)
   }
 }
 
@@ -64,75 +64,82 @@ function findKeywordConfig(
 }
 
 function renderSyntax(
-  config: Config,
-): (
   name: string,
   header: Array<Sexp>,
   body: Array<Sexp>,
   attributes: Record<string, Sexp>,
-) => pp.Node {
-  return (name, header, body, attributes) => {
+): Render {
+  return (config) => {
     const headNode = pp.indent(
       4,
-      pp.flexWrap([pp.text(name), ...header.map(renderSexp(config))]),
+      pp.flexWrap([
+        pp.text(name),
+        ...header.map((sexp) => renderSexp(sexp)(config)),
+      ]),
     )
 
     const neckNode = recordIsEmpty(attributes)
       ? pp.nil()
-      : pp.group(pp.indent(2, pp.br(), renderAttributes(config)(attributes)))
+      : pp.group(pp.indent(2, pp.br(), renderAttributes(attributes)(config)))
 
     const bodyNode =
       body.length === 0
         ? pp.nil()
-        : pp.indent(2, pp.br(), pp.flexWrap(body.map(renderSexp(config))))
+        : pp.indent(
+            2,
+            pp.br(),
+            pp.flexWrap(body.map((sexp) => renderSexp(sexp)(config))),
+          )
 
     return pp.group(pp.text("("), headNode, neckNode, bodyNode, pp.text(")"))
   }
 }
 
 function renderApplication(
-  config: Config,
-): (elements: Array<Sexp>, attributes: Record<string, Sexp>) => pp.Node {
-  return (elements, attributes) => {
+  elements: Array<Sexp>,
+  attributes: Record<string, Sexp>,
+): Render {
+  return (config) => {
     const footNode = recordIsEmpty(attributes)
       ? pp.nil()
-      : pp.group(pp.indent(1, pp.br(), renderAttributes(config)(attributes)))
+      : pp.group(pp.indent(1, pp.br(), renderAttributes(attributes)(config)))
 
     return pp.group(
       pp.text("("),
-      pp.group(pp.indent(1, pp.flexWrap(elements.map(renderSexp(config))))),
+      pp.group(
+        pp.indent(
+          1,
+          pp.flexWrap(elements.map((element) => renderSexp(element)(config))),
+        ),
+      ),
       footNode,
       pp.text(")"),
     )
   }
 }
 
-function renderElementLess(
-  config: Config,
-): (attributes: Record<string, Sexp>) => pp.Node {
-  return (attributes) => {
+function renderElementLess(attributes: Record<string, Sexp>): Render {
+  return (config) => {
     return recordIsEmpty(attributes)
       ? pp.text("()")
       : pp.group(
           pp.text("("),
-          pp.indent(1, renderAttributes(config)(attributes)),
+          pp.indent(1, renderAttributes(attributes)(config)),
           pp.text(")"),
         )
   }
 }
 
-function renderAttribute(
-  config: Config,
-): ([key, sexp]: [string, Sexp]) => pp.Node {
-  return ([key, sexp]) => {
-    return pp.group(pp.text(`:${key}`), pp.br(), renderSexp(config)(sexp))
+function renderAttribute([key, sexp]: [string, Sexp]): Render {
+  return (config) => {
+    return pp.group(pp.text(`:${key}`), pp.br(), renderSexp(sexp)(config))
   }
 }
 
-function renderAttributes(
-  config: Config,
-): (attributes: Record<string, Sexp>) => pp.Node {
-  return (attributes) => {
-    return pp.flex(Object.entries(attributes).map(renderAttribute(config)))
+function renderAttributes(attributes: Record<string, Sexp>): Render {
+  return (config) => {
+    return pp.flex(
+      Object.entries(attributes).map((entry) => renderAttribute(entry)(config)),
+    )
   }
 }
