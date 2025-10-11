@@ -64,14 +64,16 @@
        (layout
         max-width
         cursor
-        (cons [indentation mode left]
-              (cons [indentation mode right] (cdr targets)))))
+        (cons
+         [indentation mode left]
+         (cons [indentation mode right] (cdr targets)))))
       ([indentation mode (indent-node length child)]
        (layout
         max-width
         cursor
-        (cons [(iadd indentation length) mode child]
-              (cdr targets))))
+        (cons
+         [(iadd indentation length) mode child]
+         (cdr targets))))
       ([indentation grouping-inline (break-node space)]
        (string-append
         space
@@ -91,8 +93,9 @@
        (layout
         max-width
         cursor
-        (cons [indentation grouping-mode child]
-              (cdr targets)))))))
+        (cons
+         [indentation grouping-mode child]
+         (cdr targets)))))))
 
 (claim fit-inline? (-> int? (list? ppml-node?) bool?))
 
