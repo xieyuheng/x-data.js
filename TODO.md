@@ -1,9 +1,8 @@
-[pretty] put every attributes after the first elements
-
-- [bug] the position of attributes relative to elements, is lost
-  - x-lisp/examples/xml/bookstore.snapshot.lisp
-
 # to be a formatter
+
+[bug] the position of attributes relative to elements, is lost
+
+- x-lisp/examples/xml/bookstore.snapshot.lisp
 
 [ppml] support `hardbreak` -- for line comment
 [lexer] `EmptyLine` as `Token` -- for formatter

@@ -206,9 +206,9 @@
 (define (node-parent heap node)
   (= index (node-index node))
   (= parent-index
-      (cond
-        ((equal? 1 (imod index 2)) (idiv index 2))
-        (else (isub (idiv index 2) 1))))
+     (cond
+       ((equal? 1 (imod index 2)) (idiv index 2))
+       (else (isub (idiv index 2) 1))))
   (if (int-non-negative? parent-index)
     (list-get parent-index heap)
     null))

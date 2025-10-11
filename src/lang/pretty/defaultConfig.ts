@@ -6,7 +6,6 @@ export const defaultConfig: Config = {
     ["import-all", 0],
     ["include-all", 0],
     ["include", 0],
-    ["=", 2],
     ["import", 0],
     ["claim", 1],
     ["define", 1],

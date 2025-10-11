@@ -85,9 +85,9 @@
         (layout max-width indentation (cdr targets))))
       ([indentation mode (group-node child)]
        (= grouping-mode
-           (if (fit-inline? (isub max-width cursor) [child])
-             grouping-inline
-             grouping-block))
+          (if (fit-inline? (isub max-width cursor) [child])
+            grouping-inline
+            grouping-block))
        (layout
         max-width
         cursor

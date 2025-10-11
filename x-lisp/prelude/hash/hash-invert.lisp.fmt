@@ -28,8 +28,8 @@
     (hash-each-value
      (lambda (value)
        (= keys
-           (hash-keys
-            (hash-select (drop (equal? value)) hash)))
+          (hash-keys
+           (hash-select (drop (equal? value)) hash)))
        (hash-put! value (list-to-set keys) new-hash))))
   new-hash)
 
