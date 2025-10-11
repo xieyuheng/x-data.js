@@ -1,4 +1,6 @@
-more examples form x-lisp
+[bug] `flexWrap` does not really wrap well -- using `group` is not enough
+
+- x-lisp/examples/langs/blackjack/blackjack.lisp.fmt
 
 [pretty] `renderSexp` -- function application with "short target" heuristic
 
