@@ -1,8 +1,9 @@
-# to be a formatter
+# format
 
 [bug] the position of attributes relative to elements, is lost
 
-- x-lisp/examples/xml/bookstore.snapshot.lisp
+- example: x-lisp/examples/xml/bookstore.snapshot.lisp
+- to solve this we need to get the insertion order of both elements and attributes.
 
 [ppml] support `hardbreak` -- for line comment
 [lexer] `EmptyLine` as `Token` -- for formatter
