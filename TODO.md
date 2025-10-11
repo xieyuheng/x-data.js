@@ -1,8 +1,8 @@
+[pretty] `renderSexp` -- function application with "short target" heuristic
+
 [bug] `flexWrap` does not really wrap well -- using `group` is not enough
 
 - x-lisp/examples/langs/blackjack/blackjack.lisp.fmt
-
-[pretty] `renderSexp` -- function application with "short target" heuristic
 
 [ppml] support `hardbreak`
 
