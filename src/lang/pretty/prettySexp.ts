@@ -76,18 +76,26 @@ function renderTael(
   attributes: Record<string, Sexp>,
 ): Render {
   return (config) => {
-    const bodyNode = pp.group(
-      pp.indent(
-        1,
-        pp.flexWrap(elements.map((element) => renderSexp(element)(config))),
-      ),
-    )
+    if (elements.length === 0) {
+      const bodyNode = recordIsEmpty(attributes)
+        ? pp.nil()
+        : pp.group(pp.indent(1, renderAttributes(attributes)(config)))
 
-    const footNode = recordIsEmpty(attributes)
-      ? pp.nil()
-      : pp.group(pp.indent(1, pp.br(), renderAttributes(attributes)(config)))
+      return pp.group(pp.text("["), bodyNode, pp.text("]"))
+    } else {
+      const bodyNode = pp.group(
+        pp.indent(
+          1,
+          pp.flexWrap(elements.map((element) => renderSexp(element)(config))),
+        ),
+      )
 
-    return pp.group(pp.text("["), bodyNode, footNode, pp.text("]"))
+      const footNode = recordIsEmpty(attributes)
+        ? pp.nil()
+        : pp.group(pp.indent(1, pp.br(), renderAttributes(attributes)(config)))
+
+      return pp.group(pp.text("["), bodyNode, footNode, pp.text("]"))
+    }
   }
 }
 
