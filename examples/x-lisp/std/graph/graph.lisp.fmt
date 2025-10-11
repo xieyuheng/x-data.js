@@ -24,7 +24,7 @@
     (-> (list? V) (list? (graph-edge? V)) (graph? V))))
 
 (define (make-graph vertices edges)
-  (= graph (cons-graph (@set) (@hash)))
+  (= graph (cons-graph {} (@hash)))
   (graph-add-vertices! vertices graph)
   (graph-add-edges! edges graph))
 
@@ -44,8 +44,7 @@
      (lambda ((@tael vertex neighbors))
        (pipe neighbors
          set-to-list
-         (list-map
-          (lambda (neighbor) (@set vertex neighbor))))))
+         (list-map (lambda (neighbor) {vertex neighbor})))))
     (list-map set-to-list)
     list-to-set))
 
@@ -71,11 +70,11 @@
   (= neighbor-hash (graph-neighbor-hash graph))
   (= source-neighbors (hash-get source neighbor-hash))
   (if (null? source-neighbors)
-    (hash-put! source (@set target) neighbor-hash)
+    (hash-put! source {target} neighbor-hash)
     (set-add! target source-neighbors))
   (= target-neighbors (hash-get target neighbor-hash))
   (if (null? target-neighbors)
-    (hash-put! target (@set source) neighbor-hash)
+    (hash-put! target {source} neighbor-hash)
     (set-add! source target-neighbors))
   graph)
 

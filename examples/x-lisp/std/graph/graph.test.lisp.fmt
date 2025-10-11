@@ -18,23 +18,23 @@
   (= graph
       (make-graph (@tael 1 2 3)
        (@tael (@tael 1 2) (@tael 2 3) (@tael 3 1))))
-  (assert-equal (@set 1 2 3) (graph-vertices graph)))
+  (assert-equal {1 2 3} (graph-vertices graph)))
 
 (begin
   (= graph
       (make-graph (@tael 1 2 3)
        (@tael (@tael 1 2) (@tael 2 3) (@tael 3 1))))
   (assert-equal
-    (@set (@set 1 2) (@set 2 3) (@set 3 1))
+    {{1 2} {2 3} {3 1}}
     (pipe (graph-edges graph) (set-map list-to-set))))
 
 (begin
   (= graph
       (make-graph (@tael 1 2 3)
        (@tael (@tael 1 2) (@tael 2 3) (@tael 3 1))))
-  (assert-equal (@set 2 3) (graph-neighbors 1 graph))
-  (assert-equal (@set 1 3) (graph-neighbors 2 graph))
-  (assert-equal (@set 1 2) (graph-neighbors 3 graph)))
+  (assert-equal {2 3} (graph-neighbors 1 graph))
+  (assert-equal {1 3} (graph-neighbors 2 graph))
+  (assert-equal {1 2} (graph-neighbors 3 graph)))
 
 (begin
   (= graph

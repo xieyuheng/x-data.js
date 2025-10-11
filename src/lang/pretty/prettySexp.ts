@@ -34,7 +34,7 @@ export function renderSexp(sexp: Sexp): Render {
     if (first.kind === "Symbol") {
       switch (first.content) {
         case "@set": {
-          // renderSet(config)(rest)
+          return renderSet(rest)(config)
         }
       }
     }
@@ -51,6 +51,21 @@ export function renderSexp(sexp: Sexp): Render {
     }
 
     return renderApplication(sexp.elements, sexp.attributes)(config)
+  }
+}
+
+function renderSet(elements: Array<Sexp>): Render {
+  return (config) => {
+    return pp.group(
+      pp.text("{"),
+      pp.group(
+        pp.indent(
+          1,
+          pp.flexWrap(elements.map((element) => renderSexp(element)(config))),
+        ),
+      ),
+      pp.text("}"),
+    )
   }
 }
 
@@ -100,21 +115,18 @@ function renderApplication(
   attributes: Record<string, Sexp>,
 ): Render {
   return (config) => {
+    const bodyNode = pp.group(
+      pp.indent(
+        1,
+        pp.flexWrap(elements.map((element) => renderSexp(element)(config))),
+      ),
+    )
+
     const footNode = recordIsEmpty(attributes)
       ? pp.nil()
       : pp.group(pp.indent(1, pp.br(), renderAttributes(attributes)(config)))
 
-    return pp.group(
-      pp.text("("),
-      pp.group(
-        pp.indent(
-          1,
-          pp.flexWrap(elements.map((element) => renderSexp(element)(config))),
-        ),
-      ),
-      footNode,
-      pp.text(")"),
-    )
+    return pp.group(pp.text("("), bodyNode, footNode, pp.text(")"))
   }
 }
 

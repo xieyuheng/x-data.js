@@ -2,7 +2,7 @@
 
 (assert-equal "[]" (pretty 0 (@tael)))
 
-(assert-equal "{}" (pretty 0 (@set)))
+(assert-equal "{}" (pretty 0 {}))
 
 (assert-equal "(@hash)" (pretty 0 (@hash)))
 
