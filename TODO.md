@@ -1,4 +1,4 @@
-[pretty] `renderSexp` -- function application with "short target" heuristic
+[pretty] `renderSexp` -- "short target" heuristic -- for `if` `and` `or` `->` `*->`
 
 # to be a formatter
 
