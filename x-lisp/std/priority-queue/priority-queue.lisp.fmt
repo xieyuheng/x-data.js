@@ -65,8 +65,8 @@
   (cond
     ((priority-queue-empty? queue) null)
     (else
-      (= first (list-head (priority-queue-heap queue)))
-      (node-key first))))
+     (= first (list-head (priority-queue-heap queue)))
+     (node-key first))))
 
 (claim priority-queue-poll!
   (polymorphic (K P)
@@ -82,16 +82,16 @@
      (hash-delete! (node-key first) hash)
      (node-key first))
     (else
-      (= heap (priority-queue-heap queue))
-      (= compare (priority-queue-compare queue))
-      (= first (list-head heap))
-      (= hash (priority-queue-hash queue))
-      (hash-delete! (node-key first) hash)
-      (= last (list-last heap))
-      (node-swap! heap first last)
-      (list-pop! heap)
-      (node-blance! heap compare last)
-      (node-key first))))
+     (= heap (priority-queue-heap queue))
+     (= compare (priority-queue-compare queue))
+     (= first (list-head heap))
+     (= hash (priority-queue-hash queue))
+     (hash-delete! (node-key first) hash)
+     (= last (list-last heap))
+     (node-swap! heap first last)
+     (list-pop! heap)
+     (node-blance! heap compare last)
+     (node-key first))))
 
 (claim priority-queue-delete!
   (polymorphic (K P)
@@ -109,10 +109,10 @@
        (list-pop! heap)
        (hash-delete! (node-key found) hash))
       (else
-        (node-swap! heap found last)
-        (list-pop! heap)
-        (node-blance! heap compare last)
-        (hash-delete! (node-key found) hash))))
+       (node-swap! heap found last)
+       (list-pop! heap)
+       (node-blance! heap compare last)
+       (hash-delete! (node-key found) hash))))
   queue)
 
 (claim priority-queue-put!
@@ -129,11 +129,11 @@
      (put-node-priority! priority found)
      (node-blance! heap compare found))
     (else
-      (= index (list-length heap))
-      (= new-node (cons-node key priority index))
-      (list-push! new-node heap)
-      (hash-put! key new-node hash)
-      (node-blance! heap compare new-node)))
+     (= index (list-length heap))
+     (= new-node (cons-node key priority index))
+     (list-push! new-node heap)
+     (hash-put! key new-node hash)
+     (node-blance! heap compare new-node)))
   queue)
 
 (claim node-blance!
