@@ -1,4 +1,4 @@
-import { arrayZip } from "../../helper/array/arrayZip.ts"
+import { arrayZip } from "../../helpers/array/arrayZip.ts"
 import type { Attributes, Sexp } from "./Sexp.ts"
 
 export function sexpEqual(x: Sexp, y: Sexp): boolean {

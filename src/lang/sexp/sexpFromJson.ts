@@ -1,4 +1,4 @@
-import { isJsonArray, isJsonObject } from "../../helper/json/Json.ts"
+import { isJsonArray, isJsonObject } from "../../helpers/json/Json.ts"
 import * as X from "../sexp/index.ts"
 
 // Can not handle null and undefined,

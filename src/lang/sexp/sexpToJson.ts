@@ -1,5 +1,5 @@
-import { type Json } from "../../helper/json/Json.ts"
-import { recordMapValue } from "../../helper/record/recordMapValue.ts"
+import { type Json } from "../../helpers/json/Json.ts"
+import { recordMapValue } from "../../helpers/record/recordMapValue.ts"
 import * as X from "../sexp/index.ts"
 
 // Only translate those sexp that can be translated to JSON,

@@ -1,7 +1,7 @@
 import { type Command } from "@xieyuheng/commander.js"
 import fs from "node:fs"
-import { errorReport } from "../helper/error/errorReport.ts"
-import { createUrlOrFileUrl } from "../helper/url/createUrlOrFileUrl.ts"
+import { errorReport } from "../helpers/error/errorReport.ts"
+import { createUrlOrFileUrl } from "../helpers/url/createUrlOrFileUrl.ts"
 import * as X from "../index.ts"
 
 export const FormatCommand: Command = {

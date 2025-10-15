@@ -1,5 +1,5 @@
-import { jsonParseNumber } from "../../../helper/json/jsonParse.ts"
-import { stringIsBlank } from "../../../helper/string/stringIsBlank.ts"
+import { jsonParseNumber } from "../../../helpers/json/jsonParse.ts"
+import { stringIsBlank } from "../../../helpers/string/stringIsBlank.ts"
 import type { Consumer } from "../Consumer.ts"
 import { lexerMarks, type Lexer } from "../index.ts"
 
